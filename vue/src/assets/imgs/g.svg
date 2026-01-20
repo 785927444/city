@@ -1,0 +1,2277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"-->
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1500" viewBox="0 0 2000 1500" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:cge="http://iec.ch/TC57/2005/SVG-schema#">
+  <defs>
+    <style type="text/css"><![CDATA[
+            KV1000 {stroke:#0000FF; fill:#0000FF}
+            KV750 {stroke:#FF800A; fill:#FF800A}
+            KV500 {stroke:#FF0000; fill:#FF0000}
+            KV330 {stroke:#1E90FF; fill:#1E90FF}
+            KV220 {stroke:#800080; fill:#800080}
+            KV110 {stroke:#F04155; fill:#F04155}
+            KV66 {stroke:#FFCC00; fill:#FFCC00}
+            KV35 {stroke:#FFFF00; fill:#FFFF00}
+            KV20 {stroke:#E2AC06; fill:#E2AC06}
+            KV10 {stroke:#00D200; fill:#00D200}
+            KV6 {stroke:#00008B; fill:#00008B}
+            KV0_4 {stroke:#D2B48C; fill:#D2B48C}
+            ]]></style>
+    <symbol>
+      <!--定义图元DollyBreaker:xc2416312832@0-->
+      <symbol viewBox="0.00 0.00 14.00 99.00" id="DollyBreaker:xc2416312832@0">
+        <use y="1.44" xlink:href="#terminal" x="6.92" id="0"/>
+        <use y="15.97" xlink:href="#terminal" x="6.76" id="1"/>
+        <use y="81.12" xlink:href="#terminal" x="6.92" id="2"/>
+        <use y="97.24" xlink:href="#terminal" x="6.76" id="3"/>
+        <path stroke="#00ff00" stroke-linecap="round" stroke-width="2.00" d="M6.50855 4.80968 L1.22277 9.09677 "/>
+        <path stroke="#00ff00" stroke-linecap="round" stroke-width="2.00" d="M6.68297 9.9629 L1.09196 14.8532 "/>
+        <path stroke="#00ff00" stroke-linecap="round" stroke-width="2.00" d="M12.8845 14.8452 L7.21857 10.0435 "/>
+        <path stroke="#00ff00" stroke-linecap="round" stroke-width="2.00" d="M12.8845 8.96613 L7.26217 4.81129 "/>
+        <path stroke="#00ff00" stroke-linecap="round" stroke-width="2.00" d="M6.95235 2 L6.95235 4.32258 "/>
+        <path stroke="#00ff00" stroke-linecap="round" stroke-width="2.00" d="M7.37591 93.2968 L12.6617 89.0097 "/>
+        <path stroke="#00ff00" stroke-linecap="round" stroke-width="2.00" d="M7.20149 88.1436 L12.7925 83.2532 "/>
+        <path stroke="#00ff00" stroke-linecap="round" stroke-width="2.00" d="M1 83.2613 L6.66589 88.0629 "/>
+        <path stroke="#00ff00" stroke-linecap="round" stroke-width="2.00" d="M1 89.1403 L6.62229 93.2952 "/>
+        <path stroke="#00ff00" stroke-linecap="round" stroke-width="2.00" d="M6.93211 96.1065 L6.93211 93.7839 "/>
+        <path stroke="#00ff00" stroke-linecap="round" stroke-width="2.00" d="M6.9194 15.0097 L6.9194 10.5387 "/>
+        <path stroke="#00ff00" stroke-linecap="round" stroke-width="2.00" d="M6.9194 86.9597 L6.9194 82.0742 "/>
+        <rect y="0.00" opacity="0" width="14.00" height="14.00" x="0.00" fill="#FFFFFF"/>
+        <rect y="85.00" opacity="0" width="14.00" height="14.00" x="0.00" fill="#FFFFFF"/>
+      </symbol>
+      <!--定义图元DollyBreaker:xc2416312832@1-->
+      <symbol viewBox="0.00 0.00 14.00 99.00" id="DollyBreaker:xc2416312832@1">
+        <use y="1.44" xlink:href="#terminal" x="6.92" id="0"/>
+        <use y="15.97" xlink:href="#terminal" x="6.76" id="1"/>
+        <use y="81.12" xlink:href="#terminal" x="6.92" id="2"/>
+        <use y="97.24" xlink:href="#terminal" x="6.76" id="3"/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="2.00" d="M6.50855 4.80968 L1.22277 9.09677 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="2.00" d="M6.68297 9.9629 L1.09196 14.8532 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="2.00" d="M12.8845 14.8452 L7.21857 10.0435 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="2.00" d="M12.8845 8.96613 L7.26217 4.81129 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="2.00" d="M6.95235 2 L6.95235 4.32258 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="2.00" d="M7.37591 93.2968 L12.6617 89.0097 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="2.00" d="M7.20149 88.1436 L12.7925 83.2532 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="2.00" d="M1 83.2613 L6.66589 88.0629 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="2.00" d="M1 89.1403 L6.62229 93.2952 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="2.00" d="M6.93211 96.1065 L6.93211 93.7839 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="2.00" d="M6.9194 15.0097 L6.9194 10.5387 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="2.00" d="M6.9194 86.9597 L6.9194 82.0742 "/>
+        <rect y="0.00" opacity="0" width="14.00" height="14.00" x="0.00" fill="#FFFFFF"/>
+        <rect y="85.00" opacity="0" width="14.00" height="14.00" x="0.00" fill="#FFFFFF"/>
+      </symbol>
+      <!--定义图元DollyBreaker:xc2416312832@-1-->
+      <symbol viewBox="0.00 0.00 14.00 99.00" id="DollyBreaker:xc2416312832@-1">
+        <use y="1.44" xlink:href="#terminal" x="6.92" id="0"/>
+        <use y="15.97" xlink:href="#terminal" x="6.76" id="1"/>
+        <use y="81.12" xlink:href="#terminal" x="6.92" id="2"/>
+        <use y="97.24" xlink:href="#terminal" x="6.76" id="3"/>
+        <path stroke="#959595" stroke-linecap="round" stroke-width="2.00" d="M6.50855 4.80968 L1.22277 9.09677 "/>
+        <path stroke="#959595" stroke-linecap="round" stroke-width="2.00" d="M6.68297 9.9629 L1.09196 14.8532 "/>
+        <path stroke="#959595" stroke-linecap="round" stroke-width="2.00" d="M12.8845 14.8452 L7.21857 10.0435 "/>
+        <path stroke="#959595" stroke-linecap="round" stroke-width="2.00" d="M12.8845 8.96613 L7.26217 4.81129 "/>
+        <path stroke="#959595" stroke-linecap="round" stroke-width="2.00" d="M6.95235 2 L6.95235 4.32258 "/>
+        <path stroke="#959595" stroke-linecap="round" stroke-width="2.00" d="M7.37591 93.2968 L12.6617 89.0097 "/>
+        <path stroke="#959595" stroke-linecap="round" stroke-width="2.00" d="M7.20149 88.1436 L12.7925 83.2532 "/>
+        <path stroke="#959595" stroke-linecap="round" stroke-width="2.00" d="M1 83.2613 L6.66589 88.0629 "/>
+        <path stroke="#959595" stroke-linecap="round" stroke-width="2.00" d="M1 89.1403 L6.62229 93.2952 "/>
+        <path stroke="#959595" stroke-linecap="round" stroke-width="2.00" d="M6.93211 96.1065 L6.93211 93.7839 "/>
+        <path stroke="#959595" stroke-linecap="round" stroke-width="2.00" d="M6.9194 15.0097 L6.9194 10.5387 "/>
+        <path stroke="#959595" stroke-linecap="round" stroke-width="2.00" d="M6.9194 86.9597 L6.9194 82.0742 "/>
+        <rect y="0.00" opacity="0" width="14.00" height="14.00" x="0.00" fill="#FFFFFF"/>
+        <rect y="85.00" opacity="0" width="14.00" height="14.00" x="0.00" fill="#FFFFFF"/>
+      </symbol>
+      <!--定义图元Breaker:kg2415984896@0-->
+      <symbol viewBox="0.00 0.00 13.00 25.00" id="Breaker:kg2415984896@0">
+        <use y="0.69" xlink:href="#terminal" x="6.52" id="0"/>
+        <use y="24.27" xlink:href="#terminal" x="6.52" id="1"/>
+        <rect y="1.06" width="9.81" height="22.81" stroke="#00aa00" stroke-linecap="round" stroke-width="2.00" x="1.61" fill="#00ff00"/>
+        <rect y="0.00" opacity="0" width="13.00" height="25.00" x="0.00" fill="#FFFFFF"/>
+      </symbol>
+      <!--定义图元Breaker:kg2415984896@1-->
+      <symbol viewBox="0.00 0.00 13.00 25.00" id="Breaker:kg2415984896@1">
+        <use y="0.69" xlink:href="#terminal" x="6.52" id="0"/>
+        <use y="24.27" xlink:href="#terminal" x="6.52" id="1"/>
+        <rect y="1.05" width="9.89" height="22.86" stroke="#aa0000" stroke-linecap="round" stroke-width="2.00" x="1.61" fill="#ff0000"/>
+        <rect y="0.00" opacity="0" width="13.00" height="25.00" x="0.00" fill="#FFFFFF"/>
+      </symbol>
+      <!--定义图元Breaker:kg2415984896@-1-->
+      <symbol viewBox="0.00 0.00 13.00 25.00" id="Breaker:kg2415984896@-1">
+        <use y="0.69" xlink:href="#terminal" x="6.52" id="0"/>
+        <use y="24.27" xlink:href="#terminal" x="6.52" id="1"/>
+        <rect y="1.06" width="9.81" height="22.81" stroke="#6f6f6f" stroke-linecap="round" stroke-width="2.00" x="1.61" fill="#b8b8b8"/>
+        <rect y="0.00" opacity="0" width="13.00" height="25.00" x="0.00" fill="#FFFFFF"/>
+      </symbol>
+      <!--定义图元EnergyConsumer:fh2685534208_0-->
+      <symbol viewBox="0.00 0.00 12.00 25.00" id="EnergyConsumer:fh2685534208_0">
+        <use y="1.98" xlink:href="#terminal" x="6.02" id="0"/>
+        <path stroke="#aa0000" stroke-linecap="round" stroke-width="2.00" d="M1 7 L10 7 L6 23 Z" fill="#ff0000"/>
+        <path stroke="#aa0000" stroke-linecap="round" stroke-width="2.00" d="M6.02515 1.53226 L6.02515 6.81774 "/>
+        <rect y="0.00" opacity="0" width="12.00" height="25.00" x="0.00" fill="#FFFFFF"/>
+      </symbol>
+      <!--定义图元EnergyConsumer:jd2685337600_0-->
+      <symbol viewBox="0.00 0.00 16.00 16.00" id="EnergyConsumer:jd2685337600_0">
+        <use y="0.34" xlink:href="#terminal" x="7.82" id="0"/>
+        <path stroke="#8f8f8f" stroke-linecap="round" stroke-width="2.00" d="M7.94839 0.43871 L7.94839 4.82581 "/>
+        <path stroke="#8f8f8f" stroke-linecap="round" stroke-width="2.00" d="M0.658065 5.6 L15.2387 5.6 "/>
+        <path stroke="#8f8f8f" stroke-linecap="round" stroke-width="2.00" d="M3.47097 9.75484 L12.4258 9.75484 "/>
+        <path stroke="#8f8f8f" stroke-linecap="round" stroke-width="2.00" d="M6.14194 13.729 L9.75484 13.729 "/>
+        <rect y="0.00" opacity="0" width="16.00" height="16.00" x="0.00" fill="#FFFFFF"/>
+      </symbol>
+      <!--定义图元Disconnector:dz2416050432@0-->
+      <symbol viewBox="0.00 0.00 13.00 27.00" id="Disconnector:dz2416050432@0">
+        <use y="1.30" xlink:href="#terminal" x="6.45" id="0"/>
+        <use y="25.22" xlink:href="#terminal" x="6.46" id="1"/>
+        <path stroke="#00ff00" stroke-linecap="round" stroke-width="2.00" d="M1.12752 4.98871 L11.9492 4.98871 "/>
+        <path stroke="#00ff00" stroke-linecap="round" stroke-width="2.00" d="M6.50305 1.39032 L6.50305 4.62419 "/>
+        <path stroke="#00ff00" stroke-linecap="round" stroke-width="2.00" d="M1.17406 8.43064 L6.4962 17.7935 "/>
+        <path stroke="#00ff00" stroke-linecap="round" stroke-width="2.00" d="M6.51641 22.4726 L6.51641 25.6177 "/>
+        <ellipse cx="6.44" ry="1.68" stroke="#00ff00" stroke-linecap="round" cy="20.06" stroke-width="2.00" rx="1.91" fill="none"/>
+        <rect y="0.00" opacity="0" width="13.00" height="27.00" x="0.00" fill="#FFFFFF"/>
+      </symbol>
+      <!--定义图元Disconnector:dz2416050432@1-->
+      <symbol viewBox="0.00 0.00 13.00 27.00" id="Disconnector:dz2416050432@1">
+        <use y="1.30" xlink:href="#terminal" x="6.45" id="0"/>
+        <use y="25.22" xlink:href="#terminal" x="6.46" id="1"/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="3.00" d="M1.12752 4.98871 L11.9492 4.98871 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="2.00" d="M6.50305 1.39032 L6.50305 4.62419 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="3.00" d="M6.4962 6.05323 L6.4962 17.7935 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="2.00" d="M6.51641 22.4726 L6.51641 25.6177 "/>
+        <ellipse cx="6.44" ry="1.68" stroke="#ff0000" stroke-linecap="round" cy="20.06" stroke-width="2.00" rx="1.91" fill="none"/>
+        <rect y="0.00" opacity="0" width="13.00" height="27.00" x="0.00" fill="#FFFFFF"/>
+      </symbol>
+      <!--定义图元Disconnector:dz2416050432@-1-->
+      <symbol viewBox="0.00 0.00 13.00 27.00" id="Disconnector:dz2416050432@-1">
+        <use y="1.30" xlink:href="#terminal" x="6.45" id="0"/>
+        <use y="25.22" xlink:href="#terminal" x="6.46" id="1"/>
+        <path stroke="#919191" stroke-linecap="round" stroke-width="2.00" d="M1.12752 4.98871 L11.9492 4.98871 "/>
+        <path stroke="#919191" stroke-linecap="round" stroke-width="2.00" d="M6.50305 1.39032 L6.50305 4.62419 "/>
+        <path stroke="#919191" stroke-linecap="round" stroke-width="2.00" d="M1.22148 5.18226 L11.4732 17.2887 "/>
+        <path stroke="#919191" stroke-linecap="round" stroke-width="2.00" d="M6.51641 22.4726 L6.51641 25.6177 "/>
+        <ellipse cx="6.44" ry="1.68" stroke="#919191" stroke-linecap="round" cy="20.06" stroke-width="2.00" rx="1.91" fill="none"/>
+        <path stroke="#919191" stroke-linecap="round" stroke-width="2.00" d="M1.4396 17.2452 L11.9094 5.00806 "/>
+        <rect y="0.00" opacity="0" width="13.00" height="27.00" x="0.00" fill="#FFFFFF"/>
+      </symbol>
+      <!--定义图元SuoPowerTransformer:sybBXJ3223453696_0-->
+      <symbol viewBox="0.00 0.00 24.00 36.00" id="SuoPowerTransformer:sybBXJ3223453696_0">
+        <use y="2.55" xlink:href="#terminal" x="11.97" id="0"/>
+        <use y="35.08" xlink:href="#terminal" x="12.09" id="1"/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="1.00" d="M12.0241 2.49677 L12.0241 9.05161 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="1.00" d="M12.0241 9 L6.86281 12.9742 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="1.00" d="M11.9209 8.79355 L17.4434 12.8194 "/>
+        <ellipse cx="11.95" ry="9.05" stroke="#ff0000" stroke-linecap="round" cy="10.96" stroke-width="1.00" rx="9.05" fill="none"/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="1.00" d="M12.1157 19.0387 L12.1157 25.5935 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="1.00" d="M12.1157 25.5419 L6.95438 29.5161 "/>
+        <path stroke="#ff0000" stroke-linecap="round" stroke-width="1.00" d="M12.0124 25.3355 L17.535 29.3613 "/>
+        <ellipse cx="12.13" ry="8.87" stroke="#ff0000" stroke-linecap="round" cy="26.52" stroke-width="1.00" rx="8.87" fill="none"/>
+        <rect y="0.00" opacity="0" width="24.00" height="36.00" x="0.00" fill="#FFFFFF"/>
+      </symbol>
+      <!--定义图元Other:26869760632686976063_0-->
+      <symbol viewBox="0.00 0.00 45.00 45.00" id="Other:26869760632686976063_0">
+        <use y="1.60" xlink:href="#terminal" x="12.48" id="0"/>
+        <use y="1.74" xlink:href="#terminal" x="32.01" id="1"/>
+        <use y="22.50" xlink:href="#terminal" x="43.40" id="2"/>
+        <use y="22.50" xlink:href="#terminal" x="1.60" id="3"/>
+        <use y="43.41" xlink:href="#terminal" x="12.48" id="4"/>
+        <use y="43.55" xlink:href="#terminal" x="31.86" id="5"/>
+        <rect y="1.81" width="41.88" height="41.59" stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" x="1.60" fill="none"/>
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M42.3871 2.75806 L2.46774 42.4597 "/>
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M21.629 32.0081 L36.9435 32.0081 "/>
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M13.5,12.5927 C13.5,10.8891 12.0864,9.50806 10.3427,9.50806 C8.59904,9.50806 7.18548,10.8891 7.18548,12.5927 C7.18548,13.0972 7.30945,13.5735 7.52924,13.9939 " fill="none"/>
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M13.5403,12.3427 C13.5403,14.0464 14.9448,15.4274 16.6774,15.4274 C18.41,15.4274 19.8145,14.0464 19.8145,12.3427 C19.8145,11.4909 19.4634,10.7198 18.8957,10.1615 " fill="none"/>
+        <rect y="0.00" opacity="0" width="45.00" height="45.00" x="0.00" fill="#FFFFFF"/>
+      </symbol>
+    </symbol>
+  </defs>
+  <g>
+    <g id="HeadClass">
+      <rect y="0" width="2000" height="1500" x="0" fill="#000000"/>
+      <UT_shapedata>
+        <PowerData StationName=""/>
+      </UT_shapedata>
+    </g>
+    <g id="PelClass">
+      <g>
+        <rect y="1128.59" width="79.09" height="47.27" stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" x="197.79" fill="none"/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M233.83 1082.11 L233.958 1127.76 "/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <rect y="1129.08" width="79.09" height="47.27" stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" x="413.02" fill="none"/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M449.066 1082.59 L449.194 1128.25 "/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <rect y="1129.50" width="79.09" height="47.27" stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" x="620.19" fill="none"/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M656.232 1083.02 L656.36 1128.68 "/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <rect y="1129.99" width="79.09" height="47.27" stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" x="805.42" fill="none"/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M871.468 1083.51 L871.596 1129.16 "/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <rect y="1132.93" width="79.09" height="47.27" stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" x="1113.11" fill="none"/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1149.15 1086.45 L1149.28 1132.1 "/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <rect y="1133.42" width="79.09" height="47.27" stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" x="1328.34" fill="none"/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1364.39 1086.93 L1364.52 1132.59 "/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <rect y="1133.84" width="79.09" height="47.27" stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" x="1535.51" fill="none"/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1571.55 1087.36 L1571.68 1133.02 "/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <rect y="1134.33" width="79.09" height="47.27" stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" x="1720.75" fill="none"/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1786.79 1087.85 L1786.92 1133.5 "/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <rect y="311.74" width="240.83" height="115.83" stroke="#ffffff" stroke-linecap="butt" stroke-width="2.00" x="119.16" fill="none"/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <path stroke="#ffffff" stroke-linecap="butt" stroke-width="2.00" d="M119.333 347.366 L359.958 347.366 "/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <path stroke="#ffffff" stroke-linecap="butt" stroke-width="2.00" d="M118.583 388.241 L359.208 388.241 "/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <path stroke="#ffffff" stroke-linecap="butt" stroke-width="2.00" d="M178.538 312.51 L178.538 427.682 "/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g>
+        <path stroke="#ffffff" stroke-linecap="butt" stroke-width="2.00" d="M308.193 312.165 L308.193 427.337 "/>
+        <metadata>
+          <cge:PSR_Ref_MAP linkType="none" file="" svgFileName=""/>
+        </metadata>
+      </g>
+    </g>
+    <g id="TextClass">
+      <g id="7091">
+        <text y="476.53" font-size="13.3333px" x="1843.01" fill="#ffffff" font-family="宋体">
+          <tspan y="476.53" x="1843.01">10kV</tspan>
+        </text>
+      </g>
+      <g id="5800">
+        <text y="1164.54" font-size="18.6667px" x="220.25" fill="#ffffff" font-family="宋体">
+          <tspan y="1164.54" x="220.25">电池</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="5811">
+        <text y="1165.03" font-size="18.6667px" x="435.49" fill="#ffffff" font-family="宋体">
+          <tspan y="1165.03" x="435.49">电池</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="5916">
+        <text y="1165.45" font-size="18.6667px" x="642.66" fill="#ffffff" font-family="宋体">
+          <tspan y="1165.45" x="642.66">电池</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="5920">
+        <text y="1163.72" font-size="18.6667px" x="832.34" fill="#ffffff" font-family="宋体">
+          <tspan y="1163.72" x="832.34">电池</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="6113">
+        <text y="1168.88" font-size="18.6667px" x="1135.58" fill="#ffffff" font-family="宋体">
+          <tspan y="1168.88" x="1135.58">电池</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="6117">
+        <text y="1169.37" font-size="18.6667px" x="1350.81" fill="#ffffff" font-family="宋体">
+          <tspan y="1169.37" x="1350.81">电池</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="6128">
+        <text y="1169.79" font-size="18.6667px" x="1557.98" fill="#ffffff" font-family="宋体">
+          <tspan y="1169.79" x="1557.98">电池</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="6132">
+        <text y="1171.39" font-size="18.6667px" x="1745.44" fill="#ffffff" font-family="宋体">
+          <tspan y="1171.39" x="1745.44">电池</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7020">
+        <text y="317.21" font-size="18.6667px" x="1656.82" fill="#ffffff" font-family="宋体">
+          <tspan y="317.21" x="1656.82">日充电量</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7022">
+        <text y="317.21" font-size="18.6667px" x="1787.77" fill="#ffffff" font-family="宋体">
+          <tspan y="317.21" x="1787.77">kWh</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7024">
+        <text y="317.21" font-size="18.6667px" x="1745.30" fill="#00ff00" font-family="宋体">
+          <tspan y="317.21" x="1745.30">520</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7028">
+        <text y="358.52" font-size="18.6667px" x="1656.94" fill="#ffffff" font-family="宋体">
+          <tspan y="358.52" x="1656.94">总充电量</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7029">
+        <text y="358.52" font-size="18.6667px" x="1788.72" fill="#ffffff" font-family="宋体">
+          <tspan y="358.52" x="1788.72">kWh</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7030">
+        <text y="358.52" font-size="18.6667px" x="1746.25" fill="#00ff00" font-family="宋体">
+          <tspan y="358.52" x="1746.25">520</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7034">
+        <text y="399.36" font-size="18.6667px" x="1657.77" fill="#ffffff" font-family="宋体">
+          <tspan y="399.36" x="1657.77">日放电量</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7035">
+        <text y="399.36" font-size="18.6667px" x="1786.22" fill="#ffffff" font-family="宋体">
+          <tspan y="399.36" x="1786.22">kWh</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7036">
+        <text y="399.36" font-size="18.6667px" x="1746.25" fill="#00ff00" font-family="宋体">
+          <tspan y="399.36" x="1746.25">520</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7040">
+        <text y="439.36" font-size="18.6667px" x="1657.77" fill="#ffffff" font-family="宋体">
+          <tspan y="439.36" x="1657.77">总放电量</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7041">
+        <text y="439.36" font-size="18.6667px" x="1788.72" fill="#ffffff" font-family="宋体">
+          <tspan y="439.36" x="1788.72">kWh</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7042">
+        <text y="439.36" font-size="18.6667px" x="1746.25" fill="#00ff00" font-family="宋体">
+          <tspan y="439.36" x="1746.25">520</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7062">
+        <text y="377.32" font-size="18.6667px" x="324.57" fill="#ffffff" font-family="宋体">
+          <tspan y="377.32" x="324.57">kV</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7065">
+        <text y="417.66" font-size="18.6667px" x="324.69" fill="#ffffff" font-family="宋体">
+          <tspan y="417.66" x="324.69">kV</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7067">
+        <text y="339.82" font-size="18.6667px" x="324.54" fill="#ffffff" font-family="宋体">
+          <tspan y="339.82" x="324.54">kV</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7069">
+        <text y="338.05" font-size="18.6667px" x="130.33" fill="#ffffff" font-family="宋体">
+          <tspan y="338.05" x="130.33">Uab</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7071">
+        <text y="417.43" font-size="18.6667px" x="130.33" fill="#ffffff" font-family="宋体">
+          <tspan y="417.43" x="130.33">Uac</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7073">
+        <text y="377.01" font-size="18.6667px" x="130.33" fill="#ffffff" font-family="宋体">
+          <tspan y="377.01" x="130.33">Ubc</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7077">
+        <text y="342.27" font-size="18.6667px" x="220.12" fill="#00ff00" font-family="宋体">
+          <tspan y="342.27" x="220.12">10000</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7079">
+        <text y="378.27" font-size="18.6667px" x="219.12" fill="#00ff00" font-family="宋体">
+          <tspan y="378.27" x="219.12">10000</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="7081">
+        <text y="415.27" font-size="18.6667px" x="218.12" fill="#00ff00" font-family="宋体">
+          <tspan y="415.27" x="218.12">10000</tspan>
+        </text>
+        <metadata>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+    </g>
+    <g id="BusbarSectionClass">
+      <g id="1">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="5.00" d="M124.746 470.028 L1838.01 470.028 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1200" UTShapeName="母线" IsReference="False" Rect="124.75,470.03,1713.27,0.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID1_key="1" ObjectID2_key="2" ObjectID="295_0" ObjectID1="374_0" ObjectID_key="0" ObjectID2="529_0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="10kV" VoltLevel="10kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="470.03" pointId="0" x="1026.06"/>
+            <KeyConnectNode y="470.03" pointId="1" x="548.48"/>
+            <KeyConnectNode y="470.03" pointId="2" x="866.35"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum="10kV"/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+    </g>
+    <g id="BreakerClass">
+      <g id="270">
+        <use y="0" xlink:href="#Breaker:kg2415984896@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1020.87,379.75)" width="13.00" height="25.00" class="KV0" bound="1020.87,379.75,1033.87,404.75" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1" UTShapeName="断路器" IsReference="False" Rect="1020.87,379.75,13.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="271_0" ObjectID1="272_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="380.44" pointId="0" x="1027.39"/>
+            <KeyConnectNode y="404.02" pointId="1" x="1027.40"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="368">
+        <use y="0" xlink:href="#Breaker:kg2415984896@0" transform="rotate(180.00,0,0) scale(1.00,1.00) translate(-555.00,-563.09)" width="13.00" height="25.00" class="KV0" bound="542.00,538.09,555.00,563.09" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1" UTShapeName="断路器" IsReference="False" Rect="542.00,538.09,13.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="369_0" ObjectID1="370_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="562.40" pointId="0" x="548.48"/>
+            <KeyConnectNode y="538.82" pointId="1" x="548.48"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="523">
+        <use y="0" xlink:href="#Breaker:kg2415984896@0" transform="rotate(180.00,0,0) scale(1.00,1.00) translate(-872.71,-566.78)" width="13.00" height="25.00" class="KV0" bound="859.71,541.78,872.71,566.78" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1" UTShapeName="断路器" IsReference="False" Rect="859.71,541.78,13.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="525_0" ObjectID1="524_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="566.09" pointId="0" x="866.19"/>
+            <KeyConnectNode y="542.51" pointId="1" x="866.19"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="559">
+        <use y="0" xlink:href="#Breaker:kg2415984896@0" transform="rotate(180.00,0,0) scale(1.00,1.00) translate(-1191.16,-569.17)" width="13.00" height="25.00" class="KV0" bound="1178.16,544.17,1191.16,569.17" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1" UTShapeName="断路器" IsReference="False" Rect="1178.16,544.17,13.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="560_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="568.48" pointId="0" x="1184.64"/>
+            <KeyConnectNode y="544.90" pointId="1" x="1184.63"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="673">
+        <use y="0" xlink:href="#Breaker:kg2415984896@0" transform="rotate(180.00,0,0) scale(1.00,1.00) translate(-1470.32,-569.05)" width="13.00" height="25.00" class="KV0" bound="1457.32,544.05,1470.32,569.05" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1" UTShapeName="断路器" IsReference="False" Rect="1457.32,544.05,13.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="674_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="568.36" pointId="0" x="1463.80"/>
+            <KeyConnectNode y="544.78" pointId="1" x="1463.80"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="4522">
+        <use y="0" xlink:href="#Breaker:kg2415984896@0" transform="rotate(180.00,0,0) scale(1.00,1.00) translate(-554.85,-806.09)" width="13.00" height="25.00" class="KV0" bound="541.85,781.09,554.85,806.09" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1" UTShapeName="断路器" IsReference="False" Rect="541.85,781.09,13.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="4551_0" ObjectID1="4553_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="805.40" pointId="0" x="548.33"/>
+            <KeyConnectNode y="781.82" pointId="1" x="548.33"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="5216">
+        <use y="0" xlink:href="#Breaker:kg2415984896@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(226.62,974.52)" width="13.00" height="25.00" class="KV0" bound="226.62,974.52,239.62,999.52" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1" UTShapeName="断路器" IsReference="False" Rect="226.62,974.52,13.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="5181_0" ObjectID1="5725_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="975.21" pointId="0" x="233.14"/>
+            <KeyConnectNode y="998.79" pointId="1" x="233.14"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="5252">
+        <use y="0" xlink:href="#Breaker:kg2415984896@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(424.78,973.48)" width="13.00" height="25.00" class="KV0" bound="424.78,973.48,437.78,998.48" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1" UTShapeName="断路器" IsReference="False" Rect="424.78,973.48,13.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="5764_0" ObjectID1="5615_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="974.17" pointId="0" x="431.30"/>
+            <KeyConnectNode y="997.75" pointId="1" x="431.31"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="5908">
+        <use y="0" xlink:href="#Breaker:kg2415984896@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(649.02,975.43)" width="13.00" height="25.00" class="KV0" bound="649.02,975.43,662.02,1000.43" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1" UTShapeName="断路器" IsReference="False" Rect="649.02,975.43,13.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="5907_0" ObjectID1="5911_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="976.12" pointId="0" x="655.54"/>
+            <KeyConnectNode y="999.70" pointId="1" x="655.54"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="5909">
+        <use y="0" xlink:href="#Breaker:kg2415984896@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(847.19,974.39)" width="13.00" height="25.00" class="KV0" bound="847.19,974.39,860.19,999.39" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1" UTShapeName="断路器" IsReference="False" Rect="847.19,974.39,13.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="5912_0" ObjectID1="5910_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="975.09" pointId="0" x="853.71"/>
+            <KeyConnectNode y="998.66" pointId="1" x="853.71"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="6098">
+        <use y="0" xlink:href="#Breaker:kg2415984896@0" transform="rotate(180.00,0,0) scale(1.00,1.00) translate(-1470.17,-810.43)" width="13.00" height="25.00" class="KV0" bound="1457.17,785.43,1470.17,810.43" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1" UTShapeName="断路器" IsReference="False" Rect="1457.17,785.43,13.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="6099_0" ObjectID1="3097_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="809.74" pointId="0" x="1463.65"/>
+            <KeyConnectNode y="786.16" pointId="1" x="1463.65"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="6105">
+        <use y="0" xlink:href="#Breaker:kg2415984896@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1141.94,978.86)" width="13.00" height="25.00" class="KV0" bound="1141.94,978.86,1154.94,1003.86" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1" UTShapeName="断路器" IsReference="False" Rect="1141.94,978.86,13.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="6104_0" ObjectID1="6108_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="979.55" pointId="0" x="1148.46"/>
+            <KeyConnectNode y="1003.13" pointId="1" x="1148.47"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="6106">
+        <use y="0" xlink:href="#Breaker:kg2415984896@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1340.11,977.82)" width="13.00" height="25.00" class="KV0" bound="1340.11,977.82,1353.11,1002.82" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1" UTShapeName="断路器" IsReference="False" Rect="1340.11,977.82,13.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="6109_0" ObjectID1="6107_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="978.51" pointId="0" x="1346.63"/>
+            <KeyConnectNode y="1002.09" pointId="1" x="1346.63"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="6120">
+        <use y="0" xlink:href="#Breaker:kg2415984896@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1564.34,979.77)" width="13.00" height="25.00" class="KV0" bound="1564.34,979.77,1577.34,1004.77" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1" UTShapeName="断路器" IsReference="False" Rect="1564.34,979.77,13.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="6119_0" ObjectID1="6123_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="980.46" pointId="0" x="1570.86"/>
+            <KeyConnectNode y="1004.04" pointId="1" x="1570.87"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="6121">
+        <use y="0" xlink:href="#Breaker:kg2415984896@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1762.51,978.73)" width="13.00" height="25.00" class="KV0" bound="1762.51,978.73,1775.51,1003.73" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1" UTShapeName="断路器" IsReference="False" Rect="1762.51,978.73,13.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="6124_0" ObjectID1="6122_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="979.43" pointId="0" x="1769.03"/>
+            <KeyConnectNode y="1003.00" pointId="1" x="1769.03"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+    </g>
+    <g id="DisconnectorClass">
+      <g id="1038">
+        <use y="0" xlink:href="#Disconnector:dz2416050432@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(931.14,672.35)" width="13.00" height="27.00" class="KV0" bound="931.14,672.35,944.14,699.35" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="2" UTShapeName="隔离开关" IsReference="False" Rect="931.14,672.35,13.00,27.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="1039_0" ObjectID1="1041_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="673.66" pointId="0" x="937.60"/>
+            <KeyConnectNode y="697.57" pointId="1" x="937.60"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="1091">
+        <use y="0" xlink:href="#Disconnector:dz2416050432@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1239.73,674.14)" width="13.00" height="27.00" class="KV0" bound="1239.73,674.14,1252.73,701.14" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="2" UTShapeName="隔离开关" IsReference="False" Rect="1239.73,674.14,13.00,27.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="1092_0" ObjectID1="1094_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="675.44" pointId="0" x="1246.18"/>
+            <KeyConnectNode y="699.36" pointId="1" x="1246.19"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="1251">
+        <use y="0" xlink:href="#Disconnector:dz2416050432@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(614.11,672.89)" width="13.00" height="27.00" class="KV0" bound="614.11,672.89,627.11,699.89" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="2" UTShapeName="隔离开关" IsReference="False" Rect="614.11,672.89,13.00,27.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="1252_0" ObjectID1="1254_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="674.19" pointId="0" x="620.56"/>
+            <KeyConnectNode y="698.11" pointId="1" x="620.57"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="1400">
+        <use y="0" xlink:href="#Disconnector:dz2416050432@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1520.93,673.43)" width="13.00" height="27.00" class="KV0" bound="1520.93,673.43,1533.93,700.43" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="2" UTShapeName="隔离开关" IsReference="False" Rect="1520.93,673.43,13.00,27.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="1401_0" ObjectID1="1403_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="674.74" pointId="0" x="1527.38"/>
+            <KeyConnectNode y="698.65" pointId="1" x="1527.39"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="1832">
+        <use y="0" xlink:href="#Disconnector:dz2416050432@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(541.87,674.85)" width="13.00" height="27.00" class="KV0" bound="541.87,674.85,554.87,701.85" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="2" UTShapeName="隔离开关" IsReference="False" Rect="541.87,674.85,13.00,27.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="1856_0" ObjectID1="4551_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="676.15" pointId="0" x="548.32"/>
+            <KeyConnectNode y="700.07" pointId="1" x="548.33"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="2683">
+        <use y="0" xlink:href="#Disconnector:dz2416050432@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(859.75,672.85)" width="13.00" height="27.00" class="KV0" bound="859.75,672.85,872.75,699.85" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="2" UTShapeName="隔离开关" IsReference="False" Rect="859.75,672.85,13.00,27.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="2625_0" ObjectID1="2765_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="674.15" pointId="0" x="866.20"/>
+            <KeyConnectNode y="698.07" pointId="1" x="866.21"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="2982">
+        <use y="0" xlink:href="#Disconnector:dz2416050432@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1178.02,674.75)" width="13.00" height="27.00" class="KV0" bound="1178.02,674.75,1191.02,701.75" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="2" UTShapeName="隔离开关" IsReference="False" Rect="1178.02,674.75,13.00,27.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="3009_0" ObjectID1="3011_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="676.05" pointId="0" x="1184.48"/>
+            <KeyConnectNode y="699.96" pointId="1" x="1184.48"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="3067">
+        <use y="0" xlink:href="#Disconnector:dz2416050432@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1457.19,672.36)" width="13.00" height="27.00" class="KV0" bound="1457.19,672.36,1470.19,699.36" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="2" UTShapeName="隔离开关" IsReference="False" Rect="1457.19,672.36,13.00,27.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="3095_0" ObjectID1="3097_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="673.66" pointId="0" x="1463.64"/>
+            <KeyConnectNode y="697.58" pointId="1" x="1463.65"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+    </g>
+    <g id="EnergyConsumerClass">
+      <g id="276">
+        <use y="0" xlink:href="#EnergyConsumer:fh2685534208_0" transform="rotate(180.00,0,0) scale(1.00,1.00) translate(-1033.58,-328.41)" width="12.00" height="25.00" class="KV0" bound="1021.58,303.41,1033.58,328.41" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1203" UTShapeName="负荷" IsReference="False" Rect="1021.58,303.41,12.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="281_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="RAND_276" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="326.44" pointId="0" x="1027.55"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum="RAND_276"/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="526">
+        <use y="0" xlink:href="#EnergyConsumer:fh2685534208_0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(860.19,737.77)" width="12.00" height="25.00" class="KV0" bound="860.19,737.77,872.19,762.77" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1203" UTShapeName="负荷" IsReference="False" Rect="860.19,737.77,12.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="2765_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="RAND_276" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="739.75" pointId="0" x="866.21"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum="RAND_276"/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="562">
+        <use y="0" xlink:href="#EnergyConsumer:fh2685534208_0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1178.46,740.50)" width="12.00" height="25.00" class="KV0" bound="1178.46,740.50,1190.46,765.50" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1203" UTShapeName="负荷" IsReference="False" Rect="1178.46,740.50,12.00,25.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="3011_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="RAND_276" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="742.48" pointId="0" x="1184.48"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum="RAND_276"/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+    </g>
+    <g id="OtherClass">
+      <g id="265">
+        <use y="0" xlink:href="#DollyBreaker:xc2416312832@0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1019.30,344.65)" width="14.00" height="99.00" class="KV0" bound="1019.30,344.65,1033.30,443.65" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="6" UTShapeName="标准两态小车" IsReference="False" Rect="1019.30,344.65,14.00,99.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="4" ObjectID1_key="1" ObjectID2_key="2" ObjectID3="295_0" ObjectID3_key="3" ObjectID="271_0" ObjectID1="272_0" ObjectID_key="0" ObjectID2="281_0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="346.08" pointId="0" x="1026.22"/>
+            <KeyConnectNode y="360.61" pointId="1" x="1026.06"/>
+            <KeyConnectNode y="425.76" pointId="2" x="1026.22"/>
+            <KeyConnectNode y="441.89" pointId="3" x="1026.06"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="367">
+        <use y="0" xlink:href="#DollyBreaker:xc2416312832@0" transform="rotate(180.00,0,0) scale(1.00,1.00) translate(-555.24,-598.19)" width="14.00" height="99.00" class="KV0" bound="541.24,499.19,555.24,598.19" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="6" UTShapeName="标准两态小车" IsReference="False" Rect="541.24,499.19,14.00,99.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="4" ObjectID1_key="1" ObjectID2_key="2" ObjectID3="1856_0" ObjectID3_key="3" ObjectID="374_0" ObjectID1="370_0" ObjectID_key="0" ObjectID2="369_0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="596.75" pointId="0" x="548.32"/>
+            <KeyConnectNode y="582.22" pointId="1" x="548.48"/>
+            <KeyConnectNode y="517.07" pointId="2" x="548.32"/>
+            <KeyConnectNode y="500.94" pointId="3" x="548.48"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="522">
+        <use y="0" xlink:href="#DollyBreaker:xc2416312832@0" transform="rotate(180.00,0,0) scale(1.00,1.00) translate(-873.11,-601.88)" width="14.00" height="99.00" class="KV0" bound="859.11,502.88,873.11,601.88" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="6" UTShapeName="标准两态小车" IsReference="False" Rect="859.11,502.88,14.00,99.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="4" ObjectID1_key="1" ObjectID2_key="2" ObjectID3="2437_0" ObjectID3_key="3" ObjectID="529_0" ObjectID1="524_0" ObjectID_key="0" ObjectID2="525_0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="600.44" pointId="0" x="866.19"/>
+            <KeyConnectNode y="585.91" pointId="1" x="866.35"/>
+            <KeyConnectNode y="520.77" pointId="2" x="866.19"/>
+            <KeyConnectNode y="504.64" pointId="3" x="866.35"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="558">
+        <use y="0" xlink:href="#DollyBreaker:xc2416312832@0" transform="rotate(180.00,0,0) scale(1.00,1.00) translate(-1191.40,-604.27)" width="14.00" height="99.00" class="KV0" bound="1177.40,505.27,1191.40,604.27" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="6" UTShapeName="标准两态小车" IsReference="False" Rect="1177.40,505.27,14.00,99.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="560_0" ObjectID1="3009_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="602.83" pointId="0" x="1184.48"/>
+            <KeyConnectNode y="588.30" pointId="1" x="1184.64"/>
+            <KeyConnectNode y="523.16" pointId="2" x="1184.48"/>
+            <KeyConnectNode y="507.03" pointId="3" x="1184.64"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="672">
+        <use y="0" xlink:href="#DollyBreaker:xc2416312832@0" transform="rotate(180.00,0,0) scale(1.00,1.00) translate(-1470.56,-604.15)" width="14.00" height="99.00" class="KV0" bound="1456.56,505.15,1470.56,604.15" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="6" UTShapeName="标准两态小车" IsReference="False" Rect="1456.56,505.15,14.00,99.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID1_key="1" ObjectID="674_0" ObjectID1="3095_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="602.72" pointId="0" x="1463.64"/>
+            <KeyConnectNode y="588.19" pointId="1" x="1463.80"/>
+            <KeyConnectNode y="523.04" pointId="2" x="1463.64"/>
+            <KeyConnectNode y="506.91" pointId="3" x="1463.80"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum=""/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="959">
+        <use y="0" xlink:href="#EnergyConsumer:jd2685337600_0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(929.78,744.02)" width="16.00" height="16.00" class="KV0" bound="929.78,744.02,945.78,760.02" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="5" UTShapeName="接地线" IsReference="False" Rect="929.78,744.02,16.00,16.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="1041_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="RAND_959" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="744.36" pointId="0" x="937.60"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum="RAND_959"/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="1090">
+        <use y="0" xlink:href="#EnergyConsumer:jd2685337600_0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1238.37,745.81)" width="16.00" height="16.00" class="KV0" bound="1238.37,745.81,1254.37,761.81" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="5" UTShapeName="接地线" IsReference="False" Rect="1238.37,745.81,16.00,16.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="1094_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="RAND_959" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="746.15" pointId="0" x="1246.19"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum="RAND_959"/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="1250">
+        <use y="0" xlink:href="#EnergyConsumer:jd2685337600_0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(612.75,744.56)" width="16.00" height="16.00" class="KV0" bound="612.75,744.56,628.75,760.56" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="5" UTShapeName="接地线" IsReference="False" Rect="612.75,744.56,16.00,16.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="1254_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="RAND_959" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="744.90" pointId="0" x="620.57"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum="RAND_959"/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="1399">
+        <use y="0" xlink:href="#EnergyConsumer:jd2685337600_0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1519.57,745.10)" width="16.00" height="16.00" class="KV0" bound="1519.57,745.10,1535.57,761.10" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="5" UTShapeName="接地线" IsReference="False" Rect="1519.57,745.10,16.00,16.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="1403_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="RAND_959" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="745.44" pointId="0" x="1527.38"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum="RAND_959"/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="5774">
+        <use y="0" xlink:href="#Other:26869760632686976063_0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(201.13,1038.27)" width="45.00" height="45.00" class="KV0" bound="201.13,1038.27,246.13,1083.27" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="" UTShapeName="其他" IsReference="False" Rect="201.13,1038.27,45.00,45.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="5725_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="RAND_5774" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="1039.86" pointId="0" x="213.62"/>
+            <KeyConnectNode y="1040.01" pointId="1" x="233.14"/>
+            <KeyConnectNode y="1060.77" pointId="2" x="244.54"/>
+            <KeyConnectNode y="1060.77" pointId="3" x="202.73"/>
+            <KeyConnectNode y="1081.67" pointId="4" x="213.62"/>
+            <KeyConnectNode y="1081.82" pointId="5" x="233.00"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum="RAND_5774"/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="5808">
+        <use y="0" xlink:href="#Other:26869760632686976063_0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(418.83,1039.91)" width="45.00" height="45.00" class="KV0" bound="418.83,1039.91,463.83,1084.91" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="" UTShapeName="其他" IsReference="False" Rect="418.83,1039.91,45.00,45.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="5764_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="RAND_5774" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="1041.50" pointId="0" x="431.31"/>
+            <KeyConnectNode y="1041.65" pointId="1" x="450.83"/>
+            <KeyConnectNode y="1062.41" pointId="2" x="462.23"/>
+            <KeyConnectNode y="1062.41" pointId="3" x="420.42"/>
+            <KeyConnectNode y="1083.31" pointId="4" x="431.31"/>
+            <KeyConnectNode y="1083.46" pointId="5" x="450.69"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum="RAND_5774"/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="5913">
+        <use y="0" xlink:href="#Other:26869760632686976063_0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(623.54,1039.18)" width="45.00" height="45.00" class="KV0" bound="623.54,1039.18,668.54,1084.18" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="" UTShapeName="其他" IsReference="False" Rect="623.54,1039.18,45.00,45.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="5911_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="RAND_5774" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="1040.78" pointId="0" x="636.02"/>
+            <KeyConnectNode y="1040.92" pointId="1" x="655.54"/>
+            <KeyConnectNode y="1061.68" pointId="2" x="666.94"/>
+            <KeyConnectNode y="1061.68" pointId="3" x="625.13"/>
+            <KeyConnectNode y="1082.58" pointId="4" x="636.02"/>
+            <KeyConnectNode y="1082.73" pointId="5" x="655.40"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum="RAND_5774"/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="5917">
+        <use y="0" xlink:href="#Other:26869760632686976063_0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(841.23,1040.82)" width="45.00" height="45.00" class="KV0" bound="841.23,1040.82,886.23,1085.82" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="" UTShapeName="其他" IsReference="False" Rect="841.23,1040.82,45.00,45.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="5912_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="RAND_5774" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="1042.42" pointId="0" x="853.71"/>
+            <KeyConnectNode y="1042.56" pointId="1" x="873.24"/>
+            <KeyConnectNode y="1063.32" pointId="2" x="884.63"/>
+            <KeyConnectNode y="1063.32" pointId="3" x="842.83"/>
+            <KeyConnectNode y="1084.23" pointId="4" x="853.71"/>
+            <KeyConnectNode y="1084.37" pointId="5" x="873.09"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum="RAND_5774"/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="6110">
+        <use y="0" xlink:href="#Other:26869760632686976063_0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1116.46,1042.60)" width="45.00" height="45.00" class="KV0" bound="1116.46,1042.60,1161.46,1087.60" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="" UTShapeName="其他" IsReference="False" Rect="1116.46,1042.60,45.00,45.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="6108_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="RAND_5774" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="1044.20" pointId="0" x="1128.94"/>
+            <KeyConnectNode y="1044.35" pointId="1" x="1148.46"/>
+            <KeyConnectNode y="1065.11" pointId="2" x="1159.86"/>
+            <KeyConnectNode y="1065.11" pointId="3" x="1118.05"/>
+            <KeyConnectNode y="1086.01" pointId="4" x="1128.94"/>
+            <KeyConnectNode y="1086.16" pointId="5" x="1148.32"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum="RAND_5774"/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="6114">
+        <use y="0" xlink:href="#Other:26869760632686976063_0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1334.15,1044.25)" width="45.00" height="45.00" class="KV0" bound="1334.15,1044.25,1379.15,1089.25" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="" UTShapeName="其他" IsReference="False" Rect="1334.15,1044.25,45.00,45.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="6109_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="RAND_5774" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="1045.84" pointId="0" x="1346.63"/>
+            <KeyConnectNode y="1045.99" pointId="1" x="1366.16"/>
+            <KeyConnectNode y="1066.75" pointId="2" x="1377.55"/>
+            <KeyConnectNode y="1066.75" pointId="3" x="1335.74"/>
+            <KeyConnectNode y="1087.65" pointId="4" x="1346.63"/>
+            <KeyConnectNode y="1087.80" pointId="5" x="1366.01"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum="RAND_5774"/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="6125">
+        <use y="0" xlink:href="#Other:26869760632686976063_0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1538.86,1043.52)" width="45.00" height="45.00" class="KV0" bound="1538.86,1043.52,1583.86,1088.52" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="" UTShapeName="其他" IsReference="False" Rect="1538.86,1043.52,45.00,45.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="6123_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="RAND_5774" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="1045.11" pointId="0" x="1551.34"/>
+            <KeyConnectNode y="1045.26" pointId="1" x="1570.87"/>
+            <KeyConnectNode y="1066.02" pointId="2" x="1582.26"/>
+            <KeyConnectNode y="1066.02" pointId="3" x="1540.46"/>
+            <KeyConnectNode y="1086.92" pointId="4" x="1551.34"/>
+            <KeyConnectNode y="1087.07" pointId="5" x="1570.72"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum="RAND_5774"/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+      <g id="6129">
+        <use y="0" xlink:href="#Other:26869760632686976063_0" transform="rotate(0.00,0,0) scale(1.00,1.00) translate(1756.55,1045.16)" width="45.00" height="45.00" class="KV0" bound="1756.55,1045.16,1801.55,1090.16" x="0"/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="" UTShapeName="其他" IsReference="False" Rect="1756.55,1045.16,45.00,45.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="1" ObjectID="6124_0" ObjectID_key="0"/>
+          <PowerData SubType="" StationName="" Description="" PointName="RAND_5774" VoltLevel="0kV"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="1046.76" pointId="0" x="1769.03"/>
+            <KeyConnectNode y="1046.90" pointId="1" x="1788.56"/>
+            <KeyConnectNode y="1067.66" pointId="2" x="1799.95"/>
+            <KeyConnectNode y="1067.66" pointId="3" x="1758.15"/>
+            <KeyConnectNode y="1088.56" pointId="4" x="1769.03"/>
+            <KeyConnectNode y="1088.71" pointId="5" x="1788.41"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="1" ObjectDevNum="RAND_5774"/>
+          <cge:PSR_Ref_MAP ycID="" linkType="none" file="" ycAttr="" svgFileName=""/>
+        </metadata>
+      </g>
+    </g>
+    <g id="ConnectiveNodeClass">
+      <g id="271">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1027.39 360.615 L1027.39 380.44 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1027.39,360.61,0.00,19.83" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="265_1" ObjectID1="270_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="360.61" pointId="0" x="1027.39"/>
+            <KeyConnectNode y="380.44" pointId="1" x="1027.39"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_271"/>
+        </metadata>
+      </g>
+      <g id="272">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1027.4 404.016 L1027.4 425.763 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1027.40,404.02,0.00,21.75" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="270_1" ObjectID1="265_2"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="404.02" pointId="0" x="1027.40"/>
+            <KeyConnectNode y="425.76" pointId="1" x="1027.40"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_272"/>
+        </metadata>
+      </g>
+      <g id="281">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1027.55 346.084 L1027.55 326.439 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1027.55,326.44,0.00,19.65" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="265_0" ObjectID1="276_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="346.08" pointId="0" x="1027.55"/>
+            <KeyConnectNode y="326.44" pointId="1" x="1027.55"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_281"/>
+        </metadata>
+      </g>
+      <g id="295">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1026.06 441.89 L1026.06 470.028 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1026.06,441.89,0.00,28.14" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="265_3" ObjectID1="1_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="441.89" pointId="0" x="1026.06"/>
+            <KeyConnectNode y="470.03" pointId="1" x="1026.06"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_295"/>
+        </metadata>
+      </g>
+      <g id="369">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M548.481 582.218 L548.481 562.392 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="548.48,562.39,0.00,19.83" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="367_1" ObjectID1="368_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="582.22" pointId="0" x="548.48"/>
+            <KeyConnectNode y="562.39" pointId="1" x="548.48"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_369"/>
+        </metadata>
+      </g>
+      <g id="370">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M548.476 538.825 L548.32 517.07 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="548.32,517.07,0.16,21.76" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="368_1" ObjectID1="367_2"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="538.82" pointId="0" x="548.48"/>
+            <KeyConnectNode y="517.07" pointId="1" x="548.32"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_370"/>
+        </metadata>
+      </g>
+      <g id="374">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M548.481 500.942 L548.481 470.028 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="548.48,470.03,0.00,30.91" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="367_3" ObjectID1="1_1"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="500.94" pointId="0" x="548.48"/>
+            <KeyConnectNode y="470.03" pointId="1" x="548.48"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_374"/>
+        </metadata>
+      </g>
+      <g id="524">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M866.351 585.913 L866.194 566.088 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="866.19,566.09,0.16,19.83" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="522_1" ObjectID1="523_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="585.91" pointId="0" x="866.35"/>
+            <KeyConnectNode y="566.09" pointId="1" x="866.19"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_524"/>
+        </metadata>
+      </g>
+      <g id="525">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M866.19 542.512 L866.19 520.765 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="866.19,520.76,0.00,21.75" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="523_1" ObjectID1="522_2"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="542.51" pointId="0" x="866.19"/>
+            <KeyConnectNode y="520.76" pointId="1" x="866.19"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_525"/>
+        </metadata>
+      </g>
+      <g id="529">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M866.351 504.638 L866.351 470.028 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="866.35,470.03,0.00,34.61" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="522_3" ObjectID1="1_7"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="504.64" pointId="0" x="866.35"/>
+            <KeyConnectNode y="470.03" pointId="1" x="866.35"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_529"/>
+        </metadata>
+      </g>
+      <g id="560">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1184.64 588.304 L1184.64 568.479 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1184.64,568.48,0.00,19.83" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="558_1" ObjectID1="559_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="588.30" pointId="0" x="1184.64"/>
+            <KeyConnectNode y="568.48" pointId="1" x="1184.64"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_560"/>
+        </metadata>
+      </g>
+      <g id="561">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1558.92 644.903 L1558.76 623.156 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1558.76,623.16,0.16,21.75" CimId="" TextID=""/>
+          <CN_Ref PinNum="2"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="644.90" pointId="0" x="1558.92"/>
+            <KeyConnectNode y="623.16" pointId="1" x="1558.76"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_561"/>
+        </metadata>
+      </g>
+      <g id="565">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1558.92 607.029 L1558.92 570.028 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1558.92,570.03,0.00,37.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="607.03" pointId="0" x="1558.92"/>
+            <KeyConnectNode y="570.03" pointId="1" x="1558.92"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_565"/>
+        </metadata>
+      </g>
+      <g id="674">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1463.8 588.185 L1463.8 568.36 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1463.80,568.36,0.00,19.83" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="672_1" ObjectID1="673_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="588.19" pointId="0" x="1463.80"/>
+            <KeyConnectNode y="568.36" pointId="1" x="1463.80"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_674"/>
+        </metadata>
+      </g>
+      <g id="675">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1838.08 644.784 L1837.93 623.037 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1837.93,623.04,0.16,21.75" CimId="" TextID=""/>
+          <CN_Ref PinNum="2"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="644.78" pointId="0" x="1838.08"/>
+            <KeyConnectNode y="623.04" pointId="1" x="1837.93"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_675"/>
+        </metadata>
+      </g>
+      <g id="679">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1838.09 606.909 L1838.09 570.028 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1838.09,570.03,0.00,36.88" CimId="" TextID=""/>
+          <CN_Ref PinNum="2"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="606.91" pointId="0" x="1838.09"/>
+            <KeyConnectNode y="570.03" pointId="1" x="1838.09"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_679"/>
+        </metadata>
+      </g>
+      <g id="930">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M866.047 618.409 L937.595 618.409 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="866.05,618.41,71.55,0.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="5" ObjectID3="2437_0" ObjectID4="2625_0" ObjectID2="1039_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="618.41" pointId="0" x="866.05"/>
+            <KeyConnectNode y="618.41" pointId="1" x="937.60"/>
+            <KeyConnectNode y="618.41" pointId="2" x="937.60"/>
+            <KeyConnectNode y="618.41" pointId="3" x="866.19"/>
+            <KeyConnectNode y="618.41" pointId="4" x="866.20"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_930"/>
+        </metadata>
+      </g>
+      <g id="1039">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M937.595 618.409 L937.595 673.656 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="937.60,618.41,0.00,55.25" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="930_0" ObjectID1="1038_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="618.41" pointId="0" x="937.60"/>
+            <KeyConnectNode y="673.66" pointId="1" x="937.60"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_1039"/>
+        </metadata>
+      </g>
+      <g id="1041">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M937.603 697.57 L937.603 744.359 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="937.60,697.57,0.00,46.79" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="1038_1" ObjectID1="959_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="697.57" pointId="0" x="937.60"/>
+            <KeyConnectNode y="744.36" pointId="1" x="937.60"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_1041"/>
+        </metadata>
+      </g>
+      <g id="1092">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1246.19 620.197 L1246.19 675.444 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1246.19,620.20,0.00,55.25" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="1096_0" ObjectID1="1091_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="620.20" pointId="0" x="1246.19"/>
+            <KeyConnectNode y="675.44" pointId="1" x="1246.19"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_1092"/>
+        </metadata>
+      </g>
+      <g id="1094">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1246.19 699.358 L1246.19 746.147 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1246.19,699.36,0.00,46.79" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="1091_1" ObjectID1="1090_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="699.36" pointId="0" x="1246.19"/>
+            <KeyConnectNode y="746.15" pointId="1" x="1246.19"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_1094"/>
+        </metadata>
+      </g>
+      <g id="1096">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1184.48 620.197 L1246.19 620.197 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1184.48,620.20,61.71,0.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID="3009_0" ObjectID2="1092_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="620.20" pointId="0" x="1184.48"/>
+            <KeyConnectNode y="620.20" pointId="1" x="1246.19"/>
+            <KeyConnectNode y="620.20" pointId="2" x="1246.19"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_1096"/>
+        </metadata>
+      </g>
+      <g id="1252">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M620.56 618.947 L620.56 674.194 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="620.56,618.95,0.00,55.25" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="1256_0" ObjectID1="1251_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="618.95" pointId="0" x="620.56"/>
+            <KeyConnectNode y="674.19" pointId="1" x="620.56"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_1252"/>
+        </metadata>
+      </g>
+      <g id="1254">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M620.568 698.108 L620.568 744.897 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="620.57,698.11,0.00,46.79" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="1251_1" ObjectID1="1250_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="698.11" pointId="0" x="620.57"/>
+            <KeyConnectNode y="744.90" pointId="1" x="620.57"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_1254"/>
+        </metadata>
+      </g>
+      <g id="1256">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M548.32 618.947 L620.56 618.947 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="548.32,618.95,72.24,0.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID="1856_0" ObjectID2="1252_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="618.95" pointId="0" x="548.32"/>
+            <KeyConnectNode y="618.95" pointId="1" x="620.56"/>
+            <KeyConnectNode y="618.95" pointId="2" x="620.56"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_1256"/>
+        </metadata>
+      </g>
+      <g id="1401">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1527.38 620.077 L1527.38 674.735 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1527.38,620.08,0.00,54.66" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="1405_0" ObjectID1="1400_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="620.08" pointId="0" x="1527.38"/>
+            <KeyConnectNode y="674.74" pointId="1" x="1527.38"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_1401"/>
+        </metadata>
+      </g>
+      <g id="1403">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1527.38 698.65 L1527.38 745.439 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1527.38,698.65,0.00,46.79" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="1400_1" ObjectID1="1399_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="698.65" pointId="0" x="1527.38"/>
+            <KeyConnectNode y="745.44" pointId="1" x="1527.38"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_1403"/>
+        </metadata>
+      </g>
+      <g id="1405">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1463.64 620.077 L1528.81 620.077 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1463.64,620.08,65.17,0.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID="3095_0" ObjectID2="1401_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="620.08" pointId="0" x="1463.64"/>
+            <KeyConnectNode y="620.08" pointId="1" x="1528.81"/>
+            <KeyConnectNode y="620.08" pointId="2" x="1527.38"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_1405"/>
+        </metadata>
+      </g>
+      <g id="1856">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M548.32 596.749 L548.32 676.152 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="548.32,596.75,0.00,79.40" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID="367_0" ObjectID1="1832_0" ObjectID2="1256_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="596.75" pointId="0" x="548.32"/>
+            <KeyConnectNode y="676.15" pointId="1" x="548.32"/>
+            <KeyConnectNode y="618.95" pointId="2" x="548.32"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_1856"/>
+        </metadata>
+      </g>
+      <g id="2437">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M866.19 600.444 L866.19 618.409 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="866.19,600.44,0.00,17.97" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="522_0" ObjectID1="930_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="600.44" pointId="0" x="866.19"/>
+            <KeyConnectNode y="618.41" pointId="1" x="866.19"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_2437"/>
+        </metadata>
+      </g>
+      <g id="2625">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M866.2 618.409 L866.2 674.153 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="866.20,618.41,0.00,55.74" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="930_0" ObjectID1="2683_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="618.41" pointId="0" x="866.20"/>
+            <KeyConnectNode y="674.15" pointId="1" x="866.20"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_2625"/>
+        </metadata>
+      </g>
+      <g id="2765">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M866.207 698.067 L866.207 739.748 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="866.21,698.07,0.00,41.68" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="2683_1" ObjectID1="526_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="698.07" pointId="0" x="866.21"/>
+            <KeyConnectNode y="739.75" pointId="1" x="866.21"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_2765"/>
+        </metadata>
+      </g>
+      <g id="3009">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1184.48 602.835 L1184.48 676.049 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1184.48,602.84,0.00,73.21" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID="558_0" ObjectID1="2982_0" ObjectID2="1096_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="602.84" pointId="0" x="1184.48"/>
+            <KeyConnectNode y="676.05" pointId="1" x="1184.48"/>
+            <KeyConnectNode y="620.20" pointId="2" x="1184.48"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_3009"/>
+        </metadata>
+      </g>
+      <g id="3011">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1184.48 699.963 L1184.48 742.48 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1184.48,699.96,0.00,42.52" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="2982_1" ObjectID1="562_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="699.96" pointId="0" x="1184.48"/>
+            <KeyConnectNode y="742.48" pointId="1" x="1184.48"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_3011"/>
+        </metadata>
+      </g>
+      <g id="3095">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1463.64 602.716 L1463.64 673.663 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1463.64,602.72,0.00,70.95" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID="672_0" ObjectID1="3067_0" ObjectID2="1405_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="602.72" pointId="0" x="1463.64"/>
+            <KeyConnectNode y="673.66" pointId="1" x="1463.64"/>
+            <KeyConnectNode y="620.08" pointId="2" x="1463.64"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_3095"/>
+        </metadata>
+      </g>
+      <g id="3097">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1463.65 697.578 L1463.65 786.161 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1463.65,697.58,0.00,88.58" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="3067_1" ObjectID1="6098_1"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="697.58" pointId="0" x="1463.65"/>
+            <KeyConnectNode y="786.16" pointId="1" x="1463.65"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_3097"/>
+        </metadata>
+      </g>
+      <g id="4551">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M548.327 700.066 L548.327 781.821 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="548.33,700.07,0.00,81.76" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="1832_1" ObjectID1="4522_1"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="700.07" pointId="0" x="548.33"/>
+            <KeyConnectNode y="781.82" pointId="1" x="548.33"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_4551"/>
+        </metadata>
+      </g>
+      <g id="4553">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M548.332 805.397 L548.332 856.394 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="548.33,805.40,0.00,51.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="4522_0" ObjectID1="4389_1"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="805.40" pointId="0" x="548.33"/>
+            <KeyConnectNode y="856.39" pointId="1" x="548.33"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_4553"/>
+        </metadata>
+      </g>
+      <g id="4878">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M548.447 888.923 L548.447 924.543 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="548.45,888.92,0.00,35.62" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="4389_0" ObjectID1="4911_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="888.92" pointId="0" x="548.45"/>
+            <KeyConnectNode y="924.54" pointId="1" x="548.45"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_4878"/>
+        </metadata>
+      </g>
+      <g id="4911">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M329.805 924.543 L762.207 924.543 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="329.81,924.54,432.40,0.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID="5075_0" ObjectID1="5921_0" ObjectID2="4878_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="924.54" pointId="0" x="329.81"/>
+            <KeyConnectNode y="924.54" pointId="1" x="762.21"/>
+            <KeyConnectNode y="924.54" pointId="2" x="548.45"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_4911"/>
+        </metadata>
+      </g>
+      <g id="5075">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M329.805 924.543 L329.805 951.876 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="329.81,924.54,0.00,27.33" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID1="5110_0" ObjectID2="4911_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="924.54" pointId="0" x="329.81"/>
+            <KeyConnectNode y="951.88" pointId="1" x="329.81"/>
+            <KeyConnectNode y="924.54" pointId="2" x="329.81"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_5075"/>
+        </metadata>
+      </g>
+      <g id="5110">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M233.138 951.876 L431.305 951.876 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="233.14,951.88,198.17,0.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID="5181_0" ObjectID1="5615_0" ObjectID2="5075_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="951.88" pointId="0" x="233.14"/>
+            <KeyConnectNode y="951.88" pointId="1" x="431.31"/>
+            <KeyConnectNode y="951.88" pointId="2" x="329.81"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_5110"/>
+        </metadata>
+      </g>
+      <g id="5181">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M233.138 951.876 L233.138 975.21 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="233.14,951.88,0.00,23.33" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID1="5216_0" ObjectID2="5110_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="951.88" pointId="0" x="233.14"/>
+            <KeyConnectNode y="975.21" pointId="1" x="233.14"/>
+            <KeyConnectNode y="951.88" pointId="2" x="233.14"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_5181"/>
+        </metadata>
+      </g>
+      <g id="5615">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M431.305 951.876 L431.305 974.174 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="431.31,951.88,0.00,22.30" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID1="5252_0" ObjectID2="5110_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="951.88" pointId="0" x="431.31"/>
+            <KeyConnectNode y="974.17" pointId="1" x="431.31"/>
+            <KeyConnectNode y="951.88" pointId="2" x="431.31"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_5615"/>
+        </metadata>
+      </g>
+      <g id="5725">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M233.143 998.785 L233.143 1040.01 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="233.14,998.79,0.00,41.22" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="5216_1" ObjectID1="5774_1"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="998.79" pointId="0" x="233.14"/>
+            <KeyConnectNode y="1040.01" pointId="1" x="233.14"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_5725"/>
+        </metadata>
+      </g>
+      <g id="5764">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M431.31 997.75 L431.31 1041.5 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="431.31,997.75,0.00,43.75" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="5252_1" ObjectID1="5808_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="997.75" pointId="0" x="431.31"/>
+            <KeyConnectNode y="1041.50" pointId="1" x="431.31"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_5764"/>
+        </metadata>
+      </g>
+      <g id="5906">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M655.541 952.789 L853.809 952.789 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="655.54,952.79,198.27,0.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="4" ObjectID3="5910_0" ObjectID="5907_0" ObjectID2="5921_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="952.79" pointId="0" x="655.54"/>
+            <KeyConnectNode y="952.79" pointId="1" x="853.81"/>
+            <KeyConnectNode y="952.79" pointId="2" x="762.21"/>
+            <KeyConnectNode y="952.79" pointId="3" x="853.71"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_5906"/>
+        </metadata>
+      </g>
+      <g id="5907">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M655.541 952.789 L655.541 976.122 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="655.54,952.79,0.00,23.33" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID1="5908_0" ObjectID2="5906_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="952.79" pointId="0" x="655.54"/>
+            <KeyConnectNode y="976.12" pointId="1" x="655.54"/>
+            <KeyConnectNode y="952.79" pointId="2" x="655.54"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_5907"/>
+        </metadata>
+      </g>
+      <g id="5910">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M853.708 952.789 L853.708 975.086 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="853.71,952.79,0.00,22.30" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="5906_0" ObjectID1="5909_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="952.79" pointId="0" x="853.71"/>
+            <KeyConnectNode y="975.09" pointId="1" x="853.71"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_5910"/>
+        </metadata>
+      </g>
+      <g id="5911">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M655.545 999.698 L655.545 1040.92 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="655.55,999.70,0.00,41.22" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="5908_1" ObjectID1="5913_1"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="999.70" pointId="0" x="655.55"/>
+            <KeyConnectNode y="1040.92" pointId="1" x="655.55"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_5911"/>
+        </metadata>
+      </g>
+      <g id="5912">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M853.712 998.662 L853.712 1042.42 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="853.71,998.66,0.00,43.75" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="5909_1" ObjectID1="5917_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="998.66" pointId="0" x="853.71"/>
+            <KeyConnectNode y="1042.42" pointId="1" x="853.71"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_5912"/>
+        </metadata>
+      </g>
+      <g id="5921">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M762.207 924.543 L762.207 952.789 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="762.21,924.54,0.00,28.25" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID1="5906_0" ObjectID2="4911_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="924.54" pointId="0" x="762.21"/>
+            <KeyConnectNode y="952.79" pointId="1" x="762.21"/>
+            <KeyConnectNode y="924.54" pointId="2" x="762.21"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_5921"/>
+        </metadata>
+      </g>
+      <g id="6099">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1463.65 809.737 L1463.65 860.733 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1463.65,809.74,0.00,51.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="6098_0" ObjectID1="6097_1"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="809.74" pointId="0" x="1463.65"/>
+            <KeyConnectNode y="860.73" pointId="1" x="1463.65"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_6099"/>
+        </metadata>
+      </g>
+      <g id="6100">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1463.77 893.263 L1463.77 928.883 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1463.77,893.26,0.00,35.62" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="6097_0" ObjectID1="6101_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="893.26" pointId="0" x="1463.77"/>
+            <KeyConnectNode y="928.88" pointId="1" x="1463.77"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_6100"/>
+        </metadata>
+      </g>
+      <g id="6101">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1245.13 928.883 L1677.53 928.883 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1245.13,928.88,432.40,0.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID="6102_0" ObjectID1="6133_0" ObjectID2="6100_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="928.88" pointId="0" x="1245.13"/>
+            <KeyConnectNode y="928.88" pointId="1" x="1677.53"/>
+            <KeyConnectNode y="928.88" pointId="2" x="1463.77"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_6101"/>
+        </metadata>
+      </g>
+      <g id="6102">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1245.13 928.883 L1245.13 956.216 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1245.13,928.88,0.00,27.33" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID1="6103_0" ObjectID2="6101_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="928.88" pointId="0" x="1245.13"/>
+            <KeyConnectNode y="956.22" pointId="1" x="1245.13"/>
+            <KeyConnectNode y="928.88" pointId="2" x="1245.13"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_6102"/>
+        </metadata>
+      </g>
+      <g id="6103">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1148.46 956.216 L1346.63 956.216 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1148.46,956.22,198.17,0.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID="6104_0" ObjectID1="6107_0" ObjectID2="6102_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="956.22" pointId="0" x="1148.46"/>
+            <KeyConnectNode y="956.22" pointId="1" x="1346.63"/>
+            <KeyConnectNode y="956.22" pointId="2" x="1245.13"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_6103"/>
+        </metadata>
+      </g>
+      <g id="6104">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1148.46 956.216 L1148.46 979.549 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1148.46,956.22,0.00,23.33" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID1="6105_0" ObjectID2="6103_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="956.22" pointId="0" x="1148.46"/>
+            <KeyConnectNode y="979.55" pointId="1" x="1148.46"/>
+            <KeyConnectNode y="956.22" pointId="2" x="1148.46"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_6104"/>
+        </metadata>
+      </g>
+      <g id="6107">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1346.63 956.216 L1346.63 978.514 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1346.63,956.22,0.00,22.30" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID1="6106_0" ObjectID2="6103_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="956.22" pointId="0" x="1346.63"/>
+            <KeyConnectNode y="978.51" pointId="1" x="1346.63"/>
+            <KeyConnectNode y="956.22" pointId="2" x="1346.63"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_6107"/>
+        </metadata>
+      </g>
+      <g id="6108">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1148.47 1003.13 L1148.47 1044.35 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1148.47,1003.12,0.00,41.22" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="6105_1" ObjectID1="6110_1"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="1003.13" pointId="0" x="1148.47"/>
+            <KeyConnectNode y="1044.35" pointId="1" x="1148.47"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_6108"/>
+        </metadata>
+      </g>
+      <g id="6109">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1346.63 1002.09 L1346.63 1045.84 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1346.63,1002.09,0.00,43.75" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="6106_1" ObjectID1="6114_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="1002.09" pointId="0" x="1346.63"/>
+            <KeyConnectNode y="1045.84" pointId="1" x="1346.63"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_6109"/>
+        </metadata>
+      </g>
+      <g id="6118">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1570.86 957.128 L1769.13 957.128 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1570.86,957.13,198.27,0.00" CimId="" TextID=""/>
+          <CN_Ref PinNum="4" ObjectID3="6122_0" ObjectID="6119_0" ObjectID2="6133_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="957.13" pointId="0" x="1570.86"/>
+            <KeyConnectNode y="957.13" pointId="1" x="1769.13"/>
+            <KeyConnectNode y="957.13" pointId="2" x="1677.53"/>
+            <KeyConnectNode y="957.13" pointId="3" x="1769.03"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_6118"/>
+        </metadata>
+      </g>
+      <g id="6119">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1570.86 957.128 L1570.86 980.462 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1570.86,957.13,0.00,23.33" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID1="6120_0" ObjectID2="6118_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="957.13" pointId="0" x="1570.86"/>
+            <KeyConnectNode y="980.46" pointId="1" x="1570.86"/>
+            <KeyConnectNode y="957.13" pointId="2" x="1570.86"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_6119"/>
+        </metadata>
+      </g>
+      <g id="6122">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1769.03 957.128 L1769.03 979.426 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1769.03,957.13,0.00,22.30" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="6118_0" ObjectID1="6121_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="957.13" pointId="0" x="1769.03"/>
+            <KeyConnectNode y="979.43" pointId="1" x="1769.03"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_6122"/>
+        </metadata>
+      </g>
+      <g id="6123">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1570.87 1004.04 L1570.87 1045.26 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1570.87,1004.04,0.00,41.22" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="6120_1" ObjectID1="6125_1"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="1004.04" pointId="0" x="1570.87"/>
+            <KeyConnectNode y="1045.26" pointId="1" x="1570.87"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_6123"/>
+        </metadata>
+      </g>
+      <g id="6124">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1769.03 1003 L1769.03 1046.76 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1769.03,1003.00,0.00,43.75" CimId="" TextID=""/>
+          <CN_Ref PinNum="2" ObjectID="6121_1" ObjectID1="6129_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="1003.00" pointId="0" x="1769.03"/>
+            <KeyConnectNode y="1046.76" pointId="1" x="1769.03"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_6124"/>
+        </metadata>
+      </g>
+      <g id="6133">
+        <path stroke="#ff0000" stroke-linecap="butt" stroke-width="2.00" d="M1677.53 928.883 L1677.53 957.128 "/>
+        <UT_shapedata>
+          <ShapeRef ShapeType="1208" UTShapeName="正交连接线" IsReference="False" Rect="1677.53,928.88,0.00,28.25" CimId="" TextID=""/>
+          <CN_Ref PinNum="3" ObjectID1="6118_0" ObjectID2="6101_0"/>
+          <KeyConnectNodeData>
+            <KeyConnectNode y="928.88" pointId="0" x="1677.53"/>
+            <KeyConnectNode y="957.13" pointId="1" x="1677.53"/>
+            <KeyConnectNode y="928.88" pointId="2" x="1677.53"/>
+          </KeyConnectNodeData>
+        </UT_shapedata>
+        <metadata>
+          <cge:PSR_Ref ObjectStationNum="0" ObjectDevNum="RAND_6133"/>
+        </metadata>
+      </g>
+    </g>
+  </g>
+</svg>
