@@ -1,7 +1,7 @@
 <template>
   <div class="layout-row">
-    <Role />
-    <Route />
+    <Role class="flex1 hh100 rad8 hidden" />
+    <Route class="flex4 hh100 rad8 hidden ml15" />
   </div>
 </template>
 

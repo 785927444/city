@@ -13,10 +13,11 @@
 .trow{width: 100%;display: flex;align-items: center;padding: 12px 5px;box-sizing: border-box; font-weight: bold;}
 .trow > div{padding: 0 5px;box-sizing: border-box;}
 .row{width: 100%;display: flex;align-items: center;padding: 10px 5px;box-sizing: border-box; background: none; transition: background 0.3s ease;}
+.table .row{width: 100%;display: flex;align-items: center;padding: 10px 5px;box-sizing: border-box; background: none; transition: background 0.3s ease; border-bottom: 1px solid #eee;}
 .table .row:hover{background: rgba(0, 101, 255, 0.1) !important; transition: background 0.3s ease; box-sizing: border-box;}
 .row > div{padding: 0 5px;box-sizing: border-box;word-break: break-all;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;line-clamp: 2;-webkit-box-orient: vertical;}
 .row > div > span{vertical-align: middle}
-.active{background: rgba(0, 101, 255, 0.5) !important;}
+.active{background: #e6f7ff !important;}
 .views{background: linear-gradient(90deg, #fa9b64 0%, #d27015 100%);}
 /*经过*/
 .hoverclass{ background-color: #1A57B2 !important; color: #e5e9f1; cursor: pointer;}
@@ -28,30 +29,6 @@
 .buttonStyle{background: rgba(30, 131, 255, 0.2); color: #fff; border: 1px solid #1E83FF}
 .titleStyle{width: 248px; padding: 8px 0; background: linear-gradient(90deg, rgba(12,1,67,0.00) 0%, #242DAB 51%, rgba(12,1,67,0.00) 100%);
 	font-size: 16px;font-weight: 400;color: #fff;display: flex; align-items:center; justify-content: center;margin: 0 auto; margin-bottom: 15px;}
-/*地图*/
-.custom-tooltip-box {min-width: 120px; padding: 10px 15px !important; border-radius: 8px !important; border: 1px solid #aaa !important; color: #fff !important; background: rgba(0, 0, 0, 0.7) !important; box-shadow: 0px 0px 8px 2px rgba(1, 136, 255, 0.5) !important;}
-/*three.js标签*/
-.cssrender {display: flex; position: fixed; top: 0; left: 0; z-index: 100;pointer-events: none;}
-.elementTagLeft {position: relative; left: -150px; top: -100px; width: 220px; height: 50px;}
-.elementTagLeft::before {content: ""; display: block; position: absolute; width: 60px; height: 1px; background: rgb(127 177 255 / 75%); bottom: -70px; right: -60px; transform-origin: 0 0; transform: rotate(30deg);}
-.elementTagLeft::after {content: ""; display: block; position: absolute; width: 8px; height: 8px; background: rgb(127 177 255 / 75%); bottom: -105px; right: -58px; border-radius: 50%;}
-.elementTagRight {position: relative; left: 150px; top: -100px; width: 220px; height: 50px;font-size: 14px;}
-.elementTagRight::before {content: ""; display: block; position: absolute; width: 60px; height: 1px; background: rgb(127 177 255 / 75%); bottom: -70px; right: 159px; transform-origin: 0 0; transform: rotate(120deg);}
-.elementTagRight::after {content: ""; display: block; position: absolute; width: 8px; height: 8px; background: rgb(127 177 255 / 75%); bottom: -126px; right: 246px; border-radius: 50%;}
-.elementContent {background-color: rgb(20 143 221 / 68%); box-shadow: 0px 0px 12px rgb(0 128 255 / 75%); border: 1px solid rgb(127 177 255 / 75%); padding: 0 15px; color: #efefef;}
-.elementTagLefts {position: relative; left: -150px; top: -100px; width: 170px; height: 30px;font-size: 12px;}
-.elementTagLefts::before {content: ""; display: block; position: absolute; width: 50px; height: 1px; background: rgb(127 177 255 / 75%); bottom: -80px; right: -48px; transform-origin: 0 0; transform: rotate(30deg);}
-.elementTagLefts::after {content: ""; display: block; position: absolute; width: 6px; height: 6px; background: rgb(127 177 255 / 75%); bottom: -109px; right: -46px; border-radius: 50%;}
-.elementTagRights {position: relative; left: 100px; top: -100px; width: 170px; height: 30px;font-size: 12px;}
-.elementTagRights::before {content: ""; display: block; position: absolute; width: 50px; height: 1px; background: rgb(127 177 255 / 75%); bottom: -68px; right: 118px; transform-origin: 0 0; transform: rotate(120deg);}
-.elementTagRights::after {content: ""; display: block; position: absolute; width: 6px; height: 6px; background: rgb(127 177 255 / 75%); bottom: -110px; right: 188px; border-radius: 50%;}
-.elementTagLefts2 {position: relative; left: -120px; top: 80px; width: 170px; height: 30px;font-size: 12px;}
-.elementTagLefts2::before {content: ""; display: block; position: absolute; width: 50px; height: 1px; background: rgb(127 177 255 / 75%); bottom: 70px; right: -74px; transform-origin: 0 0; transform: rotate(120deg);}
-.elementTagLefts2::after {content: ""; display: block; position: absolute; width: 6px; height: 6px; background: rgb(127 177 255 / 75%); bottom: 70px; right: -28px; border-radius: 50%;}
-.elementContent .title {font-size: 16px; font-weight: bold; margin: 15px 0;  color: #efefef;}
-.elementContent .titles {font-size: 12px; font-weight: bold; margin: 13px 0;  color: #efefef;}
-.lightspan{background: rgba(0, 0, 0, 0.7); padding: 2px; font-size: 12px; color: #00ffff; width: 20px; height: 20px; text-align: center; line-height: 20px; border-radius: 100%; border: 1px #72aff8 solid}
-
 /* -----------------------自定义样式------------------------*/
 /*阴影*/
 .ba1{background: rgba(4, 30, 74, 0.6);}

@@ -1,11 +1,11 @@
 <template>
   <el-container class="window flex-col">
     <admin-title />
-    <admin-crumb />
-    <div class="layout-row">
+    <div class="layout-row p15">
       <admin-aside />
       <div class="layout-col">
-        <router-view class="p15"/>
+        <admin-crumb />
+        <router-view class="plr15"/>
       </div>
     </div>
   </el-container>

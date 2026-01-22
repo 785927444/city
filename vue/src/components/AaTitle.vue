@@ -1,14 +1,11 @@
 <template>
-  <div class="ww100 h40 flex-col relative mb5">
-    <div class="ww100 hh100 flex-ss hidden">
-      <img class="hh100" src="@/assets/imgs/title-l.png" />
-      <img class="hh100 ww100" src="@/assets/imgs/title-r.png" />
+  <div class="ww100 h60 flex-sc white-rgba50 rad8 plr15 mb15">
+    <div class="flex-sc">
+      <span>{{ title?title:'' }}</span>
+      <slot name="left-content"></slot>
     </div>
-    <div class="ww100 hh100 flex-sc pl35 pr5 absolute">
-      <span class="fw f15">{{ title }}</span>
-      <div class="flex-ec flex1">
-        <slot name="right-content"></slot>
-      </div>
+    <div class="flex-ec flex1 hidden">
+      <slot name="right-content"></slot>
     </div>
   </div>
 </template>
@@ -23,5 +20,5 @@
 </script>
 
 <style scoped lang="scss">
-.hh{height: 40px !important;}
+
 </style>

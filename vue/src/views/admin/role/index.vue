@@ -1,46 +1,21 @@
 <template>
   <div class="layout-col">
-    <div class="layout-col flex2">
-      <!-- 标题 -->
-      <div class="h40 ww100 flex-sc relative mb10">
-        <img class="hh100" src="@/assets/imgs/title4.png" />
-        <div class="ww100 hh100 flex-sc absolute pl35">
-          <span class="fw flex1 ptb5">角色列表</span>
-          <div class="flex-ec flex1">
-              <div class="rad4 ptb5 plr8 flex-cc cursor bgi22 i21 ml10 bo-i21-1" 
-              v-if="state.content.find(v=>{return typeof(v.key) == 'object'}) && state.content.find(v=>{return typeof(v.key) == 'object'})['key'].hasOwnProperty('add')" 
-              @click.stop="handleClick('add', state.addItem)">
-              <i-ep-plus class="f12 fw" /><span class="f14 ml4">{{state.content.find(v=>{return typeof(v.key) == 'object'})['key'].add}}</span>
-            </div>
-          </div>
+    <!-- 标题 -->
+    <aa-title title="角色列表">
+      <template #left-content></template>
+      <template #right-content>
+        <div class="rad4 ptb5 plr8 flex-cc cursor bgi1 white ml10" 
+          v-if="state.content.find(v=>{return typeof(v.key) == 'object'}) && state.content.find(v=>{return typeof(v.key) == 'object'})['key'].hasOwnProperty('add')" 
+          @click.stop="addRef.onVisable(state.addItem)">
+          <i-ep-plus class="f12 fw" /><span class="f14 ml2">{{state.content.find(v=>{return typeof(v.key) == 'object'})['key'].add}}</span>
         </div>
-      </div>
-      <!-- 内容 -->
-      <div class="row bgi22">
-        <div :style="{textAlign: v.align}" v-for="(v, i) in state.content" :key="i" v-show="v.show" :class="typeof(v.key) == 'object'?v.width +' '+ 'mlr5':v.width">{{v.name}}</div>
-      </div>
-      <div class="table bss">
-        <div class="row" :class="publicStore.active[state.key] == item[state.key]?'active':index%2 == 1?'bgi23':'bgi18'" v-for="(item, index) in state.list" :key="index" @click="handleClick('active', item)">
-          <div v-show="v.show" :class="v.width" :style="{textAlign: v.align}" v-for="(v, i) in state.content" :key="i">
-            <span v-if="typeof(v.key) == 'object'" class="cursor mlr5" :class="kk=='add'||state.auth[kk] == false?'none':kk=='del'?'i8':'i21'" 
-            v-for="(vv, kk, ii) in v.key" :key="ii" @click.stop="handleClick(kk, item)">{{vv}}</span>
-            <span v-else-if="v.key=='*'">{{(state.page-1)*state.limit + index+1}}</span>
-            <span v-else-if="v.type == 'time'">{{item[v.key] == 0?'/':parseTime(item[v.key])}}</span>
-            <span v-else-if="v.type == 'select'" :class="find(v.list, [v.value, item[v.key]], 'color')?find(v.list, [v.value, item[v.key]], 'color'):''">
-              {{find(v.list, [v.value, item[v.key]], v.label)}}
-            </span>
-            <span v-else-if="v.type == 'switch'">
-              <el-switch v-model="item[v.key]" :active-text="v.value[1].name" :inactive-text="v.value[0].name" :active-value="v.value[1].value" :inactive-value="v.value[0].value" inline-prompt @change="handleClick('switch', item)"></el-switch>
-            </span>
-            <span v-else-if="v.type == 'input'"><el-input v-model="item[v.value]" placeholder="请输入" style="width: 150px;" size="small" /></span>
-            <span v-else-if="v.type == 'preload'">{{item[v.filed]}}</span>
-            <span v-else>{{isNull(item[v.key]) && v.key!=''? '/' : item[v.key]}}</span>
-          </div>
-        </div>
-        <div v-if="state.empty" class="flex-cc ww100 tc ptb13 bgi18">没有数据</div>
-      </div>
-      <Add @init="init" :state="state" ref="addRef" />
+      </template>
+    </aa-title>
+    <!-- 内容 -->
+    <div class="layout-col white-rgba50 rad8 p15">
+      <List @handleClick="handleClick" :state="state"/>
     </div>
+    <Add @init="init" :state="state" ref="addRef" />
   </div>
 </template>
 

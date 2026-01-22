@@ -20,19 +20,19 @@ router.beforeEach(async (to: any, from: any, next) => {
     await publicStore().http({Api: {}}, '/api/v1/terminal/base/csrfToken', {}, 'get')
   }
   // 全局配置
-  if(isNull(configStore().configs) && configStore().key){
-    let query = {model: "t_config", args: `name='${configStore().key}'`}
-    publicStore().http({Api: query}).then(res=>{
-      if(isNull(res)) return
-      if(!res[0].attr) return
-      try {
-        let attr = JSON.parse(res[0].attr)
-        configStore().configs = attr.reduce((acc, {code, value}) => ({...acc, [code]: value}), {})
-      } catch (err) {
-        console.error(err)
-      }
-    })
-  }
+  // if(isNull(configStore().configs) && configStore().key){
+  //   let query = {model: "t_config", args: `name='${configStore().key}'`}
+  //   publicStore().http({Api: query}).then(res=>{
+  //     if(isNull(res)) return
+  //     if(!res[0].attr) return
+  //     try {
+  //       let attr = JSON.parse(res[0].attr)
+  //       configStore().configs = attr.reduce((acc, {code, value}) => ({...acc, [code]: value}), {})
+  //     } catch (err) {
+  //       console.error(err)
+  //     }
+  //   })
+  // }
   // 无需登录
   if(!configStore().isLogin) return next() 
   // 登录地址

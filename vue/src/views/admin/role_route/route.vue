@@ -1,40 +1,39 @@
 <template>
-  <div class="layout-col flex3 ml15">
+  <div class="layout-col">
     <!-- 标题 -->
-    <div class="h40 ww100 flex-sc relative mb10">
-      <img class="hh100" src="@/assets/imgs/title3.png" />
-      <div class="ww100 hh100 flex-sc absolute pl35">
-        <span class="fw flex1 ptb5">{{isNull(publicStore.active)?'':publicStore.active.name + ' - 路由配置'}}</span>
-        <div class="flex-ec flex1">
-          <el-form class="ww100 flex-ec" :model="state.from" label-width="115px" v-if="state.auth.upd">
-            <div class="rad4 ptb5 plr8 flex-cc cursor bgi22 i21 ml10 bo-i21-1" @click.stop="handleSubmit(formRef)">
-              <i-ep-connection class="f12 fw" /><span class="f14 ml2">保存</span>
-            </div>
-          </el-form>
-        </div>
-      </div>
-    </div>
+    <aa-title :title="isNull(publicStore.active)?'':publicStore.active.name + ' - 路由配置'">
+      <template #left-content></template>
+      <template #right-content>
+        <el-form class="ww100 flex-ec" :model="state.from" label-width="115px" v-if="state.auth.upd">
+          <div class="rad4 ptb5 plr8 flex-cc cursor bgi1 white ml10" @click.stop="handleSubmit(formRef)">
+            <i-ep-connection class="f12 fw" /><span class="f14 ml2">保存</span>
+          </div>
+        </el-form>
+      </template>
+    </aa-title>
     <!-- 内容 -->
-    <div class="row bgi22">
-      <div :style="{textAlign: v.align, paddingRight: v.name=='操作'?'10px': 'inherit'}" v-for="(v, i) in state.content" :key="i" v-show="v.show" :class="v.width">{{v.name}}</div>
-    </div>
-    <div class="table-col bss">
-      <el-tree 
-        :data="state.tree" 
-        :props="defaultProps" 
-        :default-expand-all="true"
-        :node-key="state.key"
-        ref="treeRef"
-        class="ww100"
-        highlight-current
-        empty-text="暂无数据"
-        show-checkbox>
-        <template #default="{ node, data }">
-          <span class="flex-bc">
-            <span>{{ node.label }}</span>
-          </span>
-        </template>
-      </el-tree>
+    <div class="layout-col white-rgba50 rad8 p15">
+      <div class="row">
+        <div :style="{textAlign: v.align, paddingRight: v.name=='操作'?'10px': 'inherit'}" v-for="(v, i) in state.content" :key="i" v-show="v.show" :class="v.width">{{v.name}}</div>
+      </div>
+      <div class="table-col bg-white">
+        <el-tree 
+          :data="state.tree" 
+          :props="defaultProps" 
+          :default-expand-all="true"
+          :node-key="state.key"
+          ref="treeRef"
+          class="ww100"
+          highlight-current
+          empty-text="暂无数据"
+          show-checkbox>
+          <template #default="{ node, data }">
+            <span class="flex-bc">
+              <span>{{ node.label }}</span>
+            </span>
+          </template>
+        </el-tree>
+      </div>
     </div>
   </div>
 </template>

@@ -40,7 +40,6 @@ onMounted(async() => {
   document.addEventListener('contextmenu', handleContextMenu)
   document.addEventListener('keydown', handleKeyDown)
   createScheduled('detectDevTools', 1000, () =>  detectDevTools())
-  createScheduled('checkLgoin', 10000, () =>  checkLgoin())
 })
 
 onUnmounted(() => {
@@ -67,15 +66,6 @@ const handleKeyDown = (e) => {
   }
   if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') ||  (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.key === 'U')) {
     if(!configStore.debugger) e.preventDefault()
-  }
-}
-// 检查登录
-const checkLgoin = async() => {
-  if(configStore.config && configStore.config.checkLogin){
-    if(proxy.isNull(configStore.tourist)) return
-    let query = {model: "t_user", args: `username='${configStore.tourist.username}'`}
-    let res = await publicStore.http({Api: query})
-    console.log("登录检查结果res---", res)
   }
 }
 // 综合检测

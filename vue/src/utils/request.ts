@@ -3,6 +3,7 @@
   import configStore from '../stores/configStore'
   import publicStore from '../stores/publicStore'
   import { isNull, getHttp, toPath, encryptData, decryptData, encrypt, setLog } from "../utils/common"
+  import { findNode } from "../utils/tree"
   // 基础配置
   const service = axios.create({
     baseURL: "",
@@ -19,7 +20,15 @@
     headers['X-CSRF-Token'] = configStore().csrfToken
     headers['AuthToken'] = configStore().secret_key? 'xyz'+ encrypt('xyz'+configStore().secret_key) : ''
     headers['Authorization'] = configStore().token || ''
+    headers['Refresh'] = false
     req.baseURL = getHttp(req)
+    if(!isNull(configStore().routes)){
+      const path = window.location.hash.replace('#', '') || '/'
+      if(path){
+        const node = findNode(configStore().routes, (n) => { return n.path && n.path == path })
+        if(node) headers['Refresh'] = true
+      }
+    }
     if(configStore().secret_key){
       if (!req.status && !configStore().debugapi && configStore().config && !configStore().config.secret) {
         if(req.url.indexOf('/terminal') != -1){

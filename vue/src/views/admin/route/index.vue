@@ -2,46 +2,19 @@
   <div class="layout-col">
     <div class="layout-col">
       <!-- 标题 -->
-      <div class="h40 ww100 flex-sc relative mb10">
-        <img class="hh100" src="@/assets/imgs/title4.png" />
-        <div class="ww100 hh100 flex-sc absolute pl35">
-          <span class="fw flex1 ptb5">路由列表</span>
-          <div class="flex-ec flex1">
-              <div class="rad4 ptb5 plr8 flex-cc cursor bgi22 i21 ml10 bo-i21-1" 
-              v-if="state.content.find(v=>{return typeof(v.key) == 'object'}) && state.content.find(v=>{return typeof(v.key) == 'object'})['key'].hasOwnProperty('add')" 
-              @click.stop="handleClick('add', state.addItem)">
-              <i-ep-plus class="f12 fw" /><span class="f14 ml4">{{state.content.find(v=>{return typeof(v.key) == 'object'})['key'].add}}</span>
-            </div>
+      <aa-title title="路由列表">
+        <template #left-content></template>
+        <template #right-content>
+          <div class="rad4 ptb5 plr8 flex-cc cursor bgi1 white ml10" 
+            v-if="state.content.find(v=>{return typeof(v.key) == 'object'}) && state.content.find(v=>{return typeof(v.key) == 'object'})['key'].hasOwnProperty('add')" 
+            @click.stop="addRef.onVisable(state.addItem)">
+            <i-ep-plus class="f12 fw" /><span class="f14 ml2">{{state.content.find(v=>{return typeof(v.key) == 'object'})['key'].add}}</span>
           </div>
-        </div>
-      </div>
+        </template>
+      </aa-title>
       <!-- 内容 -->
-      <div class="row bgi22">
-        <div :style="{textAlign: v.align, paddingRight: v.name=='操作'?'10px': 'inherit'}" v-for="(v, i) in state.content" :key="i" v-show="v.show" :class="v.width">{{v.name}}</div>
-      </div>
-      <div class="table-col bss">
-        <el-tree 
-        class="ww100" 
-        ref="treeRef" 
-        :data="state.tree"
-        :node-key="state.key" 
-        :current-node-key="defaultId"
-        :props="defaultProps"
-        highlight-current    
-        @node-click="handleNodeClick"
-        empty-text="暂无数据">
-          <template #default="{ node, data }">
-            <span class="row">
-              <div v-show="v.show" :class="v.width" :style="{textAlign: v.align}" v-for="(v, i) in state.content" :key="i">
-                <span v-if="typeof(v.key) == 'object'" class="cursor mlr5" v-for="(vv, kk, ii) in v.key" :key="ii" :class="kk=='add'||state.auth[kk] == false?'none':kk=='del'?'i8':'i21'" @click.stop="handleClick(kk, data)">{{vv}}</span>
-                <span v-else-if="v.type == 'select'" :class="find(v.list, [v.value, data[v.key]], 'color')?find(v.list, [v.value, data[v.key]], 'color'):''">
-                  {{find(v.list, [v.value, data[v.key]], v.label)}}
-                </span>
-                <span v-else>{{isNull(data[v.key]) && v.key!=''? '/' : data[v.key]}}</span>
-              </div>
-            </span>
-          </template>
-        </el-tree>
+      <div class="layout-col white-rgba50 rad8 p15">
+        <ListTree @handleNodeClick="handleNodeClick" @handleClick="handleClick" :state="state" ref="listTreeRef"/>
       </div>
       <Add @init="init" :state="state" ref="addRef" />
     </div>
@@ -54,13 +27,8 @@
   const configStore = proxy.configStore()
   const dictStore = proxy.dictStore()
   let addRef = $ref()
+  let listTreeRef = $ref()
   let permissionRef = $ref()
-  let treeRef = $ref()
-  let defaultId = $ref()
-  let defaultProps = {
-    children: 'children',
-    label: 'name',
-  }
   const state = reactive({
 	  ...publicStore.$state,
     content: [
@@ -107,14 +75,10 @@
     let node2 = proxy.findNode(state.tree, (node) => { return node[state.key] == key })
     let node = proxy.isNull(node2)? node1 : node2
     await nextTick()
-    handleNodeClick(node)
+    listTreeRef.handleNodeClick(node)
   }
 
-  const handleNodeClick = async(val) => {
-    defaultId = val[state.key]
-    treeRef.setCurrentKey(defaultId, true)
-    publicStore.active = val
-  }
+  const handleNodeClick = (val) => { publicStore.active = {...val} }
 
   const handleClick = (remark, val) => {
     if(remark == 'add' || remark == 'upd'){

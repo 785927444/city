@@ -21,9 +21,9 @@ textarea {outline: none; resize: none;}
 li { list-style: none; }
 a { text-decoration: none;outline: none; }
 /*浏览器滚动条样式*/
-::-webkit-scrollbar {width: 8px;height: 8px;}
-::-webkit-scrollbar-track {--webkit-box-shadow: inset 0 0 6px rgba(0, 100, 255, 0.2); border-radius: 5px; position: fixed;}
-::-webkit-scrollbar-thumb {--webkit-box-shadow: inset 0 0 6px rgba(0, 100, 255, 0.2); background: rgba(0, 100, 255, 0.2); border-radius: 5px;}
+::-webkit-scrollbar {width: 6px;height: 6px;}
+::-webkit-scrollbar-track {--webkit-box-shadow: inset 0 0 5px rgba(128, 129, 130, 0.2); border-radius: 5px; position: fixed;}
+::-webkit-scrollbar-thumb {--webkit-box-shadow: inset 0 0 5px rgba(128, 129, 130, 0.2); background: rgba(128, 129, 130, 0.2); border-radius: 4px;}
 /*灰度*/
 .gray {-webkit-filter: grayscale(100%); -moz-filter: grayscale(100%); -ms-filter: grayscale(100%); -o-filter: grayscale(100%); filter: grayscale(100%); filter: gray;}
 /*显示隐藏*/
@@ -118,20 +118,14 @@ $--stretch: stretch;
 .as-between{ align-self: $--between; }
 /*颜色变量*/
 $color-list: #111111 #222222 #333333 #444444 #555555 #666666 #777777 #888888 #999999 #aaaaaa #bbbbbb #cccccc #dddddd #eeeeee #FFFFFF
-             #266fff #6c6c6c #ff1212 #fde611 #c08703 #FEC746 #FFCCC7 #F45C5C #f11212 #D9F7BE #52C41A #00B578 #f7f7f7 #6097FF #B1C9F1
-			       #1464C5 #FA8A94 #001027 #FF41A4 #1E28A3 #3EBEE3 #093A83 #00204F #0E0838 #2663AA #E33E3E #A0EAFF #153B84 #a7c4fa #7860FF
-						 #1BFFDF;
+             #266fff #6c6c6c #ff1212 #3362f6 #c08703 #FEC746 #FFCCC7 #F45C5C #f11212 #D9F7BE #52C41A #00B578 #B1C9F1;
 						 
 /*字体颜色*/
 $color-name-list: c1 c2 c3 c4 c5 c6 c7 c8 c9 ca cb cc cd ce white
-                  i1 i2 i3 i4 i5 i6 i7 i8 i9 i10 i11 i12 i13 i14 i15
-				          i16 i17 i18 i19 i20 i21 i22 i23 i24 i25 i26 i27 i28 i29 i30
-									i31;
+                  i1 i2 i3 i4 i5 i6 i7 i8 i9 i10 i11 i12 i13;
 /*背景颜色*/
 $background-name-list: bg1  bg2  bg3  bg4  bg5  bg6  bg7  bg8  bg9  bga  bgb  bgc  bgd  bge  bg-white
-                       bgi1 bgi2 bgi3 bgi4 bgi5 bgi6 bgi7 bgi8 bgi9 bgi10 bgi11 bgi12 bgi13 bgi14 bgi15
-					             bgi16 bgi17 bgi18 bgi19 bgi20 bgi21 bgi22 bgi23 bgi24 bgi25 bgi26 bgi27 bgi28 bgi29 bgi30
-											 bgi31;
+                       bgi1 bgi2 bgi3 bgi4 bgi5 bgi6 bgi7 bgi8 bgi9 bgi10 bgi11 bgi12 bgi13;
 /*转换颜色*/
 @each $color in $color-list {
 	$i: list.index($color-list, $color);

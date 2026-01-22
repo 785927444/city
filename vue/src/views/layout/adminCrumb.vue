@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-sc plr15 h60 f14 ww100 ml1">
+  <div class="flex-sc plr15 h50 f14 ww100 ml1">
     <svg class="w18 h18 mr5" style="color: #6c6c6c;" viewBox="0 0 48 48" width="18" height="18">
       <g>
         <path d="M7 17L24 7L41 17V41H7V17Z" stroke="#6c6c6c" fill="transparent" stroke-width="4"></path>

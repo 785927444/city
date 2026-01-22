@@ -61,49 +61,6 @@
                   <el-button size="large" type="info" class="white bgi23" @click.stop="dataForm[item.key].splice(i, 1)">删 除</el-button>
                 </div>
               </div>
-              <!-- 动作 -->
-              <div v-if="item.type=='action'" class="ww100">
-                <div class="flex-sc cursor bo-i16-1 plr10 ptb1 rad4 i16 w80" @click.stop="dataForm[item.key]?dataForm[item.key].push({action_name: '', action_code: '', action_type: '', }):dataForm[item.key]=[{action_name: '', action_code: '', action_type: ''}]"><i-ep-plus class="f12 mr2" />新增</div>
-                <div class="flex-sc ww100 mt10" v-for="(v, i) in dataForm[item.key]?dataForm[item.key]:[]" :key="i">
-                  <el-input class="flex2 mr10" size="large" v-model="v.action_name" placeholder="名称" />
-                  <el-input class="flex2 mr10" size="large" v-model="v.action_code" placeholder="编码" />
-                  <el-select class="flex2 mr10" size="large" v-model="v.action_type" placeholder="类型" clearable filterable>
-                    <el-option v-for="sel in item.list" :key="sel['value']" :label="sel['name']" :value="sel['value']" />
-                  </el-select>
-                  <el-button size="large" type="info" class="white bgi23" @click.stop="dataForm[item.key].splice(i, 1)">删 除</el-button>
-                </div>
-              </div>
-              <!-- 告警 -->
-              <div v-if="item.type=='alarm'" class="ww100">
-                <div class="flex-sc cursor bo-i16-1 plr10 ptb1 rad4 i16 w80" @click.stop="!dataForm['code']?'':dataForm[item.key]?
-                dataForm[item.key].push({attribute_name: dataForm['code'], alarm_name: '', alarm_code: '', statistics_type: '', left_range_type: '', left_range_value: '', right_range_type: '', right_range_value: ''}):
-                dataForm[item.key]=[{attribute_name: dataForm['code'], alarm_name: '', alarm_code: '', statistics_type: '', left_range_type: '', left_range_value: '', right_range_type: '', right_range_value: ''}]"><i-ep-plus class="f12 mr2" />新增</div>
-                <div class="flex-sc ww100 warp pb10 bob-i16-1" v-for="(v, i) in dataForm[item.key]?dataForm[item.key]:[]" :key="i">
-                  <el-input class="ww25 mr10 none" size="large" v-model="v.attribute_name" placeholder="关联" />
-                    <el-input class="ww25 pr10 mt10" size="large" v-model="v.alarm_name" placeholder="告警名" />
-                    <el-input class="ww25 pr10 mt10" size="large" v-model="v.alarm_code" placeholder="告警码" />
-                    <div class="ww25 pr10 mt10">
-                      <el-select size="large" v-model="v.statistics_type" placeholder="统计类型" clearable filterable>
-                        <el-option v-for="sel in item.list" :key="sel['value']" :label="sel['name']" :value="sel['value']" />
-                      </el-select>
-                    </div>
-                    <div class="ww25 pr10 mt10 flex-ec ">
-                      <el-button size="large" type="info" class="white bgi23" @click.stop="dataForm[item.key].splice(i, 1)">删 除</el-button>
-                    </div>
-                    <div class="ww25 pr10 mt10">
-                      <el-select size="large" v-model="v.left_range_type" placeholder="左类型" clearable filterable>
-                        <el-option v-for="sel in item.list1" :key="sel['value']" :label="sel['name']" :value="sel['value']" />
-                      </el-select>
-                    </div>
-                    <el-input class="ww25 pr10 mt10" size="large" v-model="v.left_range_value" placeholder="左值" />
-                    <div class="ww25 pr10 mt10">
-                      <el-select size="large" v-model="v.right_range_type" placeholder="右类型" clearable filterable>
-                        <el-option v-for="sel in item.list1" :key="sel['value']" :label="sel['name']" :value="sel['value']" />
-                      </el-select>
-                    </div>
-                    <el-input class="ww25 pr10 mt10" size="large" v-model="v.right_range_value" placeholder="右值" />
-                </div>
-              </div>
             </el-form-item>
           </div>
         </div>
@@ -111,14 +68,13 @@
     </el-form>
     <template #footer>
       <div class="dialog-footer">
-        <el-button size="large" type="info" class="i23 bg-white" @click="onVisable">取 消</el-button>
-        <el-button size="large" type="info" class="white bgi22" @click.stop="handleSubmit(formRef)">确 定</el-button>
+        <el-button size="large" class="bgc white" @click="onVisable">取 消</el-button>
+        <el-button size="large" class="bgi1 white" @click.stop="handleSubmit(formRef)">确 定</el-button>
       </div>
     </template>
   </el-dialog>
   <ImgsParams ref="imgsRef" v-model="dataForm" />
   <DetailParams ref="detailRef" v-model="dataForm" />
-  <CommParams ref="commRef" v-model="dataForm" />
 </template>
 
 <script lang="ts" setup>
@@ -138,7 +94,6 @@
   let formRef = ref()
   let imgsRef = $ref()
   let detailRef = $ref()
-  let commRef = $ref()
   let ruleList= $ref({})
   let treeRef = $ref(null)
   let treeData = $ref([])
@@ -223,7 +178,6 @@
   }
 
   const jsonParams = async(item) => {
-    if(item.key == 'comm_params') commRef.onVisable(item.key)
     if(item.key == 'description') detailRef.onVisable(item.key)
     if(item.key == 'imgs') imgsRef.onVisable(item)
   }
@@ -366,38 +320,6 @@
         }, 1000)
       }
     }
-    // 告警类型添加
-    if(props.state.model == 't_sensor_template_alarm_point') {
-      let query = {model: 't_sensor_alarm_type', args: `alarm_class='${from.code}'`}
-      let res = await publicStore.http( {Api: query})
-      // console.log("from---", from)
-      if(!proxy.isNull(from.alarm)){
-        let adds = {model: 't_sensor_alarm_type', list: []}
-        let upds = {model: 't_sensor_alarm_type', list: []}
-        from.alarm.forEach(v => {
-          let temp = res.find(a=>a.alarm_code == v.alarm_code)
-          let data = {id: temp?temp.id:'', alarm_class: from.sensor_type, alarm_code: v.alarm_code, alarm_name: v.alarm_name}
-          if(!temp) adds.list.push(data)
-          if(temp && temp.alarm_name != v.alarm_name) upds.list.push(data)
-        })
-        console.log('adds---', adds)
-        console.log('upds---', upds)
-        if(!proxy.isNull(adds.list)) api['addApi'](adds).then((res:any) => {console.log("res", res)})
-        if(!proxy.isNull(upds.list)) api['updApi'](upds).then((res:any) => {console.log("res", res)})
-      }
-      if(!proxy.isNull(res)){
-        let alarms = !proxy.isNull(from.alarm)? from.alarm : []
-        let dels = {model: 't_sensor_alarm_type', list: []}
-        res.forEach(v => {
-          let temp = alarms.find(a=>a.alarm_code == v.alarm_code)
-          if(!temp) dels.list.push(v)
-        })
-        console.log('dels---', dels)
-        if(!proxy.isNull(dels.list)) api['delApi'](dels).then((res:any) => {console.log("res", res)})
-      }
-      // console.log('res---', res)
-    }
-    
   }
 
   const uploadImageFile = async(options, key) => {
@@ -418,7 +340,6 @@
       reader.readAsDataURL(options.file)
       reader.onload = async () => {
         const base64Data = reader.result
-        console.log("base64Data---", base64Data)
         if(type == 'base64'){
           dataForm[key] = base64Data
         }else{
@@ -488,36 +409,6 @@
         resolve(compressedBase64)
       }
       img.onerror = (error) => reject(error)
-    })
-  }
-
-  // 同步参数
-  const handleSync = (val) => {
-    ElMessageBox.confirm('是否确定同步到同类型传感器?', '重要提示！', {
-      confirmButtonText: '确定',
-      cancelButtonText: '关闭',
-      type: 'error'
-    }).then(async() => {
-      let value = dataForm[val]
-      let form = {"model": props.state.model, list: []}
-      let data = props.state.list.filter((a:any)=>a.type == dataForm.type)
-      data.forEach(v => {
-        let temp = Object.assign({}, v)
-        temp[val] = value
-        form.list.push(temp)
-      })
-      console.log('form------', form)
-      api.updApi(form).then((res:any) => {
-        if(res.code == 200){
-          ElNotification({ title: '提示', message: '操作成功', type: 'success' })
-          onVisable()
-          emit('init', dataForm[props.state.key])
-        }else{
-          ElNotification({ title: '提示', message: '操作失败', type: 'error' })
-        }
-      }).catch((err) => {
-        ElNotification({ title: '提示', message: '操作失败', type: 'error' })
-      })
     })
   }
 

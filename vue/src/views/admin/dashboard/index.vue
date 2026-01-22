@@ -1,55 +1,55 @@
 <template>
-  <div class="layout-row i15">
+  <div class="layout-row i15 plr15">
     <!-- 系统信息 -->
-    <div class="flex1 hh100 p10">
-      <div class="layout-col ba1 rad5 p20 f16" >
+    <div class="flex1 hh100 bg-white rad8">
+      <div class="layout-col rad5 p20 f16" >
         <div class="ww100 flex-sc">
           <span class="w50x2">本地时间</span>
-          <span class="white">{{ state.locattime }}</span>
+          <span class="i2">{{ state.locattime }}</span>
         </div>
         <div class="ww100 flex-sc mt25">
           <span class="w50x2">系统时间</span>
-          <span class="white">{{ !isNull(state.host)&&state.host.currentTime? parseTime(state.host.currentTime) : '' }}</span>
+          <span class="i2">{{ !isNull(state.host)&&state.host.currentTime? parseTime(state.host.currentTime) : '' }}</span>
         </div>
         <div class="ww100 flex-sc mt25">
           <span class="w50x2">运行时长</span>
-          <span class="white">{{ !isNull(state.host)&&state.host.uptime? formatUptime(state.host.uptime) : '' }}</span>
+          <span class="i2">{{ !isNull(state.host)&&state.host.uptime? formatUptime(state.host.uptime) : '' }}</span>
         </div>
         <div class="ww100 flex-sc mt25">
           <span class="w50x2">开机时间</span>
-          <span class="white">{{ !isNull(state.host)&&state.host.boot_time? parseTime(state.host.boot_time*1000) : '' }}</span>
+          <span class="i2">{{ !isNull(state.host)&&state.host.boot_time? parseTime(state.host.boot_time*1000) : '' }}</span>
         </div>
         <div class="ww100 flex-sc mt25">
           <span class="w50x2">关机时间</span>
-          <span class="white">{{ !isNull(state.host)&&state.host.last_shutdown_time? parseTime(state.host.last_shutdown_time*1000) : '' }}</span>
+          <span class="i2">{{ !isNull(state.host)&&state.host.last_shutdown_time? parseTime(state.host.last_shutdown_time*1000) : '' }}</span>
         </div>
         <div class="ww100 flex-sc mt25">
           <span class="w50x2">操作系统</span>
-          <span class="white">{{ !isNull(state.host)&&state.host.os? state.host.os : '' }}</span>
+          <span class="i2">{{ !isNull(state.host)&&state.host.os? state.host.os : '' }}</span>
         </div>
         <div class="ww100 flex-sc mt25">
           <span class="w50x2">内核版本</span>
-          <span class="white">{{ !isNull(state.host)&&state.host.kernel_version? state.host.kernel_version : '' }}</span>
+          <span class="i2">{{ !isNull(state.host)&&state.host.kernel_version? state.host.kernel_version : '' }}</span>
         </div>
         <div class="ww100 flex-sc mt25">
           <span class="w50x2">发行名称</span>
-          <span class="white mr10">{{ !isNull(state.host)&&state.host.platform? state.host.platform : '' }}</span>
+          <span class="i2 mr10">{{ !isNull(state.host)&&state.host.platform? state.host.platform : '' }}</span>
         </div>
         <div class="ww100 flex-sc mt25">
           <span class="w50x2">发行家族</span>
-          <span class="white mr10">{{ !isNull(state.host)&&state.host.platform_family? state.host.platform_family : '' }}</span>
+          <span class="i2 mr10">{{ !isNull(state.host)&&state.host.platform_family? state.host.platform_family : '' }}</span>
         </div>
         <div class="ww100 flex-sc mt25">
           <span class="w50x2">发行版本</span>
-          <span class="white mr10">{{ !isNull(state.host)&&state.host.platform_version? state.host.platform_version : '' }}</span>
+          <span class="i2 mr10">{{ !isNull(state.host)&&state.host.platform_version? state.host.platform_version : '' }}</span>
         </div>
       </div>
     </div>
     <!-- 其他信息 -->
-    <div class="flex3 hh100 flex-col">
+    <div class="flex3 hh100 flex-col bg-white rad8 ml15">
       <!-- CPU信息 -->
       <div class="flex1 hh100 p10">
-        <div class="ww100 hh100 flex-col-bc ba1 rad5 hidden p20 relative">
+        <div class="ww100 hh100 flex-col-bc rad5 hidden p20 relative">
           <div class="ww100 f20 flex-sc">
             <div class="bgi22 p15 ww20">
               <span class="">CPU信息</span>
@@ -59,34 +59,34 @@
           <div class="flex1 ww100 flex-sc mt15">
             <div class="flex-sc flex1">
               <span class="f22">物理核心</span>
-              <span class="ml15 mr10 f30 white">{{ !isNull(state.cpu)&&state.cpu.physical_cores? state.cpu.physical_cores : '' }}</span>
+              <span class="ml15 mr10 f30">{{ !isNull(state.cpu)&&state.cpu.physical_cores? state.cpu.physical_cores : '' }}</span>
               <span class="mt15">个</span>
             </div>
             <div class="flex-sc flex1">
               <span class="f22">逻辑核心</span>
-              <span class="ml15 mr10 f30 white">{{ !isNull(state.cpu)&&state.cpu.logical_cores? state.cpu.logical_cores : '' }}</span>
+              <span class="ml15 mr10 f30">{{ !isNull(state.cpu)&&state.cpu.logical_cores? state.cpu.logical_cores : '' }}</span>
               <span class="mt15">个</span>
             </div>
             <div class="flex-sc flex1">
               <span class="f22">插槽数量</span>
-              <span class="ml15 mr10 f30 white">{{ !isNull(state.cpu)&&state.cpu.sockets? state.cpu.sockets : '' }}</span>
+              <span class="ml15 mr10 f30">{{ !isNull(state.cpu)&&state.cpu.sockets? state.cpu.sockets : '' }}</span>
               <span class="mt15">个</span>
             </div>
             <div class="flex-sc flex1">
               <span class="f22">运行频率</span>
-              <span class="ml15 mr10 f30 white">{{ !isNull(state.cpu)&&state.cpu.mhz? state.cpu.mhz : '' }}</span>
+              <span class="ml15 mr10 f30">{{ !isNull(state.cpu)&&state.cpu.mhz? state.cpu.mhz : '' }}</span>
               <span class="mt15">GHz</span>
             </div>
             <div class="flex-sc flex1"></div>
           </div>
           <div class="ww100 relative">
-            <div class="ww100 h38 black-rgba60 rad4"></div>
+            <div class="ww100 h38 black-rgba10 rad4"></div>
             <div class="h38 absolute z1 t0 l0 radd" 
             :class="!isNull(state.cpu)?'ww' + Math.floor(state.cpu.usage_percent):''" 
-             :style="{backgroundImage: 
-             !isNull(state.cpu) && state.cpu.usage_percent <= 35? 'linear-gradient(to right, #B1C9F1, #4187FF)': 
-             !isNull(state.cpu) && state.cpu.usage_percent > 35 && state.cpu.usage_percent<=70 ? 'linear-gradient(to right, #fcf6c2, #FEC746)': 
-             'linear-gradient(to right, #F98994, #DC1185)'}">
+            :style="{backgroundImage: 
+            !isNull(state.cpu) && state.cpu.usage_percent <= 35? 'linear-gradient(to right, #B1C9F1, #4187FF)': 
+            !isNull(state.cpu) && state.cpu.usage_percent > 35 && state.cpu.usage_percent<=70 ? 'linear-gradient(to right, #fcf6c2, #FEC746)': 
+            'linear-gradient(to right, #F98994, #DC1185)'}">
             </div>
           </div>
           <div class="absolute flex-ec r40 t40 z1">
@@ -96,7 +96,7 @@
       </div>
       <!-- 内存信息 -->
       <div class="flex1 hh100 p10">
-        <div class="ww100 hh100 flex-col-bc ba1 rad5 hidden p20 relative">
+        <div class="ww100 hh100 flex-col-bc rad5 hidden p20 relative">
           <div class="ww100 f20 flex-sc">
             <div class="bgi22 p15 ww20">
               <span class="">内存信息</span>
@@ -106,29 +106,29 @@
           <div class="flex1 ww100 flex-sc mt15">
             <div class="flex-sc flex1">
               <span class="f22">总量</span>
-              <span class="ml15 mr10 f30 white">{{ !isNull(state.memory)&&state.memory.total? bytesToMB(state.memory.total) : '' }}</span>
+              <span class="ml15 mr10 f30">{{ !isNull(state.memory)&&state.memory.total? bytesToMB(state.memory.total) : '' }}</span>
               <span class="mt15">MB</span>
             </div>
             <div class="flex-sc flex1">
               <span class="f22">使用</span>
-              <span class="ml15 mr10 f30 white">{{ !isNull(state.memory)&&state.memory.used? bytesToMB(state.memory.used) : '' }}</span>
+              <span class="ml15 mr10 f30">{{ !isNull(state.memory)&&state.memory.used? bytesToMB(state.memory.used) : '' }}</span>
               <span class="mt15">MB</span>
             </div>
             <div class="flex-sc flex1">
               <span class="f22">可用</span>
-              <span class="ml15 mr10 f30 white">{{ !isNull(state.memory)&&state.memory.available? bytesToMB(state.memory.available) : '' }}</span>
+              <span class="ml15 mr10 f30">{{ !isNull(state.memory)&&state.memory.available? bytesToMB(state.memory.available) : '' }}</span>
               <span class="mt15">MB</span>
             </div>
             <div class="flex-sc flex1"></div>
           </div>
           <div class="ww100 relative">
-            <div class="ww100 h38 black-rgba60 rad4"></div>
+            <div class="ww100 h38 black-rgba10 rad4"></div>
             <div class="h38 absolute z1 t0 l0 radd" 
             :class="!isNull(state.memory)?'ww' + Math.floor(state.memory.used_percent):''" 
-             :style="{backgroundImage: 
-             !isNull(state.memory) && state.memory.used_percent <= 35? 'linear-gradient(to right, #B1C9F1, #4187FF)': 
-             !isNull(state.memory) && state.memory.used_percent > 35 && state.memory.used_percent<=70 ? 'linear-gradient(to right, #fcf6c2, #FEC746)': 
-             'linear-gradient(to right, #F98994, #DC1185)'}">
+            :style="{backgroundImage: 
+            !isNull(state.memory) && state.memory.used_percent <= 35? 'linear-gradient(to right, #B1C9F1, #4187FF)': 
+            !isNull(state.memory) && state.memory.used_percent > 35 && state.memory.used_percent<=70 ? 'linear-gradient(to right, #fcf6c2, #FEC746)': 
+            'linear-gradient(to right, #F98994, #DC1185)'}">
             </div>
             <div class="absolute ww100 flex-ec r0 tx z1">
               <span>已使用：</span>
@@ -142,7 +142,7 @@
       </div>
       <!-- 硬盘信息 -->
       <div class="flex1 hh100 p10">
-        <div class="ww100 hh100 flex-col-bc ba1 rad5 hidden p20 relative">
+        <div class="ww100 hh100 flex-col-bc rad5 hidden p20 relative">
           <div class="ww100 f20 flex-sc">
             <div class="bgi22 p15 ww20">
               <span class="">硬盘信息</span>
@@ -152,29 +152,29 @@
           <div class="flex1 ww100 flex-sc mt15">
             <div class="flex-sc flex1">
               <span class="f22">总量</span>
-              <span class="ml15 mr10 f30 white">{{ !isNull(state.disk)&&state.disk.total? bytesToMB(state.disk.total) : '' }}</span>
+              <span class="ml15 mr10 f30">{{ !isNull(state.disk)&&state.disk.total? bytesToMB(state.disk.total) : '' }}</span>
               <span class="mt15">MB</span>
             </div>
             <div class="flex-sc flex1">
               <span class="f22">使用</span>
-              <span class="ml15 mr10 f30 white">{{ !isNull(state.disk)&&state.disk.used? bytesToMB(state.disk.used) : '' }}</span>
+              <span class="ml15 mr10 f30">{{ !isNull(state.disk)&&state.disk.used? bytesToMB(state.disk.used) : '' }}</span>
               <span class="mt15">MB</span>
             </div>
             <div class="flex-sc flex1">
               <span class="f22">可用</span>
-              <span class="ml15 mr10 f30 white">{{ !isNull(state.disk)&&state.disk.free? bytesToMB(state.disk.free) : '' }}</span>
+              <span class="ml15 mr10 f30">{{ !isNull(state.disk)&&state.disk.free? bytesToMB(state.disk.free) : '' }}</span>
               <span class="mt15">MB</span>
             </div>
             <div class="flex-sc flex1"></div>
           </div>
           <div class="ww100 relative">
-            <div class="ww100 h38 black-rgba60 rad4"></div>
+            <div class="ww100 h38 black-rgba10 rad4"></div>
             <div class="h38 absolute z1 t0 l0 radd" 
             :class="!isNull(state.disk)?'ww' + Math.floor(state.disk.used_percent):''" 
-             :style="{backgroundImage: 
-             !isNull(state.disk) && state.disk.used_percent <= 35? 'linear-gradient(to right, #B1C9F1, #4187FF)': 
-             !isNull(state.disk) && state.disk.used_percent > 35 && state.disk.used_percent<=70 ? 'linear-gradient(to right, #fcf6c2, #FEC746)': 
-             'linear-gradient(to right, #F98994, #DC1185)'}">
+            :style="{backgroundImage: 
+            !isNull(state.disk) && state.disk.used_percent <= 35? 'linear-gradient(to right, #B1C9F1, #4187FF)': 
+            !isNull(state.disk) && state.disk.used_percent > 35 && state.disk.used_percent<=70 ? 'linear-gradient(to right, #fcf6c2, #FEC746)': 
+            'linear-gradient(to right, #F98994, #DC1185)'}">
             </div>
             <div class="absolute ww100 flex-ec r0 tx z1">
               <span>已使用：</span>

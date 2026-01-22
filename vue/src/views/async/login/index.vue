@@ -1,12 +1,12 @@
 <template>
   <div class="window loginbg">
-    <el-form class="loginStyle absolute-cc ww28 rad5 plr50 pb40 pt40 bgi1"  
+    <el-form class="loginStyle absolute-cc ww28 rad5 plr50 pb40 pt40 white-rgba50"  
     ref="formRef" :model="state.form" :rules="state[`ruleList_${state.tab}`]" label-width="85px" size="large" status-icon>
       <!-- 选择方式 -->
       <el-form-item label="" prop="">
-        <div class="ww100 flex-sc white f20 i15">
-          <div class="flex-sc pr20 cursor" :class="state.tab=='phone'?'':'white'" @click.stop="state.tab = 'username'; getCode()">账密登录</div>
-          <div class="flex-sc pr20 cursor" :class="state.tab=='phone'?'white':''" @click.stop="state.tab = 'phone'">手机登录</div>
+        <div class="ww100 flex-sc f20 i15">
+          <div class="flex-sc pr20 cursor" :class="state.tab=='phone'?'':'i1'" @click.stop="state.tab = 'username'; getCode()">账密登录</div>
+          <div class="flex-sc pr20 cursor" :class="state.tab=='phone'?'i1':''" @click.stop="state.tab = 'phone'">手机登录</div>
         </div>
       </el-form-item>
       <!-- 手机登录 -->
@@ -17,8 +17,8 @@
         <el-form-item label="验证码" prop="phonecode">
           <div class="flex-sc ww100">
             <el-input size="large" v-model="state.form.phonecode" placeholder="短信验证" autocomplete="off"/>
-            <el-button size="large" type="info" class="white bg-white i1 ml15" @click.stop="sendCode()" v-if="!state.times">发送验证码</el-button>
-            <el-button size="large" type="info" class="white bgca ml15 w100" v-if="state.times">{{ state.times + 's' }}</el-button>
+            <div class="w50x3 bgi1 white cursor rad5 tc ml15" v-if="!state.times" @click.stop="sendCode()">发送验证码</div>
+            <div class="w50x3 bgca white cursor rad5 tc ml15" v-if="state.times">{{ state.times + 's' }}</div>
           </div>
         </el-form-item>
       </div>
@@ -38,7 +38,7 @@
         </el-form-item>
       </div>
       <el-form-item label="" prop="">
-        <div class="ww100 bg-white i1 cursor rad5 p5 tc f18 mt15" @click.stop="handleSubmit()" :loading="state.loading">{{state.loading? '登录中' : '登 录'}}</div>
+        <div class="ww100 bgi1 white cursor rad5 p5 tc f18 mt15" @click.stop="handleSubmit()" :loading="state.loading">{{state.loading? '登录中' : '登 录'}}</div>
       </el-form-item>
     </el-form>
   </div>
@@ -208,7 +208,7 @@
     color: #101010;
   }
   :deep(.el-form-item__label){
-    color: #ffffff;
+    color: #6C6C6C;
   }
   .loginStyle .el-input__wrapper{
     width: 100%;

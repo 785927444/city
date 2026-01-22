@@ -57,6 +57,7 @@
     overflow-x: hidden;
     background: #FFFFFF !important;
     width: 250px;
+    border-radius: 8px;
   }
   :deep(.el-aside::-webkit-scrollbar){
     width: 0px;
