@@ -1,0 +1,16 @@
+<template>
+  <div class="layout-row">
+    <m1 class="flex2 hh100 rad8 hidden" />
+    <m2 class="flex7 hh100 rad8 hidden ml15" />
+  </div>
+</template>
+
+<script lang="ts" setup>
+  import m1 from './m1'
+  import m2 from './m2'
+</script>
+  
+<style scoped lang="scss">
+
+</style>
+  
