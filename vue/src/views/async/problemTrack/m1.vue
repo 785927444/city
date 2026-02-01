@@ -79,7 +79,7 @@
               </div>
                <div class="ww100 flex-sc mt10">
                 <span class="w50x3">体检类型</span>
-                <span>{{ v.task?v.task.length:'城市自体检' }}</span>
+                <span>{{ v.check_type?find(check_types, ['value', v.check_type], 'name'):'城市自体检' }}</span>
               </div>
               <div class="ww100 flex-sc mt10">
                 <span class="w50x3">体检单位</span>
@@ -101,6 +101,10 @@
   const check_statuss = [
     {value: '0', name: '待体检'},
     {value: '1', name: '已体检'},
+  ]
+  const check_types = [
+    {value: '0', name: '城市自体检'},
+    {value: '1', name: '城市自体检'},
   ]
   const types = [
     {type: 'problem', name: '问题清单跟踪', path: '/problemTrack'},

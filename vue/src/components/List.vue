@@ -1,6 +1,6 @@
 <template>
     <div class="layout-col">
-      <div class="row bge" v-if="!state.listRow">
+      <div class="row bgi16" v-if="!state.listRow">
         <div :style="{textAlign: v.align}" v-for="(v, i) in state.content" :key="i" v-show="v.show" :class="typeof(v.key) == 'object'?v.width +' '+ 'mlr5':v.width">{{v.name}}</div>
       </div>
       <div class="table bg-white">

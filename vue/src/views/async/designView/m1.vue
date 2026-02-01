@@ -2,7 +2,7 @@
   <div class="ww100 flex-col hidden bg-white p20">
     <div class="ww100 fw f16 flex-bc">
       <span class="bob-ca-3 pb10">{{ publicStore.active.name??'' }}</span>
-      <span class="plr12 ptb8 rad4 bgi16 bo-cc-1 c9 cursor f14" @click.stop="toPath('/schemeDesignsManagerCity')">返 回</span>
+      <span class="plr12 ptb8 rad4 bgi1 white cursor f14" @click.stop="toPath('/schemeDesignsManagerCity')">返 回</span>
     </div>
     <div class="ww100 flex-sc warp bgi16 p10 rad5 mt30">
       <div class="ww33 flex-sc p10">
@@ -18,9 +18,23 @@
         </span>
       </div>
       <div class="ww33 flex-sc p10">
-        <span class="w110">上报状态</span>
-        <span class="flex1 line1 flex-sc">
-          <span class="plr12 ptb6 rad3" :class="publicStore.active.release_status == '0'?'bgc c6':publicStore.active.release_status == '1'?'bgi10 i12':''">{{ find(release_statuss, ['value', publicStore.active.release_status], 'name') }}</span>
+        <span class="w110">策划状态</span>
+        <span class="flex1 line1 flex-sc ptb2 rad3 hidden">
+          <!-- 待上报 -->
+          <span class="plr12 ptb6 rad3 bgc c6" v-if="publicStore.active.release_status == '0'">{{ find(release_statuss, ['value', publicStore.active.release_status], 'name') }}</span>
+          <!-- 已上报，待审核 -->
+          <span class="plr12 ptb6 rad3 bgi13 i15" v-else-if="publicStore.active.release_status == '1'&&publicStore.active.examine_status=='0'">{{ find(examine_statuss, ['value', publicStore.active.examine_status], 'name') }}</span>
+          <!-- 已上报，审核中 -->
+          <span class="plr12 ptb6 rad3 bgi13 i15" v-else-if="publicStore.active.release_status == '1'&&publicStore.active.examine_status=='1'">{{ find(examine_statuss, ['value', publicStore.active.examine_status], 'name') }}</span>
+          <!-- 已上报，审核不通过 -->
+          <span class="plr12 ptb6 rad3 bgi7 i9" v-else-if="publicStore.active.release_status == '1'&&publicStore.active.examine_status=='3'">{{ find(examine_statuss, ['value', publicStore.active.examine_status], 'name') }}</span>
+          <!-- 审核通过，待开始 -->
+          <span class="plr12 ptb6 rad3 bgc c6" v-else-if="publicStore.active.examine_status=='2'&&publicStore.active.completion_status=='0'">{{ find(completion_statuss, ['value', publicStore.active.completion_status], 'name') }}</span>
+          <!-- 审核通过，进行中 -->
+          <span class="plr12 ptb6 rad3 bgi10 i12" v-else-if="publicStore.active.examine_status=='2'&&publicStore.active.completion_status=='1'">{{ find(completion_statuss, ['value', publicStore.active.completion_status], 'name') }}</span>
+          <!-- 审核通过，已完成 -->
+          <span class="plr12 ptb6 rad3 bgi10 i12" v-else-if="publicStore.active.examine_status=='2'&&publicStore.active.completion_status=='2'">{{ find(completion_statuss, ['value', publicStore.active.completion_status], 'name') }}</span>
+          <span class="plr12 ptb6 rad3 bgc c6" v-else>状态补充</span>
         </span>
       </div>
       <div class="ww33 flex-sc p10">
@@ -29,7 +43,7 @@
       </div>
       <div class="ww33 flex-sc p10">
         <span class="w110">项目数量</span>
-        <span class="flex1 line1 flex-sc">{{ publicStore.active.project?publicStore.active.project.length:'0' }}</span>
+        <span class="flex1 line1 flex-sc">{{ publicStore.active.project_num?publicStore.active.project_num:'0' }}</span>
       </div>
       <div class="ww33 flex-sc p10">
         <span class="w110">上报单位</span>

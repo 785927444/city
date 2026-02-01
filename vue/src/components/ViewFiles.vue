@@ -23,7 +23,7 @@
   const onVisable = async (val) => {
     state.isFalse = !state.isFalse
     if(!state.isFalse) return
-    console.log("xxx", val)
+    console.log("URL:", val)
     state.filePath = val
   }
 

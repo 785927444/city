@@ -100,6 +100,15 @@ const api:any = {
     })
   },
 
+  addApi1(data: any, url: any = "/api/v1/terminal/middle/add", headers: any = {}, method: any = 'post') {
+    return request({
+      headers: headers,
+      url: url,
+      method: method,
+      data: data
+    })
+  }, 
+
   updApi(data: any, url: any = "/api/v1/terminal/middle/upd", headers: any = {}, method: any = 'post') {
     return request({
       headers: headers,
@@ -109,7 +118,25 @@ const api:any = {
     })
   },
 
+  updApi1(data: any, url: any = "/api/v1/terminal/middle/upd", headers: any = {}, method: any = 'post') {
+    return request({
+      headers: headers,
+      url: url,
+      method: method,
+      data: data
+    })
+  },
+
   delApi(data: any, url: any = "/api/v1/terminal/middle/del", headers: any = {}, method: any = 'post') {
+    return request({
+      headers: headers,
+      url: url,
+      method: method,
+      data: data
+    })
+  },
+
+  delApi1(data: any, url: any = "/api/v1/terminal/middle/del", headers: any = {}, method: any = 'post') {
     return request({
       headers: headers,
       url: url,

@@ -8,6 +8,7 @@
 </template>
 
 <script lang="ts" setup>
+  import { v6 as uuidv6 } from 'uuid'
   import api from '@/api'
   import router from '@/router'
 	const { proxy }:any = getCurrentInstance()
@@ -37,8 +38,10 @@
   }
 
   const onSave = async() => {
-    ElMessageBox.confirm('修改信息需重新审核，是否确定继续', '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(() => {
+    ElMessageBox.confirm('保存信息后可进行上报，是否确定继续', '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(() => {
       let form = JSON.parse(JSON.stringify(publicStore.form))
+      let apikey = form.id?'updApi':'addApi'
+      if(!form.id) form.id=uuidv6()
       let changeFile = []
       if(!proxy.isNull(form.attr)){
         // 图片转移
@@ -55,11 +58,37 @@
       }else{
         form.attr = ''
       }
+      // 项目更新
+      let addProject = []
+      let delProject = []
+      let project_num = 0
+      if(JSON.stringify(form.project) != JSON.stringify(publicStore._public.project)) {
+        const oldProjects = publicStore._public.project || []
+        const newProjects = form.project || []
+        project_num = newProjects.length
+        addProject = newProjects.filter(id => !oldProjects.includes(id)).map(scheme_project_id => ({ scheme_design_id: form.id, scheme_project_id }))
+        delProject = oldProjects.filter(id => !newProjects.includes(id)).map(scheme_project_id => ({ scheme_design_id: form.id, scheme_project_id }))
+      } else {
+        project_num = (publicStore._public.project || []).length
+      }
+      // 任务更新
+      let addTask = []
+      let delTask = []
+      let task_num = 0
+      if(JSON.stringify(form.task) != JSON.stringify(publicStore._public.task)) {
+        const oldTasks = publicStore._public.task || []
+        const newTasks = form.task || []
+        task_num = newTasks.length
+        addTask = newTasks.filter(id => !oldTasks.includes(id)).map(scheme_task_id => ({ scheme_design_id: form.id, scheme_task_id }))
+        delTask = oldTasks.filter(id => !newTasks.includes(id)).map(scheme_task_id => ({ scheme_design_id: form.id, scheme_task_id }))
+      } else {
+        task_num = (publicStore._public.task || []).length
+      }
       form.type = 'design'
       form.examine_status = '0'
       // form.datetime = !proxy.isNull(form.datetime)? JSON.stringify(form.datetime) : ''
-      form.project = !proxy.isNull(form.project)? JSON.stringify(form.project) : ''
-      form.task = !proxy.isNull(form.task)? JSON.stringify(form.task) : ''
+      form.project_num = project_num
+      form.task_num = task_num
       form.user_id = configStore.user.id
       form.user_name = configStore.user.name
       form.province = configStore.user.province?configStore.user.province:''
@@ -69,13 +98,19 @@
       form.city_name = configStore.user.city_name?configStore.user.city_name:''
       form.district_name = configStore.user.district_name?configStore.user.district_name:''
       let params = {model: 't_scheme_design', list: [form]}
-      let apikey = publicStore.form.id?'updApi':'addApi'
-      console.log("params", params)
-      api[apikey](params).then((res:any) => {
+      // console.log("params", params)
+      api[apikey](params).then(async(res:any) => {
         if(res.code == 200){
           ElNotification({ title: '提示', message: '保存成功', type: 'success' })
           setChangeFile(changeFile)
-          emit('init')
+          console.log("delProject", delProject)
+          if(!proxy.isNull(addProject) || !proxy.isNull(delProject) || !proxy.isNull(addTask) || !proxy.isNull(delTask)) {
+            if(!proxy.isNull(addProject) || !proxy.isNull(addTask)) await setAdd(addProject, addTask)
+            if(!proxy.isNull(delProject) || !proxy.isNull(delTask)) await setDel(delProject, delTask)
+            emit('init', form.id)
+          } else {
+            emit('init', form.id)
+          }
         }else{
           ElNotification({ title: '提示', message: res.msg?res.msg:'保存失败(400)', type: 'error' })
         }
@@ -92,6 +127,26 @@
       console.log("转移res", res)
     })
   }
+
+  const setAdd = async(addProject, addTask) => {
+    // console.log("addProject", addProject)
+    // console.log("addTask", addTask)
+    let params = {}
+    if(!proxy.isNull(addProject)) params.addApi = {model: 't_scheme_design_project', list: addProject}
+    if(!proxy.isNull(addTask)) params.addApi1 = {model: 't_scheme_design_task', list: addTask}
+    let res = await publicStore.http(params)
+    console.log('新增res---', res)
+  } 
+
+  const setDel = async(delProject, delTask) => {
+    // console.log("delProject", delProject)
+    // console.log("delTask", delTask)
+    let params = {}
+    if(!proxy.isNull(delProject)) params.delApi = {model: 't_scheme_design_project', list: delProject}
+    if(!proxy.isNull(delTask)) params.delApi1 = {model: 't_scheme_design_task', list: delTask}
+    let res = await publicStore.http(params)
+    console.log('删除res---', res)
+  } 
 
 </script>
   

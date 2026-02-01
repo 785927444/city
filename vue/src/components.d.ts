@@ -86,6 +86,8 @@ declare module 'vue' {
     Password: typeof import('./components/Password.vue')['default']
     PointAdd: typeof import('./components/PointAdd.vue')['default']
     PointAdd2: typeof import('./components/PointAdd2.vue')['default']
+    ProblemLog: typeof import('./components/ProblemLog.vue')['default']
+    Problems: typeof import('./components/Problems.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Setback: typeof import('./components/Setback.vue')['default']
@@ -93,6 +95,7 @@ declare module 'vue' {
     Setting: typeof import('./components/Setting.vue')['default']
     Upload: typeof import('./components/Upload.vue')['default']
     UploadText: typeof import('./components/UploadText.vue')['default']
+    UploadTextNoName: typeof import('./components/UploadTextNoName.vue')['default']
     ViewFiles: typeof import('./components/ViewFiles.vue')['default']
   }
   export interface ComponentCustomProperties {

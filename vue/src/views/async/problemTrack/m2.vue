@@ -39,21 +39,9 @@
 
   onMounted(async() => {
     await getInit()
-    init()
   })
 
   const getInit = async() => {}
-
-  const init = async(key) => {
-    // setTimeout(() => {
-    //   state.percent = 0.5
-    //   state.responses = [
-    //     {name: '片区数量',   data: [['太原六城区','10'],['太原','2'],['六城区','3']]}, 
-    //     {name: '实施中项目', data: [['太原六城区','20'],['太原','2'],['六城区','3']]},
-    //     {name: '项目数量',   data: [['太原六城区','30'],['太原','2'],['六城区','3']]},
-    //   ]
-    // }, 50)
-  }
 
   watch(() => publicStore._public.percent, async (val, old) => {
     if(proxy.isNull(val)) return

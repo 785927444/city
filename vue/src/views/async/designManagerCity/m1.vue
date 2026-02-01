@@ -76,7 +76,7 @@
               </div> -->
               <div class="ww100 flex-sc mt10">
                 <span class="w110">包含项目数</span>
-                <span class="flex1 line1">{{ v.project?v.project.length:'-' }}</span>
+                <span class="flex1 line1">{{ v.project_num?v.project_num:'-' }}</span>
               </div>
               <div class="ww100 flex-sc mt10">
                 <span class="w110">所属专项规划</span>
@@ -220,55 +220,67 @@
     getData2()
   }
 
-  const getData1 = () => {
-    let release = state.list.filter(a=>a.release_status == '1')
-    let data1 = {sum: state.list.length, release: release.length }
-    publicStore._public.percent = data1.sum? Math.floor((data1.release/data1.sum)*100)/100 : 0
-    publicStore._public.data1 = data1
-  }
+	const getData1 = () => {
+	  // 1. 初始化两个 Set 用于去重统计
+	  const allUsers = new Set()
+	  const releasedUsers = new Set()
+	  // 2. 遍历列表一次，收集数据
+	  state.list.forEach(v => {
+	    // 将所有用户 ID 加入 allUsers (用于计算分母)
+	    allUsers.add(v.user_id)
+	    // 如果状态是已发布，将用户 ID 加入 releasedUsers (用于计算分子)
+	    // 逻辑：只要该用户有任意一条记录是发布状态，该用户就算作已发布
+	    if (v.release_status == '1') {
+	      releasedUsers.add(v.user_id)
+	    }
+	  })
+	  // 3. 计算结果
+	  let data1 = { 
+	    sum: allUsers.size,       // 总用户数
+	    release: releasedUsers.size // 已发布用户数
+	  }
+	  // 4. 计算百分比 (保持你原有的公式)
+	  publicStore._public.percent = data1.sum ? Math.floor((data1.release / data1.sum) * 100) / 100 : 0
+	  publicStore._public.data1 = data1
+	}
 
-   const getData2 = async() => {
-    // state.responses = [
-    //   {name: '片区数量',   data: [['太原六城区','10'],['太原','2'],['六城区','3']]}, 
-    //   {name: '实施中项目', data: [['太原六城区','20'],['太原','2'],['六城区','3']]},
-    //   {name: '项目数量',   data: [['太原六城区','30'],['太原','2'],['六城区','3']]},
-    // ]
-    // const ids = state.list.map(item => `'${item.id}'`).join(', ')
-    // let query = {
-    //   model: `t_scheme_design`, 
-    //   field: `parent_id, COUNT(*) AS design_num`, 
-    //   args: `parent_id  IN (${ids})`, 
-    //   group: `parent_id`
-    // }
-    // let res = await publicStore.http({Api: query})
+	const getData2 = async() => {
+	  // 1. 获取并转换 designs 数据为 Map，方便 O(1) 查找
+	  const ids = state.list.map(item => `'${item.id}'`).join(', ')
+	  // let res = await publicStore.http({Api: {
+	  //   model: `t_scheme_design`, 
+	  //   field: `parent_id, COUNT(*) AS design_num`, 
+	  //   args: `parent_id IN (${ids})`, 
+	  //   group: `parent_id`
+	  // }})
     let res = []
-    let designs = proxy.isNull(res)? [] : res
-    let responses = [
-      {name: '片区数量',   data: []}, 
-      {name: '实施中项目', data: []},
-      {name: '项目数量',   data: []},
-    ]
-    state.list.forEach(v => {
-      let design_num = '0'
-      let design = designs.find(a=>a.parent_id == v.id)
-      if(design) design_num = design.design_num
-      responses.forEach(vv => {
-        // 片区数量
-        if(vv.name=='片区数量'){
-          vv.data = [...vv.data, [proxy.decrypt(v.user_name), design_num]]
-        }
-        // 实施中项目
-        if(vv.name=='实施中项目'){
-          vv.data = [...vv.data, [proxy.decrypt(v.user_name), '10']]
-        }
-        // 项目数量
-        if(vv.name=='项目数量'){
-          vv.data = [...vv.data, [proxy.decrypt(v.user_name), v.project?v.project.length:'0']]
-        }
-      })
-    })
-    publicStore._public.responses = responses
-  }
+	  const designMap = Object.fromEntries((proxy.isNull(res)?[]:res).map(d => [d.parent_id, d.design_num]))
+	  // 2. 按 user_id 合并数量
+	  const stats = {}
+	  state.list.forEach(v => {
+	    const uid = v.user_id
+	    if (!stats[uid]) {
+	      stats[uid] = { 
+	        name: proxy.decrypt(v.user_name), 
+	        area: 0, 
+	        impl: 0, 
+	        proj: 0 
+	      }
+	    }
+	    // 累加片区数量 (从Map取)
+	    stats[uid].area += Number(designMap[v.id] || 0)
+	    // 累加实施中项目 (JSON中有 task_num，源代码虽写死0，这里取真实值)
+	    stats[uid].impl += Number(v.task_num || 0)
+	    // 累加项目数量
+	    stats[uid].proj += Number(v.project_num || 0)
+	  })
+	  // 3. 生成最终结果
+	  publicStore._public.responses = [
+	    { name: '片区数量',   data: Object.values(stats).map(i => [i.name, String(i.area)]) },
+	    { name: '实施中项目', data: Object.values(stats).map(i => [i.name, String(i.impl)]) },
+	    { name: '项目数量',   data: Object.values(stats).map(i => [i.name, String(i.proj)]) }
+	  ]
+	}
 
   const handleClick = (remark, val) => {
     if(remark == 'remind') {

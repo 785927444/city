@@ -9,6 +9,7 @@
     <div class="layout-col" v-if="!isNull(publicStore.active)">
       <m21 v-if="state.actIndex == '1'" />
       <m22 v-if="state.actIndex == '2'" />
+      <m23 v-if="state.actIndex == '3'" />
     </div>
   </div>
 </template>
@@ -16,6 +17,7 @@
 <script lang="ts" setup>
   import m21 from './m21'
   import m22 from './m22'
+  import m23 from './m23'
 	const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()

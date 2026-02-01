@@ -16,6 +16,15 @@
         <step-foot @init="init" />
       </div>
     </div>
+    <!-- 上报提醒 -->
+    <el-dialog v-model="state.isFalse" title="提示" :draggable="true" width="30%">
+      <div class="f20 ww100 tc ptb30">你有片区策划需要上报，完成上报后可新增</div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button size="large" class="bgi1 white" @click.stop="state.isFalse = !state.isFalse">确 定</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -35,31 +44,67 @@
 
   onMounted(async() => {
     publicStore.actIndex = 1
-    init()
+    publicStore.form = {attr:{}, project: [], task: []}
+    publicStore._public.project = []
+    publicStore._public.task = []
+    let query = {model: 't_scheme_design', args: `user_id='${configStore.user.id}' and release_status='0'`}
+    let res = await publicStore.http({Api: query})
+    if(!proxy.isNull(res)) {
+      init(res[0]['id'])
+      state.isFalse = !state.isFalse
+    }
+    // init()
   })
 
-  const init = async() => {
-    let query = {model: 't_scheme_design', args: `user_id='${configStore.user.id}'`}
+  const init = async(key) => {
+    // let query = {model: 't_scheme_design', args: `user_id='${configStore.user.id}'`}
+    let query = key? {model: 't_scheme_design', args: `id='${key}'`} : {model: 't_scheme_design', args: `user_id='${configStore.user.id}'`}
     let res = await publicStore.http({Api: query})
     if(!proxy.isNull(res)){
       let data = res[0]
-				try {
-          // data.datetime = JSON.parse(data.datetime)
-          data.attr = data.attr? JSON.parse(data.attr) : {}
-          data.project = data.project? JSON.parse(data.project) : []
-          data.task = data.task? JSON.parse(data.task) : []
-				} catch (error) {
-					console.error("解析失败:", error.message)
-				}
+      // 获取关联项目
+      getProject(data)
+      // 获取关联任务
+      getTask(data)
+      try {
+        data.datetime = JSON.parse(data.datetime)
+        data.attr = data.attr? JSON.parse(data.attr) : {}
+      } catch (error) {
+        console.error("解析失败:", error.message)
+      }
       publicStore.form = {...data}
-      publicStore._public.project = data.project
-      publicStore._public.task = data.task
     }else{
       publicStore.form = {attr:{}, project: [], task: []}
       publicStore._public.project = []
       publicStore._public.task = []
     }
     // console.log("publicStore.form", publicStore.form)
+  }
+
+  const getProject = (data) => {
+    let query = {model: 't_scheme_design_project', args: `scheme_design_id='${data.id}'`}
+    publicStore.http({Api: query}).then(res=>{
+      if(!proxy.isNull(res)){
+        data.project = res.map(v => { return v.scheme_project_id })
+      } else {
+        data.project = []
+      }
+      publicStore.form.project = data.project
+      publicStore._public.project = JSON.parse(JSON.stringify(data.project))
+    })
+  }
+
+  const getTask = (data) => {
+    let query = {model: 't_scheme_design_task', args: `scheme_design_id='${data.id}'`}
+    publicStore.http({Api: query}).then(res=>{
+      if(!proxy.isNull(res)){
+        data.task = res.map(v => { return v.scheme_task_id })
+      } else {
+        data.task = []
+      }
+      publicStore.form.task = data.task
+      publicStore._public.task = JSON.parse(JSON.stringify(data.task))
+    })
   }
 
   const onBack = () => {
