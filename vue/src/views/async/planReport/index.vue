@@ -18,7 +18,10 @@
     </div>
     <!-- 上报提醒 -->
     <el-dialog v-model="state.isFalse" title="提示" :draggable="true" width="30%">
-      <div class="f20 ww100 tc ptb30">你有专项规划需要上报，完成上报后可新增</div>
+      <div class="f20 ww100 tc ptb30 flex-col-cc">
+        <span>你有专项规划需要上报</span>
+        <span class="mt10">完成【{{state.name}}】上报后可新增</span>
+      </div>
       <template #footer>
         <div class="dialog-footer">
           <el-button size="large" class="bgi1 white" @click.stop="state.isFalse = !state.isFalse">确 定</el-button>
@@ -46,13 +49,14 @@
     publicStore.form = {attr:{}, project: [], task: []}
     publicStore._public.project = []
     publicStore._public.task = []
-    // let query = {model: 't_scheme_plan', args: `user_id='${configStore.user.id}' and release_status='0'`}
-    // let res = await publicStore.http({Api: query})
-    // if(!proxy.isNull(res)) {
-    //   init(res[0]['id'])
-    //   state.isFalse = !state.isFalse
-    // }
-    init()
+    let query = {model: 't_scheme_plan', args: `user_id='${configStore.user.id}' and release_status='0' and type='${state.type}'`}
+    let res = await publicStore.http({Api: query})
+    if(!proxy.isNull(res)) {
+      init(res[0]['id'])
+      state.name = res[0]['name']
+      state.isFalse = !state.isFalse
+    }
+    // init()
   })
 
   const init = async(key) => {

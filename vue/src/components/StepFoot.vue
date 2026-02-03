@@ -58,7 +58,7 @@
       let changeFile = []
       if(!proxy.isNull(form.attr)){
         Object.keys(form.attr).forEach((key:any)=>{
-          if(form.attr[key].data.indexOf('/uploads')!=-1){
+          if(form.attr[key].data && form.attr[key].data.indexOf('/uploads')!=-1){
             let content = publicStore._public.contents.find(a=>a.type == key)
             const ext = '.' + publicStore.form.attr[key].data.split('.').pop()
             const newfile = `${content.parent_type}/${configStore.user.id}_${key}${ext}`
