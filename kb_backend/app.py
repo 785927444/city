@@ -1,4 +1,6 @@
 import os
+import sys
+import shutil
 import json
 import io
 import zipfile
@@ -26,6 +28,27 @@ def _env_int(name: str, default: int) -> int:
         return int(val)
     except ValueError:
         return default
+
+
+def _app_base_dir() -> Path:
+    env = os.getenv("KB_BASE_DIR")
+    if env:
+        return Path(env)
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).resolve().parent
+    return Path.cwd()
+
+
+def _bundled_path(rel: str) -> Path:
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        return Path(getattr(sys, "_MEIPASS")) / rel
+    return Path(rel)
+
+
+
+APP_BASE_DIR = _app_base_dir()
+PUBLIC_DIR = APP_BASE_DIR / "public"
+STATIC_DIR = PUBLIC_DIR / "static"
 
 
 DEFAULT_COLUMNS: List[Tuple[str, str, str, int]] = [
@@ -602,9 +625,8 @@ app.add_middleware(
 )
 
 # Mount static files
-static_dir = Path("public/static")
-static_dir.mkdir(parents=True, exist_ok=True)
-app.mount("/static", StaticFiles(directory="public/static"), name="static")
+STATIC_DIR.mkdir(parents=True, exist_ok=True)
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 storage: Storage | None = None
 storage_type: str = "unknown"
@@ -624,7 +646,15 @@ def _startup() -> None:
         return
     except Exception:
         pass
-    sqlite_path = Path(__file__).resolve().parent / "kb.sqlite3"
+    sqlite_path = Path(os.getenv("KB_SQLITE_PATH") or (APP_BASE_DIR / "kb.sqlite3"))
+    sqlite_path.parent.mkdir(parents=True, exist_ok=True)
+    if not sqlite_path.exists():
+        bundled = _bundled_path("kb.sqlite3")
+        if bundled.exists() and bundled.is_file():
+            try:
+                shutil.copy2(str(bundled), str(sqlite_path))
+            except Exception:
+                pass
     sqlite = SQLiteStorage(sqlite_path)
     sqlite.ensure_schema()
     storage = sqlite
@@ -637,8 +667,7 @@ async def upload_file(file: UploadFile = File(...), type: str = Query(None)):
     if not file.filename:
         raise HTTPException(status_code=400, detail="No filename")
     
-    # Using absolute path as requested by user
-    upload_dir = Path(r"c:\Users\Pro13\Desktop\单子\知识库\doc\城市体检平台开发\城市体检平台开发\om\om\public\static\uploads")
+    upload_dir = Path(os.getenv("KB_UPLOAD_DIR") or (STATIC_DIR / "uploads"))
     upload_dir.mkdir(parents=True, exist_ok=True)
     
     ext = file.filename.split(".")[-1].lower()
@@ -666,8 +695,7 @@ async def extract_text(file: UploadFile = File(...)):
     if ext not in ["pdf", "doc", "docx"]:
         raise HTTPException(status_code=400, detail="Unsupported file type")
     
-    # Save temp file
-    temp_dir = Path("temp_uploads")
+    temp_dir = Path(os.getenv("KB_TEMP_DIR") or (APP_BASE_DIR / "temp_uploads"))
     temp_dir.mkdir(exist_ok=True)
     temp_path = temp_dir / file.filename
     
@@ -1325,9 +1353,9 @@ def download_file(item_id: int = Query(..., ge=1)) -> StreamingResponse:
                 url = str(r.get("file_url") or "").strip()
                 local_path: Path | None = None
                 if url.startswith("/static/"):
-                    local_path = Path("public") / url.lstrip("/")
+                    local_path = PUBLIC_DIR / url.lstrip("/")
                 elif url.startswith("static/"):
-                    local_path = Path("public") / url
+                    local_path = PUBLIC_DIR / url
                 if local_path and local_path.exists() and local_path.is_file():
                     zf.write(str(local_path), arcname=name)
                 else:
