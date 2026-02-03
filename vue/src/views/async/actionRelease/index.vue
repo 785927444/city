@@ -50,7 +50,8 @@
       <!-- 头部 -->
       <div class="ww100 flex-sc p8">
         <div class="flex-sc fw f16 tc">
-          <div class="mr20 cursor flex-col-cc" v-for="(v, i) in types" :key="i" @click.stop="toPath(v.path)">
+          <div class="mr40 cursor flex-col-cc relative" v-for="(v, i) in state.types" :key="i" @click.stop="toPath(v.path)">
+            <span v-if="v.total" class="w20 h20 rad2 lh20 tc bgi13 i15 b20 l50 absolute">{{ v.total }}</span>
             <span class="mb5">{{ v.name }}</span>
             <span class="ww100 h3 rad10" :class="v.type == state.type?'bgi2':'black-rgba0'"></span>
           </div>
@@ -100,7 +101,7 @@
                   <span class="w110">更新进度时间</span>
                   <span>{{ v.rate_time?parseTime(v.rate_time):'-' }}</span>
                 </div>
-                <div class="rad5 ptb5 plr12 cursor bgi1 white" @click.stop="toPath('/schemePlanView', {id: v.id})">申请储备</div>
+                <div class="rad5 ptb5 plr12 cursor bgi1 white" @click.stop="state.active = {...v}; state.isFalse = !state.isFalse">申请储备</div>
               </div>
             </div>
           </div>
@@ -109,20 +110,29 @@
       <!-- 分页 -->
       <Pagination class="" style="padding-bottom: 0;" v-show="state.total>0" :total="state.total" v-model:page.sync="state.page" v-model:limit.sync="state.limit" @pagination="init" />
     </div>
+    <!-- 弹窗 -->
+    <el-dialog v-model="state.isFalse" title="温馨提示" :draggable="true" width="30%">
+      <div class="ww100 flex-col-cc">
+        <div class="f20 tc ptb30">是否将该项目申请纳入储备</div>
+      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button size="large" class="bgc white" @click="state.isFalse = !state.isFalse">取 消</el-button>
+          <el-button size="large" class="bgi1 white" @click.stop="toPath('/actionApply', {id: state.active.id})">确 定</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { toPath } from '@/utils/common'
+
 	const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
   const dictStore = proxy.dictStore()
   const route = useRoute()
-  const types = [
-    {type: 'actionRelease', name: '已上报', path: '/actionRelease'},
-    {type: 'actionApply', name: '已申请', path: '/actionApply'},
-    {type: 'actionReturn', name: '已退回', path: '/actionReturn'},
-  ]
   const state = reactive({
 	  ...publicStore.$state,
     click: false,
@@ -131,6 +141,11 @@
     province: '',
     citys: [],
     city: '',
+    types: [
+      {type: 'actionRelease', name: '已上报', path: '/actionRelease'},
+      {type: 'actionApply', name: '已申请', path: '/actionApply'},
+      {type: 'actionReturn', name: '已退回', path: '/actionReturn'},
+    ],
     type: 'actionRelease',
     completion_status: '1',
     search: '',
@@ -162,8 +177,14 @@
     let model = 't_scheme_project p'
     let field = `p.*, sp.name as schemeName, sp.parent_area`
     let join = `t_scheme_plan sp ON p.scheme_id = sp.id`
-    let args = `sp.release_status = '1'`
+    let args = `sp.release_status = '1' and p.apply_status = '0'`
+    let args1 = `sp.release_status = '1' and p.apply_status = '1'`
+    let args2 = `sp.release_status = '1' and p.apply_status = '3'`
     let query = {model: model, field: field, join: join, args: args}
+    let queryapi1 = {model: model, field: `COUNT(*)`, join: join, args: args1}
+    let queryapi2 = {model: model, field: `COUNT(*)`, join: join, args: args2}
+    getApply1(queryapi1)
+    getApply2(queryapi2)
     if(state.province) {
       query.args += ` and sp.province='${state.province}'`
       if(state.city) query.args += ` and sp.city='${state.city}'`
@@ -186,6 +207,18 @@
     state.list = proxy.isNull(res.Api1)? [] : res.Api1
     state.list.forEach(v => {
       v.area = (v.province_name||'') + (v.city_name?`-${v.city_name}`:'') + (v.district_name?`-${v.district_name}`:'')
+    })
+  }
+
+  const getApply1 = (query) => {
+    publicStore.http({Api: query}).then(res=>{
+      state.types[1]['total'] = proxy.isNull(res)? 0 : res[0]['COUNT(*)']
+    })
+  }
+
+  const getApply2 = (query) => {
+    publicStore.http({Api: query}).then(res=>{
+      state.types[2]['total'] = proxy.isNull(res)? 0 : res[0]['COUNT(*)']
     })
   }
 
