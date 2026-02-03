@@ -7,6 +7,10 @@ const modules = import.meta.glob('@/views/**/**.vue')
 router.beforeEach(async (to: any, from: any, next) => {
   // 仅允许字母、数字、斜杠和连字符
   if (!to.path.match(/^\/[a-zA-Z0-9\/\-_]*$/)) return next('/404')
+  const { origin, pathname, search, hash } = window.location
+  if (!hash && pathname && pathname !== '/') {
+    return window.location.replace(`${origin}/#${pathname}${search}`)
+  }
   // 未匹配到任何路由
   if(!checkRoute(window.location.href)) return window.location.replace(`${window.location.origin}/#/404`)  
   // 消毁echarts
@@ -114,11 +118,14 @@ export function filterRoutes(source:any, id:any, parentId:any, children:any, chi
 
 // 检查动态路由
 export function checkRoute(url) {  
-  const paths = url.replace(/^https?:\/\//, '').split(/\/(.*)/, 2)
-  if(!paths[1]) return true
-  if(paths[1].length == 0) return true
-  if(paths[1] && paths[1][0] == '#') return true
-  return false
+  try {
+    const u = new URL(url)
+    if (u.hash && u.hash.startsWith('#/')) return true
+    if (!u.hash && (!u.pathname || u.pathname === '/')) return true
+    return false
+  } catch {
+    return true
+  }
 }
 
 // 获取当前页面URL的查询参数

@@ -32,10 +32,13 @@
   // 在这里使用 watch 监听路由变化
   watch(() => route.path, (to, from) => {
     let crumb = ''
-    proxy.parentNodes(configStore.isRoute?configStore.routes:adminRoutes, route.path, 'path').reverse().forEach(item => {
+    const routeTree = configStore.isRoute && configStore.isRoute !== 'false' ? configStore.routes : adminRoutes
+    const nodes = Array.isArray(routeTree) ? proxy.parentNodes(routeTree, route.path, 'path') : []
+    const list = Array.isArray(nodes) ? nodes.slice().reverse() : []
+    list.forEach((item: any) => {
       crumb = crumb + item.name + ' / '
     })
-    crumb  = crumb + route.name
+    crumb  = crumb + (route.name ?? '')
     configStore.crumbList = crumb
   }, {immediate: true, deep: true});
   

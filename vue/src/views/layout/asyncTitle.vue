@@ -5,6 +5,7 @@
       <div class="f20 flex-sc ww20 fw">
         <img class="mr10 w30" src="@/assets/images/a_logo.png" />
         <!-- <span>城市体检评估管理信息平台</span> -->
+        <span> </span>
       </div>
       <div class="hh100 flex1 flex-ec i2 f16">
         <div class="hh100 flex1 flex-sc">
@@ -16,6 +17,9 @@
           </div> 
           <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/problem')!=-1?'bob-i1-1':''" @click.stop="toPath('/problem')">
             <span class="actfont" :class="route.path.indexOf('/problem')!=-1?'i1':''">体检整改跟踪</span>
+          </div>
+          <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/knowledge')!=-1?'bob-i1-1':''" @click.stop="toPath('/knowledge')">
+            <span class="actfont" :class="route.path.indexOf('/knowledge')!=-1?'i1':''">知识库</span>
           </div>
           <el-popover placement="bottom" width="4%">
            <div class="flex-col tc" v-if="!isNull(configStore.routes)">

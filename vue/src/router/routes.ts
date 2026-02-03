@@ -47,6 +47,41 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: { next: false },
         component: () => import('@/views/async/home/index.vue'),
         children: []
+      },
+      {
+        path: '/knowledge',
+        name: '知识库',
+        meta: { next: false },
+        component: () => import('@/views/async/knowledge/index.vue'),
+        children: []
+      },
+      {
+        path: '/knowledge/column/:code',
+        name: '知识库专栏',
+        meta: { next: false },
+        component: () => import('@/views/async/knowledge/column.vue'),
+        children: []
+      },
+      {
+        path: '/knowledge/user-articles',
+        name: '我的文章',
+        meta: { next: false },
+        component: () => import('@/views/async/knowledge/UserArticles.vue'),
+        children: []
+      },
+      {
+        path: '/knowledge/manage',
+        name: '知识库管理后台',
+        meta: { next: false },
+        component: () => import('@/views/async/knowledge/Manage.vue'),
+        children: []
+      },
+      {
+        path: '/knowledge/item/:id',
+        name: '专栏详情',
+        meta: { next: false },
+        component: () => import('@/views/async/knowledge/detail.vue'),
+        children: []
       }
     ]
   },
@@ -60,6 +95,22 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
 
 // 必需权限
 export const adminRoutes: Array<RouteRecordRaw> = [
+  {
+    path: '/kb-management',
+    name: '知识库管理',
+    meta: { isroute: 1, icon: '' },
+    component: adminLayout,
+    redirect: '/kb-management/user-articles',
+    children: [
+      {
+        path: '/kb-management/user-articles',
+        name: '知识库内容管理',
+        meta: { isroute: 1, icon: '' },
+        component: () => import('@/views/async/knowledge/UserArticles.vue'),
+        children: []
+      }
+    ]
+  },
   // {
   //   path: '/admin',
   //   name: '系统管理',

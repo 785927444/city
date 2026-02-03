@@ -56,7 +56,7 @@
         }
       }
     }
-    // setLog(res)
+    setLog(res)
     let code = res.data.code
     let errcode = res.data.errcode
     if (code === 200 || code === '200' || code === 400 || code === '400' || errcode === 0 || errcode === '0') {
@@ -93,7 +93,7 @@
       return Promise.reject('error')
     }
   }, error => {
-    if(error.response.headers && error.response.headers['x-csrf-token']) configStore().csrfToken = error.response.headers['x-csrf-token']
+    if (error.response?.headers && error.response.headers['x-csrf-token']) configStore().csrfToken = error.response.headers['x-csrf-token']
     // 处理 CSRF Token 过期
     if (error.response?.status === 403 && error.response.data?.msg === 'CSRF token invalid') {
       return handleCsrfTokenExpired(error)
