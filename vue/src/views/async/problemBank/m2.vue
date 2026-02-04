@@ -53,8 +53,12 @@
       <el-table-column prop="result" label="体检结果" align="center" width="80"/>
       <el-table-column label="存在问题">
         <template #default="scope, $index">
-          
-          <el-popover title="存在问题" width="700" :content="scope.row.problem_content" placement="top-start">
+          <el-popover title="" width="800" placement="top-start">
+            <template #default>
+              <div class="problem-content f18 h50x8">
+                <div class="hh100 overlay flex-col">{{scope.row.problem_content}}</div>
+              </div>
+            </template>
             <template #reference>
               <span class="line2">{{scope.row.problem_content}}</span>
             </template>
@@ -66,8 +70,9 @@
           <span>{{scope.row.action_type?find(action_types, ['value', scope.row.action_type], 'name'):''}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="problem_num" label="问题数量" width="80" align="center" />
-      <el-table-column prop="action_rate" label="整改进度" width="80" align="center" />
+      <el-table-column prop="action_unit" label="责任单位" width="100" align="center" />
+      <el-table-column prop="problem_num" label="问题数量" width="70" align="center" />
+      <el-table-column prop="action_rate" label="整改进度" width="70" align="center" />
       <el-table-column label="问题区域" width="100" align="center" >
         <template #default="scope, $index">
           <span class="i1 cursor" @click.stop="problemRef.onVisable(scope.row)">查看问题分布</span>
@@ -154,7 +159,7 @@
     // 其他列（包括序号列 columnIndex === 0）保持默认，不合并
     return { rowspan: 1, colspan: 1 };
   };
-  
+
   watch(() => publicStore.active, async (val, old) => {
     if(proxy.isNull(val)) return
     if(JSON.stringify(val) == JSON.stringify(old)) return
@@ -190,6 +195,7 @@
 </script>
   
 <style scoped lang="scss">
-
+/* 修改弹窗内容的样式 */
+.maxheight { max-height: 100px}
 </style>
   

@@ -17,6 +17,7 @@
   })
 
   onMounted(async() => {
+    publicStore.actIndex = 1
     init()
     getDesignNum()
   })
@@ -51,6 +52,18 @@
 </script>
   
 <style scoped lang="scss">
-
+.fullscreen-absolute {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* 高度可以任意设置 */
+  height: 20000px;
+  /* 如果需要滚动 */
+  overflow-y: auto;
+  /* 如果需要覆盖原有内容 */
+  z-index: 10;
+  background: white; /* 添加背景避免透出 */
+}
 </style>
   

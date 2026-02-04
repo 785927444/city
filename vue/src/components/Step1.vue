@@ -40,7 +40,7 @@
             <span class="w50x2">片区编号</span>
           </div>
           <div class="flex1">
-            <el-input class="ww100" v-model="publicStore.form.num" placeholder="请输入" size="large" />
+            <el-input class="ww100" v-model="publicStore.form.num" placeholder="请输入英文或数字" size="large" @input="publicStore.form.num = publicStore.form.num.replace(/[^a-zA-Z0-9]/g, '')" />
           </div>
         </div>
       </div>

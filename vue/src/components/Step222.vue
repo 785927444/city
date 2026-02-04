@@ -2,23 +2,23 @@
   <el-dialog v-model="state.isFalse" title="新增" :before-close="onVisable" :draggable="true" width="40%">
     <div class="layout-col">
       <el-form ref="formRef" :model="state.form" :rules="state.ruleList" label-width="85px">
-        <el-form-item label="任务类型" prop="task_type">
+        <el-form-item label="任务类型" prop="task_type" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
           <el-select size="large" v-model="state.form.task_type" placeholder="请选择" style="width:100%" clearable filterable @change="state.form.task_class='';state.form.construct_content=''">
             <el-option v-for="(v, i) in props.state.task_types" :key="i" :label="v.name" :value="v.id.toString()" />
           </el-select>
         </el-form-item>
-        <el-form-item label="类型中类" prop="task_class">
+        <el-form-item label="类型中类" prop="task_class" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
           <el-select size="large" v-model="state.form.task_class" placeholder="请选择" style="width:100%" clearable filterable @change="state.form.construct_content=''">
             <el-option v-for="(v, i) in state.form.task_type?props.state.task_classs.filter(a=>a.parent_id == state.form.task_type):[]" :key="i" :label="v.name" :value="v.id.toString()" />
           </el-select>
         </el-form-item>
-        <el-form-item label="建设内容" prop="construct_content">
+        <el-form-item label="建设内容" prop="construct_content" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
           <el-select size="large" v-model="state.form.construct_content" placeholder="请选择" style="width:100%" clearable filterable>
             <el-option v-for="(v, i) in state.form.task_type&&state.form.task_class?props.state.construct_contents.filter(a=>a.parent_id == state.form.task_class):[]" :key="i" :label="v.name" :value="v.id.toString()" />
           </el-select>
         </el-form-item>
-        <el-form-item label="量化目标" prop="construct_content">
-          <el-input v-model="state.form.unit_target" size="large" placeholder="请输入" />
+        <el-form-item label="量化目标" prop="construct_content" :rules="[{ required: true, message: '请输入', trigger: 'blur' }, { pattern: new RegExp('^(100000|[1-9]\\d{0,4}|0)$'), message: '请输入0~1000000000', trigger: ['blur', 'change'] }]">
+          <el-input v-model="state.form.unit_target" size="large" type="number" placeholder="请输入" />
         </el-form-item>
       </el-form>
     </div>
@@ -63,42 +63,44 @@
 
   const handleSubmit = (formEl) => {
     formEl.validate(async valid =>{
-      let aera = (configStore.user.city_name?configStore.user.city_name:'') + (configStore.user.city_name&&configStore.user.district_name?'-':'') + (configStore.user.district_name?configStore.user.district_name:'')
-      if(!aera) aera = configStore.user.province_name
-      let form = {
-        "model": "t_scheme_task", 
-        list:[
-          {
-            task_type: state.form.task_type,
-            task_class: state.form.task_class,
-            construct_content: state.form.construct_content,
-            unit_target: state.form.unit_target,
-            num: getNum(configStore.user.city_name?configStore.user.city_name:configStore.user.province_name?configStore.user.province_name:''),
-            type: props.type, 
-            aera: aera,
-            user_id: configStore.user.id,
-            user_name: configStore.user.name,
-            province: configStore.user.province,
-            province_name: configStore.user.province_name,
-            city: configStore.user.city,
-            city_name: configStore.user.city_name,
-            district: configStore.user.district,
-            district_name: configStore.user.district_name,
-          }
-        ]
+      if (valid) {
+        let aera = (configStore.user.city_name?configStore.user.city_name:'') + (configStore.user.city_name&&configStore.user.district_name?'-':'') + (configStore.user.district_name?configStore.user.district_name:'')
+        if(!aera) aera = configStore.user.province_name
+        let form = {
+          "model": "t_scheme_task", 
+          list:[
+            {
+              task_type: state.form.task_type,
+              task_class: state.form.task_class,
+              construct_content: state.form.construct_content,
+              unit_target: state.form.unit_target,
+              num: getNum(configStore.user.city_name?configStore.user.city_name:configStore.user.province_name?configStore.user.province_name:''),
+              type: props.type, 
+              aera: aera,
+              user_id: configStore.user.id,
+              user_name: configStore.user.name,
+              province: configStore.user.province,
+              province_name: configStore.user.province_name,
+              city: configStore.user.city,
+              city_name: configStore.user.city_name,
+              district: configStore.user.district,
+              district_name: configStore.user.district_name,
+            }
+          ]
+        }
+        publicStore.form.task = [...publicStore.form.task, ...form.list]
+        console.log("publicStore.form.task---", publicStore.form.task)
+        onVisable()
+        // api.addApi(form).then((res:any) => {
+        //   if(res.code == 200){
+        //     ElNotification({ title: '提示', message: '操作成功', type: 'success' })
+        //     emit('init')
+        //     onVisable()
+        //   }
+        // }).catch((err) => {
+        //   ElNotification({ title: '提示', message: '操作失败', type: 'error' })
+        // })
       }
-      publicStore.form.task = [...publicStore.form.task, ...form.list]
-      console.log("publicStore.form.task---", publicStore.form.task)
-      onVisable()
-      // api.addApi(form).then((res:any) => {
-      //   if(res.code == 200){
-      //     ElNotification({ title: '提示', message: '操作成功', type: 'success' })
-      //     emit('init')
-      //     onVisable()
-      //   }
-      // }).catch((err) => {
-      //   ElNotification({ title: '提示', message: '操作失败', type: 'error' })
-      // })
 	  }).catch((err:any) =>{
 			state.loading = false
 		  console.log('表单错误信息：', err);

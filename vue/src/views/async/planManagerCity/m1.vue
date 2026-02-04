@@ -47,7 +47,7 @@
         <div class="flex-sc fw f16 tc">
           <div class="mr20 cursor flex-col-cc" v-for="(v, i) in types" :key="i" @click.stop="toPath(v.path)">
             <span class="mb5">{{ v.name }}</span>
-            <span class="ww100 h3 rad10" :class="v.type == state.type?'bgi2':'black-rgba0'"></span>
+            <span class="ww100 h3 rad10" :class="v.type == state.tabtype?'bgi2':'black-rgba0'"></span>
           </div>
         </div>
         <div class="flex-ec flex1">
@@ -144,7 +144,7 @@
     click: false,
     clickArr: [],
     status: '1',
-    type: 'special',
+    tabtype: 'special',
     provinces: [],
     province: '',
     citys: [],

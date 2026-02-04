@@ -51,6 +51,13 @@
 
   const onSave = async() => {
     ElMessageBox.confirm('保存信息后可进行上报，是否确定继续', '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(() => {
+      // if(props.state.type=='plan' && publicStore.actIndex == 2) {
+      //   if(!publicStore.form.attr) return ElNotification({ title: '提示', message: '规划文本与规划图表为必须', type: 'error' })
+      //   if(!publicStore.form.attr.plan_text1) return ElNotification({ title: '提示', message: '规划文本必须', type: 'error' })
+      //   if(!publicStore.form.attr.plan_text2) return ElNotification({ title: '提示', message: '规划说明必须', type: 'error' })
+      //   if(!publicStore.form.attr.plan_echart1) return ElNotification({ title: '提示', message: '规划图纸必须', type: 'error' })
+      //   if(!publicStore.form.attr.plan_echart2) return ElNotification({ title: '提示', message: '规划图表必须', type: 'error' })
+      // }
       let form = JSON.parse(JSON.stringify(publicStore.form))
       let apikey = form.id?'updApi':'addApi'
       if(!form.id) form.id=uuidv6()

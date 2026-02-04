@@ -3,13 +3,13 @@
     <div class="ww100 flex-sc mb20 bob-i16-1 pb20">
       <span class="fw f16 bob-ca-3 pb10">详情信息</span>
       <div class="flex-sc rad5 hidden ml40">
-        <span class="w100 tc ptb8 cursor mr1" :class="state.actIndex == v.value ? 'bgi1 white' : 'bgi16'" v-for="(v, i) in actives" :key="'i'" @click.stop="state.actIndex = v.value">{{ v.name }}</span>
+        <span class="w100 tc ptb8 cursor mr1" :class="publicStore.actIndex == v.value ? 'bgi1 white' : 'bgi16'" v-for="(v, i) in actives" :key="'i'" @click.stop="publicStore.actIndex = v.value">{{ v.name }}</span>
       </div>
     </div>
     <div class="layout-col" v-if="!isNull(publicStore.active)">
-      <m21 v-if="state.actIndex == '1'" />
-      <m22 v-if="state.actIndex == '2'" />
-      <m23 v-if="state.actIndex == '3'" />
+      <m21 v-if="publicStore.actIndex == '1'" />
+      <m22 v-if="publicStore.actIndex == '2'" />
+      <m23 v-if="publicStore.actIndex == '3'" />
     </div>
   </div>
 </template>

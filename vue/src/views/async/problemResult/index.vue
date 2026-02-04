@@ -15,6 +15,9 @@
         </div>
       </template>
       <template #right-content>
+        <div class="rad4 ptb6 plr12 flex-cc cursor bo-i1-1 i1 ml15" @click.stop="addRef.onVisable(state.addItem)">
+          <span class="f14 ml5">新增</span>
+        </div>
         <div class="rad4 ptb6 plr12 flex-cc cursor bo-i1-1 i1 ml15" @click.stop="router.back()">
           <span class="f14 ml5">返回</span>
         </div>
@@ -42,22 +45,42 @@
         empty-text="暂无数据" 
         :data="state.list" stripe>
         <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="50" />
-        <el-table-column label="指标名称" width="250">
+        <el-table-column label="指标名称">
           <template #default="scope, $index">
             <span>{{scope.row.parent_id?find(state.task_problems, ['id', scope.row.parent_id], 'name'):''}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="评价结果" align="center" width="100">
+        <el-table-column label="指标类别" width="170" align="center">
+          <template #default="scope, $index">
+            <span>{{scope.row.class?find(classs, ['value', scope.row.class], 'name'):''}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="所属维度" width="170" align="center">
+          <template #default="scope, $index">
+            <span>{{scope.row.parent_id?find(state.task_problems, ['id', scope.row.parent_id], 'type'):''}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="指标单位" width="170" align="center">
+          <template #default="scope, $index">
+            <span>{{scope.row.parent_id?find(state.task_problems, ['id', scope.row.parent_id], 'unit'):''}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="pre_year" label="上年指标值" width="170" align="center" />
+        <el-table-column prop="nex_year" label="本年指标值" width="170" align="center" />
+        <el-table-column label="评价结果" align="center" width="170">
           <template #default="scope, $index">
             <span>{{scope.row.res?find(ress, ['value', scope.row.res], 'name'):''}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="res_content" label="标准依据" align="center" />
-        <el-table-column prop="pre_year" label="上年指标值" width="100" align="center" />
-        <el-table-column prop="nex_year" label="本年指标值" width="100" align="center" />
+        <el-table-column label="操作" align="center" width="55">
+          <template #default="scope, $index">
+            <span class="cursor i8" @click.stop="handleClick('del', scope.row)">删除</span>
+          </template>
+        </el-table-column>
         </el-table>
       </div>
     </div>
+    <Add @init="init" :state="state" ref="addRef" />
   </div>
 </template>
 
@@ -67,6 +90,7 @@
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
   const route = useRoute()
+  let addRef = $ref()
   const ress = [
     {value: '1', name: '不达标'},
     {value: '2', name: '不足'},
@@ -75,8 +99,20 @@
     {value: '5', name: '较好'},
     {value: '6', name: '很好'},
   ]
+  const classs = [
+    {value: '1', name: '预期指标'},
+    {value: '2', name: '底线指标'},
+  ]
   const state = reactive({
 	  ...publicStore.$state,
+    editFrom: [
+      { required: true, editshow: true,  name: '选择指标', key: 'parent_id', type: 'select', list: [], value: 'id', label: 'name' },
+      { required: true, editshow: true,  name: '指标类别', key: 'class', type: 'select', list: classs, value: 'value', label: 'name' },
+      { required: true, editshow: true, name: '上年指标值', key: 'pre_year', type: 'input', class: 'number', regex: ['^(100000|[1-9]\\d{0,4}|0)$', '请输入0~100000'] },
+      { required: true, editshow: true, name: '本年指标值', key: 'nex_year', type: 'input', class: 'number', regex: ['^(100000|[1-9]\\d{0,4}|0)$', '请输入0~100000']},
+      { required: true, editshow: true,  name: '评价', key: 'res', type: 'select', list: ress, value: 'value', label: 'name' },
+    ],
+    model: 't_scheme_problem_result',
   })
   const indexMethod = (index) => { return parseInt(state.page) + index }
 
@@ -87,13 +123,13 @@
   })
 
   const getInit = async() => {
-    let query = {model: 't_task_type', args: `parent_id='${state.active.parent_id}'`, order: `orderd ASC`}
+    let query = {model: 't_problem_type', args: `parent_id='${state.active.parent_id}'`, order: `orderd ASC`}
     let res = await publicStore.http({Api: query})
     state.actives = proxy.isNull(res)? [] : res.sort((a, b) => a.orderd - b.orderd)
   }
 
   const init = async(key) => {
-    console.log("state.active", state.active)
+    setAddItem()
     let query1 = {model: 't_task_problem', args: `parent_id='${state.active.id}'`, order: `orderd ASC`} 
     let query2 = {model: 't_scheme_problem_result', args: `scheme_id='${state.active.scheme_id}' and parents_id='${state.active.id}'`} 
     if(!proxy.isNull(state.datetime)) {
@@ -104,7 +140,25 @@
     }
     let res = await publicStore.http({Api1: query1, Api2: query2})
     state.task_problems = proxy.isNull(res.Api1)? [] : res.Api1
+    state.editFrom[0]['list'] = [...res.Api1]
     state.list = proxy.isNull(res.Api2)? [] : res.Api2
+  }
+
+  const setAddItem = () => {
+    state.addItem = {
+      check_year: '2026',
+      check_time: '1770048252885',
+      scheme_id: state.active.scheme_id, 
+      parents_id: state.active.id, 
+      user_id: configStore.user.id,
+      user_name: configStore.user.name,
+      province: configStore.user.province,
+      province_name: configStore.user.province_name,
+      city: configStore.user.city,
+      city_name: configStore.user.city_name,
+      district: configStore.user.district,
+      district_name: configStore.user.district_name,
+    }
   }
 
   const handleClick = (remark, val) => {
