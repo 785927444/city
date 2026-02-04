@@ -12,9 +12,19 @@
           <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/scheme')!=-1?'bob-i1-1':''" @click.stop="toPath('/scheme')">
             <span class="actfont" :class="route.path.indexOf('/scheme')!=-1?'i1':''">更新规划策划</span>
           </div>
-          <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/action')!=-1?'bob-i1-1':''" @click.stop="toPath('/action')">
-            <span class="actfont" :class="route.path.indexOf('/action')!=-1?'i1':''">实施与调度管理</span>
-          </div> 
+          <el-popover placement="bottom" width="6%">
+            <div class="flex-col tc">
+              <div class="ww100 flex-sc p5 cursor actfont" :class="route.path.indexOf('/implementation/basic-project-overview')!=-1?'i1':''" @click.stop="toPath('/implementation/basic-project-overview')">
+                基础项目总览
+              </div>
+              <div class="ww100 flex-sc p5 cursor actfont" v-if="!isNull(configStore.routes)" v-for="(v, i) in findNode(configStore.routes, node => node.path=='/action', 'children')" :key="i" :class="route.path == v.path?'i1':''" @click.stop="toPath(v.path)">{{ v.name }}</div>
+            </div>
+            <template #reference>
+              <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/action')!=-1?'bob-i1-1':''" @click.stop="toPath('/action')">
+                <span class="actfont" :class="route.path.indexOf('/action')!=-1?'i1':''">实施与调度管理</span>
+              </div>
+            </template>
+          </el-popover>
           <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/problem')!=-1?'bob-i1-1':''" @click.stop="toPath('/problem')">
             <span class="actfont" :class="route.path.indexOf('/problem')!=-1?'i1':''">体检整改跟踪</span>
           </div>

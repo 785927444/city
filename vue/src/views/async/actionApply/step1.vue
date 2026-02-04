@@ -116,13 +116,13 @@
       </div> -->
 
     </div>
-    <project :state="state" @init="init" ref="projectRef" />
+    <projects :state="state" @init="init" ref="projectRef" />
   </div>
 </template>
 
 <script lang="ts" setup>
   import api from '@/api'
-  import project from './project'
+  import projects from './projects'
 	const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()

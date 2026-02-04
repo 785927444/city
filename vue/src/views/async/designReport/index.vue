@@ -46,13 +46,14 @@
     publicStore.form = {attr:{}, project: [], task: []}
     publicStore._public.project = []
     publicStore._public.task = []
-    // let query = {model: 't_scheme_plan', args: `user_id='${configStore.user.id}' and release_status='0'`}
-    // let res = await publicStore.http({Api: query})
-    // if(!proxy.isNull(res)) {
-    //   init(res[0]['id'])
-    //   state.isFalse = !state.isFalse
-    // }
-    init()
+    let query = {model: 't_scheme_plan', args: `user_id='${configStore.user.id}' and release_status='0' and type='${state.type}'`}
+    let res = await publicStore.http({Api: query})
+    if(!proxy.isNull(res)) {
+      init(res[0]['id'])
+      state.name = res[0]['name']
+      state.isFalse = !state.isFalse
+    }
+    // init()
   })
 
   const init = async(key) => {

@@ -33,7 +33,7 @@
       { width: 'w50x4', show: true, align: 'left', key: 'task_type', name: '任务类型', type: 'select', list: [], value: 'id', label: 'name' },
       { width: 'w50x3', show: true, align: 'left', key: 'construct_scale', name: '建设规模' }, 
       { width: 'w50x4', show: true, align: 'left', key: 'construct_nature', name: '建设性质' }, 
-      { width: 'w50x3', show: true, align: 'left', key: 'construct_price', name: '投资预估' },
+      { width: 'w50x3', show: true, align: 'left', key: 'construct_price', name: '投资预估(万元)' },
       { width: 'w50x3', show: true, align: 'left', key: 'construct_datetime', name: '建设周期' },
     ],
     export: [
@@ -119,7 +119,6 @@
         num: getNum(configStore.user.city_name),
         type: props.type, 
         aera: (configStore.user.city_name?configStore.user.city_name:'') + (configStore.user.city_name&&configStore.user.district_name?'-':'') + (configStore.user.district_name?configStore.user.district_name:''),
-        user_name: configStore.user.name,
         user_id: configStore.user.id,
         user_name: configStore.user.name,
         province: configStore.user.province,

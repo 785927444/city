@@ -3,7 +3,7 @@
     <aa-title title="我的文章">
       <template #right-content>
         <div class="flex-sc">
-          <div class="rad4 ptb5 plr8 flex-cc cursor bgi1 white ml10" @click="handleAdd">新增内容</div>
+          <div class="rad4 ptb5 plr8 flex-cc cursor bgi1 white ml10" @click="handleAdd">发布内容</div>
           <div class="rad4 ptb5 plr8 flex-cc cursor bg-white c8 bo-cc-1 ml10" @click="handleBack">返回</div>
         </div>
       </template>

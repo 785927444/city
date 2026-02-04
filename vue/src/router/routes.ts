@@ -82,6 +82,13 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: { next: false },
         component: () => import('@/views/async/knowledge/detail.vue'),
         children: []
+      },
+      {
+        path: '/implementation/basic-project-overview',
+        name: '基础项目总览',
+        meta: { next: false },
+        component: () => import('@/views/async/implementation/basicProjectOverview/index.vue'),
+        children: []
       }
     ]
   },

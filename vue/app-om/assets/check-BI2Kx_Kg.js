@@ -1,1 +1,0 @@
-import{a9 as o,o as t,c as n,f as a}from"./index-BWjCSAnw.js";const r={viewBox:"0 0 1024 1024",width:"1.2em",height:"1.2em"};function c(l,e){return t(),n("svg",r,[...e[0]||(e[0]=[a("path",{fill:"currentColor",d:"M406.7 707L195.8 496.2a32 32 0 1 0-45.2 45.2l256 256l512-512a32 32 0 0 0-45.3-45.2L406.6 706.9z"},null,-1)])])}const i=o({name:"ep-check",render:c});export{i as _};

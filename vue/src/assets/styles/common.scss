@@ -8,7 +8,7 @@
 /* 通用样式scss版 */
 $bg: #f5f7f9;
 html, 
-body {height: 100%; margin: 0; padding: 0; background: linear-gradient(180deg, #081E64 0%, #02103D 100%);}
+body {height: 100%; margin: 0; padding: 0; background: $bg;}
 #app {height: 100%; margin: 0; padding: 0; font-family: PingFang SC; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 	-moz-user-select:none; /*火狐*/-webkit-user-select:none; /*webkit浏览器*/ -ms-user-select:none; /*IE10*/-khtml-user-select:none; /*早期浏览器*/ 
 	user-select:none; position: relative; color: #101010;font-size: 14px;background: $bg; background-size: 100% 100%;}

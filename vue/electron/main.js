@@ -39,7 +39,7 @@ function createWindow() {
     mainWindow = null
   })
   // and load the index.html of the app.
-  mainWindow.loadFile('p90web-yqjc/index.html')
+  mainWindow.loadFile('app-om/index.html')
   // mainWindow.loadURL('http://localhost:3000/')
  
 	// Open the DevTools.

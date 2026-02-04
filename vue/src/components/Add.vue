@@ -146,13 +146,18 @@
         // 获取规则
         if(item.required){
           if(item.editshow != 'none' && (title == '创建' || item.editshow)){
-            let rule = proxy.varObj(item.key, [
+            const rules = [
               {
                 required: true, 
                 message: item.type=='input'||item.type=='textarea'?'请输入':'请选择', 
-                trigger: item.type=='input'||item.type=='textarea'?['blur']:['blur','change'], 
-                // pattern: item.pattern?item.pattern:''
-              }])
+                trigger: item.type=='input'||item.type=='textarea'?['blur']:['blur','change']
+              }
+            ]
+            // 添加正则规则
+            if(item.regex){
+              rules.push({ pattern: new RegExp(item.regex[0]), message: item.regex[1], trigger: ['blur', 'change'] })
+            }
+            let rule = proxy.varObj(item.key, rules)
             Object.assign(ruleList, rule)
           }
         }

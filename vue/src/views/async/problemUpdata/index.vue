@@ -55,7 +55,20 @@
           </template>
         </el-table-column>
         <el-table-column prop="result" label="体检结果" align="center" width="80"/>
-        <el-table-column prop="problem_content" label="存在问题" />
+        <el-table-column label="存在问题">
+          <template #default="scope, $index">
+            <el-popover title="" width="800" placement="top-start">
+              <template #default>
+                <div class="problem-content f18 h50x8">
+                  <div class="hh100 overlay flex-col">{{scope.row.problem_content}}</div>
+                </div>
+              </template>
+              <template #reference>
+                <span class="line2">{{scope.row.problem_content}}</span>
+              </template>
+            </el-popover>
+          </template>
+        </el-table-column>
         <el-table-column label="整治类型" align="center" width="80">
           <template #default="scope, $index">
             <span>{{scope.row.action_type?find(action_types, ['value', scope.row.action_type], 'name'):''}}</span>
