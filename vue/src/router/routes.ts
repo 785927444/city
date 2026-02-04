@@ -51,7 +51,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
       {
         path: '/knowledge',
         name: '知识库',
-        meta: { next: fknowledgealse },
+        meta: { next: false },
         component: () => import('@/views/async/knowledge/index.vue'),
         children: []
       },
