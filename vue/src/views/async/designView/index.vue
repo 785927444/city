@@ -1,7 +1,7 @@
 <template>
-  <div class="layout-col">
+  <div class="ww100 hh100 overlay">
     <m1 class="rad8 hidden" />
-    <m2 class="flex1 hh100 rad8 hidden" />
+    <m2 class="rad8 hidden" :class="publicStore.actIndex==1?'hhover':''" />
   </div>
 </template>
 
@@ -17,6 +17,7 @@
   })
 
   onMounted(async() => {
+    publicStore.actIndex = 1
     init()
     getDesignNum()
   })
@@ -51,6 +52,6 @@
 </script>
   
 <style scoped lang="scss">
-
+.hhover{height: 1000px;}
 </style>
   

@@ -126,8 +126,6 @@
 </template>
 
 <script lang="ts" setup>
-import { toPath } from '@/utils/common'
-
 	const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
@@ -174,26 +172,25 @@ import { toPath } from '@/utils/common'
   }
 
   const init = async(key) => {
-    let model = 't_scheme_project p'
-    let field = `p.*, sp.name as schemeName, sp.parent_area`
-    let join = `t_scheme_plan sp ON p.scheme_id = sp.id`
-    let args = `sp.release_status = '1' and p.apply_status = '0'`
-    let args1 = `sp.release_status = '1' and p.apply_status = '1'`
-    let args2 = `sp.release_status = '1' and p.apply_status = '3'`
-    let query = {model: model, field: field, join: join, args: args}
-    let queryapi1 = {model: model, field: `COUNT(*)`, join: join, args: args1}
-    let queryapi2 = {model: model, field: `COUNT(*)`, join: join, args: args2}
+    let model = 't_project_report'
+    let field = ``
+    let args = `apply_status = '0'`
+    let args1 = `apply_status = '1'`
+    let args2 = `apply_status = '3'`
+    let query = {model: model, args: args}
+    let queryapi1 = {model: model, field: `COUNT(*)`, args: args1}
+    let queryapi2 = {model: model, field: `COUNT(*)`, args: args2}
     getApply1(queryapi1)
     getApply2(queryapi2)
     if(state.province) {
-      query.args += ` and sp.province='${state.province}'`
-      if(state.city) query.args += ` and sp.city='${state.city}'`
+      query.args += ` and province='${state.province}'`
+      if(state.city) query.args += ` and city='${state.city}'`
       if(!proxy.isNull(state.construct_datetime)) {
         const [start, end] = state.construct_datetime
-        query.args += ` and p.construct_datetime_start>='${start}' and p.construct_datetime_end<='${end}'`
+        query.args += ` and construct_datetime_start>='${start}' and construct_datetime_end<='${end}'`
       }
-      if(state.completion_status) query.args += ` and p.completion_status='${state.completion_status}'`
-      if(state.search) query.args += ` and p.name LIKE '%${state.search}%'`
+      if(state.completion_status) query.args += ` and completion_status='${state.completion_status}'`
+      if(state.search) query.args += ` and name LIKE '%${state.search}%'`
     }
     let q1 = {limit: state.limit, page: state.page}
     let q2 = {field: `COUNT(*)`}

@@ -58,9 +58,15 @@ const dictStore = defineStore('dict', {
 		],
 		// 项目实施状态
 		project_completion_statuss: [
+			{value: '0', name: '未开始'},
 			{value: '1', name: '谋划中'},
 			{value: '2', name: '实施中'},
 			{value: '3', name: '已竣工'},
+		],
+		// 项目阶段
+		project_stages: [
+			{value: '0', name: '无'},
+			{value: '1', name: '储备阶段'},
 		],
 	})
 })
