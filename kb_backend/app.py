@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Sequence, Tuple, Optional
 
 import uuid
+from urllib.parse import urlparse
 import pymysql
 import pypdf
 import docx
@@ -30,13 +31,25 @@ def _env_int(name: str, default: int) -> int:
         return default
 
 
+def _env_bool(name: str, default: bool) -> bool:
+    val = os.getenv(name)
+    if val is None:
+        return default
+    s = str(val).strip().lower()
+    if s in {"1", "true", "yes", "y", "on"}:
+        return True
+    if s in {"0", "false", "no", "n", "off"}:
+        return False
+    return default
+
+
 def _app_base_dir() -> Path:
     env = os.getenv("KB_BASE_DIR")
     if env:
         return Path(env)
     if getattr(sys, "frozen", False):
         return Path(sys.executable).resolve().parent
-    return Path.cwd()
+    return Path(__file__).resolve().parent
 
 
 def _bundled_path(rel: str) -> Path:
@@ -45,10 +58,127 @@ def _bundled_path(rel: str) -> Path:
     return Path(rel)
 
 
+def _candidate_public_dirs(base: Path) -> List[Path]:
+    return [
+        base / "public",
+        base / "kb_backend" / "public",
+        base / "vue" / "public",
+        base.parent / "public",
+        base.parent / "kb_backend" / "public",
+        base.parent / "vue" / "public",
+    ]
+
+
+def _resolve_public_dir(base: Path) -> Path:
+    for p in _candidate_public_dirs(base):
+        if (p / "static" / "uploads").exists():
+            return p
+    for p in _candidate_public_dirs(base):
+        if p.exists() and p.is_dir():
+            return p
+    return base / "public"
+
+
 
 APP_BASE_DIR = _app_base_dir()
-PUBLIC_DIR = APP_BASE_DIR / "public"
+PUBLIC_DIR = _resolve_public_dir(APP_BASE_DIR)
 STATIC_DIR = PUBLIC_DIR / "static"
+
+
+def _normalize_attachment_url(url: str) -> str:
+    raw = str(url or "").strip()
+    if not raw:
+        return ""
+    if raw.startswith("http://") or raw.startswith("https://"):
+        parsed = urlparse(raw)
+        raw = parsed.path or ""
+    pos = raw.find("/static/")
+    if pos != -1:
+        return raw[pos:]
+    if raw.startswith("static/"):
+        return f"/{raw}"
+    if raw.startswith("/static/"):
+        return raw
+    return raw
+
+
+def _resolve_attachment_path(url: str) -> Path | None:
+    raw = _normalize_attachment_url(url)
+    if not raw:
+        return None
+    public_dirs: List[Path] = []
+    for p in [PUBLIC_DIR, *_candidate_public_dirs(APP_BASE_DIR)]:
+        if p not in public_dirs:
+            public_dirs.append(p)
+    if raw.startswith("/static/"):
+        for pub in public_dirs:
+            p = pub / raw.lstrip("/")
+            if p.exists() and p.is_file():
+                return p
+    if raw.startswith("static/"):
+        for pub in public_dirs:
+            p = pub / raw
+            if p.exists() and p.is_file():
+                return p
+    p = Path(raw)
+    if p.exists() and p.is_file():
+        return p
+    upload_dir_env = os.getenv("KB_UPLOAD_DIR")
+    if upload_dir_env:
+        upload_dir = Path(upload_dir_env)
+    else:
+        upload_dir = None
+        for pub in public_dirs:
+            p = pub / "static" / "uploads"
+            if p.exists() and p.is_dir():
+                upload_dir = p
+                break
+        if upload_dir is None:
+            upload_dir = STATIC_DIR / "uploads"
+    if raw:
+        name = Path(raw).name
+        p2 = upload_dir / name
+        if p2.exists() and p2.is_file():
+            return p2
+    return None
+
+
+def _resolve_upload_by_meta(file_name: str, file_size: int | None) -> Path | None:
+    ext = Path(file_name or "").suffix.lower()
+    public_dirs: List[Path] = []
+    for p in [PUBLIC_DIR, *_candidate_public_dirs(APP_BASE_DIR)]:
+        if p not in public_dirs:
+            public_dirs.append(p)
+    upload_dirs: List[Path] = []
+    upload_dir_env = os.getenv("KB_UPLOAD_DIR")
+    if upload_dir_env:
+        upload_dirs.append(Path(upload_dir_env))
+    for pub in public_dirs:
+        p = pub / "static" / "uploads"
+        if p.exists() and p.is_dir() and p not in upload_dirs:
+            upload_dirs.append(p)
+    for ud in upload_dirs:
+        if not ud.exists():
+            continue
+        candidates = []
+        for p in ud.iterdir():
+            if not p.is_file():
+                continue
+            if ext and p.suffix.lower() != ext:
+                continue
+            if file_size is not None:
+                try:
+                    if p.stat().st_size != int(file_size):
+                        continue
+                except Exception:
+                    continue
+            candidates.append(p)
+        if len(candidates) == 1:
+            return candidates[0]
+        if len(candidates) > 1:
+            candidates.sort(key=lambda x: x.stat().st_mtime, reverse=True)
+            return candidates[0]
+    return None
 
 
 DEFAULT_COLUMNS: List[Tuple[str, str, str, int]] = [
@@ -220,6 +350,40 @@ class MySQLStorage(Storage):
                       KEY idx_kb_download_item (item_id),
                       KEY idx_kb_download_user (user_id),
                       CONSTRAINT fk_kb_download_item FOREIGN KEY (item_id) REFERENCES kb_item(id) ON DELETE CASCADE
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                    """
+                )
+
+                cur.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS t_scheme_project (
+                      id VARCHAR(64) PRIMARY KEY,
+                      num VARCHAR(64) DEFAULT NULL,
+                      code VARCHAR(64) DEFAULT NULL,
+                      name VARCHAR(255) DEFAULT NULL,
+                      scheme_id VARCHAR(64) DEFAULT NULL,
+                      scheme_name VARCHAR(255) DEFAULT NULL,
+                      task_type VARCHAR(64) DEFAULT NULL,
+                      completion_status VARCHAR(64) DEFAULT NULL,
+                      construct_scale VARCHAR(255) DEFAULT NULL,
+                      construct_nature VARCHAR(255) DEFAULT NULL,
+                      construct_price DECIMAL(18,2) DEFAULT NULL,
+                      construct_datetime_start VARCHAR(32) DEFAULT NULL,
+                      construct_datetime_end VARCHAR(32) DEFAULT NULL,
+                      construct_datetime VARCHAR(64) DEFAULT NULL,
+                      apply_status VARCHAR(32) DEFAULT NULL,
+                      user_id VARCHAR(64) DEFAULT NULL,
+                      user_name VARCHAR(255) DEFAULT NULL,
+                      province VARCHAR(64) DEFAULT NULL,
+                      city VARCHAR(64) DEFAULT NULL,
+                      district VARCHAR(64) DEFAULT NULL,
+                      province_name VARCHAR(64) DEFAULT NULL,
+                      city_name VARCHAR(64) DEFAULT NULL,
+                      district_name VARCHAR(64) DEFAULT NULL,
+                      rate_time VARCHAR(64) DEFAULT NULL,
+                      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                      INDEX idx_scheme_project_name (name),
+                      INDEX idx_scheme_project_district (district_name)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                     """
                 )
@@ -415,6 +579,46 @@ class SQLiteStorage(Storage):
                 )
                 """
             )
+
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS t_scheme_project (
+                  id TEXT PRIMARY KEY,
+                  num TEXT DEFAULT NULL,
+                  code TEXT DEFAULT NULL,
+                  name TEXT DEFAULT NULL,
+                  scheme_id TEXT DEFAULT NULL,
+                  scheme_name TEXT DEFAULT NULL,
+                  task_type TEXT DEFAULT NULL,
+                  completion_status TEXT DEFAULT NULL,
+                  construct_scale TEXT DEFAULT NULL,
+                  construct_nature TEXT DEFAULT NULL,
+                  construct_price REAL DEFAULT NULL,
+                  construct_datetime_start TEXT DEFAULT NULL,
+                  construct_datetime_end TEXT DEFAULT NULL,
+                  construct_datetime TEXT DEFAULT NULL,
+                  apply_status TEXT DEFAULT NULL,
+                  user_id TEXT DEFAULT NULL,
+                  user_name TEXT DEFAULT NULL,
+                  province TEXT DEFAULT NULL,
+                  city TEXT DEFAULT NULL,
+                  district TEXT DEFAULT NULL,
+                  province_name TEXT DEFAULT NULL,
+                  city_name TEXT DEFAULT NULL,
+                  district_name TEXT DEFAULT NULL,
+                  rate_time TEXT DEFAULT NULL,
+                  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+                )
+                """
+            )
+            try:
+                cur.execute("CREATE INDEX IF NOT EXISTS idx_scheme_project_name ON t_scheme_project(name)")
+            except Exception:
+                pass
+            try:
+                cur.execute("CREATE INDEX IF NOT EXISTS idx_scheme_project_district ON t_scheme_project(district_name)")
+            except Exception:
+                pass
             for ddl in [
                 "ALTER TABLE kb_item ADD COLUMN author TEXT DEFAULT NULL",
                 "ALTER TABLE kb_item ADD COLUMN download_count INTEGER NOT NULL DEFAULT 0",
@@ -633,20 +837,35 @@ storage_type: str = "unknown"
 API_PREFIX = os.getenv("KB_API_PREFIX", "/kb-api")
 
 
-@app.on_event("startup")
-def _startup() -> None:
-    global storage, storage_type
-    try:
-        mysql = MySQLStorage()
-        mysql.ensure_schema()
-        storage = mysql
-        storage_type = "mysql"
-        _seed_if_empty()
-        _seed_attachments_if_empty()
-        return
-    except Exception:
-        pass
-    sqlite_path = Path(os.getenv("KB_SQLITE_PATH") or (APP_BASE_DIR / "kb.sqlite3"))
+def _init_storage() -> Tuple[Storage, str]:
+    mode = (os.getenv("KB_STORAGE") or "auto").strip().lower()
+    if mode not in {"auto", "mysql", "sqlite"}:
+        mode = "auto"
+
+    if mode in {"auto", "mysql"}:
+        try:
+            mysql = MySQLStorage()
+            mysql.ensure_schema()
+            return mysql, "mysql"
+        except Exception as e:
+            if mode == "mysql":
+                raise
+            try:
+                sys.stderr.write(f"MySQL init failed, fallback to sqlite: {e}\n")
+            except Exception:
+                pass
+
+    sqlite_env = os.getenv("KB_SQLITE_PATH")
+    if sqlite_env:
+        sqlite_path = Path(sqlite_env)
+    else:
+        candidates = [
+            APP_BASE_DIR / "kb_backend" / "kb.sqlite3",
+            APP_BASE_DIR / "kb.sqlite3",
+            APP_BASE_DIR.parent / "kb_backend" / "kb.sqlite3",
+            APP_BASE_DIR.parent / "kb.sqlite3",
+        ]
+        sqlite_path = next((p for p in candidates if p.exists()), APP_BASE_DIR / "kb.sqlite3")
     sqlite_path.parent.mkdir(parents=True, exist_ok=True)
     if not sqlite_path.exists():
         bundled = _bundled_path("kb.sqlite3")
@@ -657,9 +876,108 @@ def _startup() -> None:
                 pass
     sqlite = SQLiteStorage(sqlite_path)
     sqlite.ensure_schema()
-    storage = sqlite
-    storage_type = "sqlite"
-    _seed_if_empty()
+    return sqlite, "sqlite"
+
+
+def _seed_on_startup_enabled() -> bool:
+    return _env_bool("KB_SEED_DEMO", True)
+
+
+@app.on_event("startup")
+def _startup() -> None:
+    global storage, storage_type
+    st, st_type = _init_storage()
+    storage = st
+    storage_type = st_type
+    if _seed_on_startup_enabled():
+        _seed_if_empty()
+        _seed_attachments_if_empty()
+        _seed_scheme_projects_if_empty()
+
+
+def _seed_scheme_projects_if_empty() -> None:
+    assert storage is not None
+    cnt_row = storage.fetchone(
+        "SELECT COUNT(1) AS cnt FROM t_scheme_project" if storage_type == "sqlite" else "SELECT COUNT(1) AS cnt FROM t_scheme_project",
+        (),
+    )
+    cnt = int((cnt_row or {}).get("cnt", 0) or 0)
+    if cnt > 0:
+        return
+
+    now = datetime.datetime.now()
+    y = now.year
+    prefix = now.strftime("%Y%m%d")
+    district_names = ["小店区", "迎泽区", "杏花岭区", "万柏林区", "尖草坪区", "晋源区", "清徐县", "阳曲县", "娄烦县"]
+    scales = ["新建", "改造", "扩建", "提升", "维修", "数字化改造"]
+    natures = ["市政设施", "公共服务", "交通改善", "生态修复", "老旧小区改造", "产业园配套"]
+    stage_options = ["0", "1", "2"]
+    type_options = ["1", "2", "3", "4"]
+
+    rows: List[Tuple[Any, ...]] = []
+    for i in range(50):
+        idx = f"{i+1:02d}"
+        district_name = district_names[i % len(district_names)]
+        years_start = str(y - (i % 2))
+        years_end = str(y + (i % 3))
+        price = float(80 + (i * 997) % 50000)
+        rate = str(int((now - datetime.timedelta(days=(i % 40))).timestamp() * 1000))
+        num = f"TY{prefix}{1000 + i}{idx}"
+        name = f"基础项目{idx}-{district_name}-{scales[i % len(scales)]}"
+        nature = natures[i % len(natures)]
+        if len(nature) > 20:
+            nature = nature[:20]
+        rows.append(
+            (
+                str(uuid.uuid4()),
+                num,
+                f"CODE-{prefix}-{10000 + i}",
+                name,
+                "",
+                "",
+                type_options[i % len(type_options)],
+                stage_options[i % len(stage_options)],
+                scales[i % len(scales)],
+                nature,
+                price,
+                years_start,
+                years_end,
+                f"{years_start}-{years_end}",
+                str(i % 3),
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                district_name,
+                rate,
+            )
+        )
+
+    if storage_type == "sqlite":
+        storage.executemany(
+            """
+            INSERT INTO t_scheme_project(
+              id,num,code,name,scheme_id,scheme_name,task_type,completion_status,construct_scale,construct_nature,
+              construct_price,construct_datetime_start,construct_datetime_end,construct_datetime,apply_status,user_id,user_name,
+              province,city,district,province_name,city_name,district_name,rate_time
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            """,
+            rows,
+        )
+    else:
+        storage.executemany(
+            """
+            INSERT INTO t_scheme_project(
+              id,num,code,name,scheme_id,scheme_name,task_type,completion_status,construct_scale,construct_nature,
+              construct_price,construct_datetime_start,construct_datetime_end,construct_datetime,apply_status,user_id,user_name,
+              province,city,district,province_name,city_name,district_name,rate_time
+            ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            """,
+            rows,
+        )
 
 
 @app.post(f"{API_PREFIX}/upload")
@@ -759,7 +1077,7 @@ async def create_article(req: ArticleCreateRequest):
                     continue
                 file_type = str(a.get("file_type") or "").strip()
                 file_size = int(a.get("file_size") or 0)
-                file_url = str(a.get("url") or a.get("file_url") or "").strip()
+                file_url = _normalize_attachment_url(str(a.get("url") or a.get("file_url") or "").strip())
                 rows.append((item_id, file_name, file_type, file_size, file_url))
             if rows:
                 storage.executemany(insert_sql, rows)
@@ -813,7 +1131,7 @@ async def update_article(req: ArticleUpdateRequest):
                     continue
                 file_type = str(a.get("file_type") or "").strip()
                 file_size = int(a.get("file_size") or 0)
-                file_url = str(a.get("url") or a.get("file_url") or "").strip()
+                file_url = _normalize_attachment_url(str(a.get("url") or a.get("file_url") or "").strip())
                 rows2.append((item_id, file_name, file_type, file_size, file_url))
             if rows2:
                 storage.executemany(insert_sql, rows2)
@@ -1351,12 +1669,10 @@ def download_file(item_id: int = Query(..., ge=1)) -> StreamingResponse:
                     name_seen[name] = 0
 
                 url = str(r.get("file_url") or "").strip()
-                local_path: Path | None = None
-                if url.startswith("/static/"):
-                    local_path = PUBLIC_DIR / url.lstrip("/")
-                elif url.startswith("static/"):
-                    local_path = PUBLIC_DIR / url
-                if local_path and local_path.exists() and local_path.is_file():
+                local_path = _resolve_attachment_path(url)
+                if not local_path:
+                    local_path = _resolve_upload_by_meta(name, r.get("file_size"))
+                if local_path:
                     zf.write(str(local_path), arcname=name)
                 else:
                     missing.append(name)
@@ -1636,7 +1952,197 @@ def item(req: ItemRequest) -> Dict[str, Any]:
     return {"code": 200, "data": {"item": out}}
 
 
+def _sp_placeholder() -> str:
+    return "?" if storage_type == "sqlite" else "%s"
+
+
+def _sp_build_where(
+    keyword: str | None,
+    province: str | None,
+    city: str | None,
+    project_stage: str | None,
+    project_type: str | None,
+    invest_level: str | None,
+    start: str | None,
+    end: str | None,
+    ids: str | None,
+) -> Tuple[str, List[Any]]:
+    where = ["1=1"]
+    params: List[Any] = []
+    ph = _sp_placeholder()
+    if keyword:
+        where.append(f"name LIKE {ph}")
+        params.append(f"%{keyword}%")
+    if province:
+        where.append(f"province = {ph}")
+        params.append(province)
+    if city:
+        where.append(f"city = {ph}")
+        params.append(city)
+    if project_stage:
+        where.append(f"completion_status = {ph}")
+        params.append(project_stage)
+    if project_type:
+        where.append(f"task_type = {ph}")
+        params.append(project_type)
+    if start:
+        where.append(f"construct_datetime_start >= {ph}")
+        params.append(start)
+    if end:
+        where.append(f"construct_datetime_end <= {ph}")
+        params.append(end)
+    if invest_level:
+        s = str(invest_level).strip()
+        if s.endswith("+"):
+            try:
+                v = float(s[:-1])
+                where.append(f"construct_price >= {ph}")
+                params.append(v)
+            except Exception:
+                pass
+        elif "-" in s:
+            a, b = s.split("-", 1)
+            try:
+                va = float(a)
+                vb = float(b)
+                where.append(f"construct_price >= {ph}")
+                params.append(va)
+                where.append(f"construct_price < {ph}")
+                params.append(vb)
+            except Exception:
+                pass
+    if ids:
+        id_list = [x.strip() for x in str(ids).split(",") if x.strip()]
+        if id_list:
+            in_ph = ",".join([ph] * len(id_list))
+            where.append(f"id IN ({in_ph})")
+            params.extend(id_list)
+    return " AND ".join(where), params
+
+
+@app.get(f"{API_PREFIX}/scheme-projects")
+def scheme_projects(
+    page: int = Query(1),
+    limit: int = Query(20),
+    keyword: str | None = Query(None),
+    province: str | None = Query(None),
+    city: str | None = Query(None),
+    project_stage: str | None = Query(None),
+    project_type: str | None = Query(None),
+    invest_level: str | None = Query(None),
+    start: str | None = Query(None),
+    end: str | None = Query(None),
+    ids: str | None = Query(None),
+) -> Dict[str, Any]:
+    assert storage is not None
+    safe_page = max(1, int(page or 1))
+    safe_limit = max(1, min(int(limit or 20), 500))
+    where_sql, params = _sp_build_where(keyword, province, city, project_stage, project_type, invest_level, start, end, ids)
+
+    cnt_row = storage.fetchone(
+        f"SELECT COUNT(1) AS cnt FROM t_scheme_project WHERE {where_sql}",
+        tuple(params),
+    )
+    total = int((cnt_row or {}).get("cnt", 0) or 0)
+
+    if storage_type == "sqlite":
+        sql = f"SELECT * FROM t_scheme_project WHERE {where_sql} ORDER BY CAST(rate_time AS INTEGER) DESC, created_at DESC LIMIT ? OFFSET ?"
+        rows = storage.fetchall(sql, tuple(params + [safe_limit, (safe_page - 1) * safe_limit]))
+    else:
+        sql = f"SELECT * FROM t_scheme_project WHERE {where_sql} ORDER BY rate_time DESC, created_at DESC LIMIT %s OFFSET %s"
+        rows = storage.fetchall(sql, tuple(params + [safe_limit, (safe_page - 1) * safe_limit]))
+    return {"code": 200, "data": {"list": rows, "total": total}}
+
+
+@app.get(f"{API_PREFIX}/scheme-projects/stats/district")
+def scheme_projects_district_stats(
+    keyword: str | None = Query(None),
+    province: str | None = Query(None),
+    city: str | None = Query(None),
+    project_stage: str | None = Query(None),
+    project_type: str | None = Query(None),
+    invest_level: str | None = Query(None),
+    start: str | None = Query(None),
+    end: str | None = Query(None),
+) -> Dict[str, Any]:
+    assert storage is not None
+    where_sql, params = _sp_build_where(keyword, province, city, project_stage, project_type, invest_level, start, end, None)
+    rows = storage.fetchall(
+        f"SELECT district_name, COUNT(1) AS cnt FROM t_scheme_project WHERE {where_sql} GROUP BY district_name ORDER BY cnt DESC",
+        tuple(params),
+    )
+    return {"code": 200, "data": {"rows": rows}}
+
+
+@app.post(f"{API_PREFIX}/scheme-projects")
+def scheme_projects_create(payload: Dict[str, Any] = Body(...)) -> Dict[str, Any]:
+    assert storage is not None
+    row = dict(payload or {})
+    row_id = str(row.get("id") or "") or str(uuid.uuid4())
+    row["id"] = row_id
+    cols = [
+        "id",
+        "num",
+        "code",
+        "name",
+        "scheme_id",
+        "scheme_name",
+        "task_type",
+        "completion_status",
+        "construct_scale",
+        "construct_nature",
+        "construct_price",
+        "construct_datetime_start",
+        "construct_datetime_end",
+        "construct_datetime",
+        "apply_status",
+        "user_id",
+        "user_name",
+        "province",
+        "city",
+        "district",
+        "province_name",
+        "city_name",
+        "district_name",
+        "rate_time",
+    ]
+    values = [row.get(c) for c in cols]
+    if storage_type == "sqlite":
+        ph = ",".join(["?"] * len(cols))
+        sql = f"INSERT INTO t_scheme_project({','.join(cols)}) VALUES ({ph})"
+        storage.execute(sql, tuple(values))
+    else:
+        ph = ",".join(["%s"] * len(cols))
+        sql = f"INSERT INTO t_scheme_project({','.join(cols)}) VALUES ({ph})"
+        storage.execute(sql, tuple(values))
+    return {"code": 200, "data": {"id": row_id}}
+
+
 if __name__ == "__main__":
+    import argparse
     import uvicorn
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--init-db", action="store_true")
+    parser.add_argument("--seed-demo", action="store_true")
+    parser.add_argument("--no-seed-demo", action="store_true")
+    args = parser.parse_args()
+
+    seed_demo = _seed_on_startup_enabled()
+    if args.seed_demo:
+        seed_demo = True
+    if args.no_seed_demo:
+        seed_demo = False
+
+    if args.init_db:
+        st, st_type = _init_storage()
+        storage = st
+        storage_type = st_type
+        if seed_demo:
+            _seed_if_empty()
+            _seed_attachments_if_empty()
+            _seed_scheme_projects_if_empty()
+        print(f"init-db ok: storage={st_type}")
+        raise SystemExit(0)
 
     uvicorn.run(app, host="0.0.0.0", port=_env_int("KB_PORT", 9010))

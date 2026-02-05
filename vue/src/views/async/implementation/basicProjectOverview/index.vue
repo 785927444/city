@@ -408,47 +408,220 @@
             </div>
 
             <div class="fw f16 mt15 mb10">项目文件上传</div>
-            <el-row :gutter="20">
-              <el-col :span="12">
-                <div class="rad4 bo-cc-1 p12">
-                  <div class="flex-bc">
-                    <div class="fw">更新潜力</div>
-                    <UploadText v-model:model="state.draft.files.update_potential" />
-                  </div>
-                  <div class="mt10 c6">
-                    <div class="flex-sc"><span class="w110">上传状态</span><span class="flex1">{{ uploadStatus(state.draft.files.update_potential) }}</span></div>
-                    <div class="flex-sc mt6"><span class="w110">文件类型</span><span class="flex1">{{ uploadType(state.draft.files.update_potential) }}</span></div>
-                    <div class="flex-sc mt6"><span class="w110">上传时间</span><span class="flex1">{{ uploadTime(state.draft.files.update_potential) }}</span></div>
-                  </div>
-                  <div class="flex-ec mt10">
-                    <span class="ml12 i1 cursor" v-if="state.draft.files.update_potential" @click.stop="openUpload(state.draft.files.update_potential)">查看</span>
-                    <span class="ml12 i9 cursor" v-if="state.draft.files.update_potential" @click.stop="clearUpload('update_potential')">删除</span>
-                  </div>
+            <div class="layout-col">
+                <el-table :data="state.draft.fileList" border stripe header-cell-class-name="bgi16 c3">
+                    <el-table-column label="序号" type="index" width="80" align="center" />
+                    <el-table-column prop="type" label="文件类型" width="120" align="center" />
+                    <el-table-column prop="time" label="上传时间" width="180" align="center" />
+                    <el-table-column label="已上传文件">
+                        <template #default="scope">
+                            <span class="c-primary cursor">{{ scope.row.name }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="上传状态" width="150" align="center">
+                         <template #default="scope">
+                             <span :class="scope.row.status === 'success' ? 'c-success' : 'c-danger'">{{ scope.row.statusText }}</span>
+                         </template>
+                    </el-table-column>
+                    <el-table-column label="操作" width="120" align="center">
+                         <template #default="scope">
+                             <div class="flex-cc">
+                                 <span class="c-primary cursor mr10">删除</span>
+                                 <span class="c-primary cursor">查看</span>
+                             </div>
+                         </template>
+                    </el-table-column>
+                </el-table>
+                <div class="ww100 bo-e ptb10 flex-cc cursor bg-white" style="border-top: none;">
+                    <span class="c-primary f16">添加+</span>
                 </div>
-              </el-col>
-              <el-col :span="12">
-                <div class="rad4 bo-cc-1 p12">
-                  <div class="flex-bc">
-                    <div class="fw">功能业态</div>
-                    <UploadText v-model:model="state.draft.files.function_format" />
-                  </div>
-                  <div class="mt10 c6">
-                    <div class="flex-sc"><span class="w110">上传状态</span><span class="flex1">{{ uploadStatus(state.draft.files.function_format) }}</span></div>
-                    <div class="flex-sc mt6"><span class="w110">文件类型</span><span class="flex1">{{ uploadType(state.draft.files.function_format) }}</span></div>
-                    <div class="flex-sc mt6"><span class="w110">上传时间</span><span class="flex1">{{ uploadTime(state.draft.files.function_format) }}</span></div>
-                  </div>
-                  <div class="flex-ec mt10">
-                    <span class="ml12 i1 cursor" v-if="state.draft.files.function_format" @click.stop="openUpload(state.draft.files.function_format)">查看</span>
-                    <span class="ml12 i9 cursor" v-if="state.draft.files.function_format" @click.stop="clearUpload('function_format')">删除</span>
-                  </div>
-                </div>
-              </el-col>
-            </el-row>
+            </div>
           </el-form>
           </div>
 
           <div class="mt10" v-show="state.drawerStep === 1">
-            <div class="rad4 bo-cc-1 p12 c6">实施方案</div>
+            <el-form :model="state.draft.step2" label-width="120px">
+                <!-- Project Info -->
+                <div class="fw f16 mt15 mb10">项目信息</div>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="方案名称">
+                            <el-input v-model="state.draft.step2.plan_name" placeholder="请输入" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="方案编制单位">
+                            <el-input v-model="state.draft.step2.compilation_unit" placeholder="请输入" />
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="批复时间">
+                            <el-date-picker v-model="state.draft.step2.approval_time" type="date" placeholder="请选择日期" style="width: 100%;" value-format="YYYY-MM-DD" />
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-form-item label="方案摘要">
+                    <el-input v-model="state.draft.step2.summary" type="textarea" :rows="3" placeholder="请输入" />
+                </el-form-item>
+                <el-form-item label="项目基础建设条件">
+                    <el-input v-model="state.draft.step2.conditions" type="textarea" :rows="3" placeholder="请输入" />
+                </el-form-item>
+
+                <!-- Project Tasks -->
+                <div class="fw f16 mt20 mb10">项目任务</div>
+                <el-tabs v-model="state.draft.step2.activeTaskTab">
+                    <el-tab-pane label="重点落实任务" name="key_tasks">
+                        <el-table :data="state.draft.step2.key_tasks" border stripe header-cell-class-name="bgi16 c3">
+                            <el-table-column type="selection" width="55" align="center" />
+                            <el-table-column type="index" label="序号" width="60" align="center" />
+                            <el-table-column prop="type" label="任务类型" align="center" />
+                            <el-table-column prop="content" label="建设内容" />
+                            <el-table-column prop="scale" label="建设规模" align="center" width="100" />
+                            <el-table-column v-for="year in state.draft.step2.task_years" :key="year" :label="year + '年目标'" align="center">
+                                <template #default="scope">
+                                    <el-input v-model="scope.row.goals[year]" size="small" />
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="添加年度" width="100" align="center">
+                                <template #header>
+                                    <div class="flex-cc cursor" @click="() => {}">
+                                        <span>添加年度</span>
+                                    </div>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <div class="flex-sc mt10">
+                            <el-button size="small">全选</el-button>
+                            <el-button size="small" type="warning" plain>删除</el-button>
+                            <el-button size="small" type="success" plain>导入</el-button>
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane label="体检整改任务" name="rectification_tasks">
+                        <div class="p15 tc c9">暂无数据</div>
+                    </el-tab-pane>
+                </el-tabs>
+
+                <!-- Time Sequence Management -->
+                <div class="fw f16 mt20 mb10">时序管理</div>
+                <el-table :data="state.draft.step2.time_sequences" border stripe header-cell-class-name="bgi16 c3">
+                    <el-table-column prop="year" label="序号" width="60" align="center">
+                         <template #default="scope">{{ scope.$index + 1 }}</template>
+                    </el-table-column>
+                    <el-table-column prop="year" label="年度" align="center" width="100" />
+                    <el-table-column label="阶段任务描述">
+                        <template #default="scope">
+                            <el-input v-model="scope.row.desc" size="small" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="阶段投资" width="150">
+                        <template #default="scope">
+                            <el-input v-model="scope.row.invest" size="small" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" width="100" align="center">
+                         <template #default="scope">
+                             <!-- Placeholder for actions -->
+                         </template>
+                    </el-table-column>
+                </el-table>
+
+                <!-- File Upload -->
+                <div class="fw f16 mt20 mb10">实施方案文件上传</div>
+                <el-tabs v-model="state.draft.step2.activeFileTab">
+                    <el-tab-pane label="方案文本" name="plan_text">
+                        <div class="layout-col">
+                            <el-table :data="state.draft.step2.fileList" border stripe header-cell-class-name="bgi16 c3">
+                                <el-table-column label="序号" type="index" width="80" align="center" />
+                                <el-table-column prop="type" label="文件类型" width="120" align="center" />
+                                <el-table-column prop="time" label="上传时间" width="180" align="center" />
+                                <el-table-column label="已上传文件">
+                                    <template #default="scope">
+                                        <span class="c-primary cursor" @click.stop="viewFile(scope.row)">{{ scope.row.name }}</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="上传状态" width="150" align="center">
+                                    <template #default="scope">
+                                        <span :class="scope.row.status === 'success' ? 'c-success' : 'c-danger'" @click="checkFileStatus(scope.row.id)" class="cursor">{{ scope.row.statusText }}</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="操作" width="120" align="center">
+                                    <template #default="scope">
+                                        <div class="flex-cc">
+                                            <span class="c-primary cursor mr10" @click.stop="deleteFile(scope.row)">删除</span>
+                                            <span class="c-primary cursor" @click.stop="viewFile(scope.row)">查看</span>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <div class="ww100 bo-e ptb10 flex-cc cursor bg-white" style="border-top: none;" @click="uploadFile({name: '新上传方案.pdf', type: '文本文件'}, 'plan_text')">
+                                <span class="c-primary f16">添加+</span>
+                            </div>
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane label="重要图表" name="charts">
+                         <div class="layout-col">
+                            <el-table :data="state.draft.step2.chartsList" border stripe header-cell-class-name="bgi16 c3" empty-text="暂无数据">
+                                <el-table-column label="序号" type="index" width="80" align="center" />
+                                <el-table-column prop="type" label="文件类型" width="120" align="center" />
+                                <el-table-column prop="time" label="上传时间" width="180" align="center" />
+                                <el-table-column label="已上传文件">
+                                    <template #default="scope">
+                                        <span class="c-primary cursor" @click.stop="viewFile(scope.row)">{{ scope.row.name }}</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="上传状态" width="150" align="center">
+                                    <template #default="scope">
+                                        <span :class="scope.row.status === 'success' ? 'c-success' : 'c-danger'" @click="checkFileStatus(scope.row.id)" class="cursor">{{ scope.row.statusText }}</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="操作" width="120" align="center">
+                                    <template #default="scope">
+                                        <div class="flex-cc">
+                                            <span class="c-primary cursor mr10" @click.stop="deleteFile(scope.row)">删除</span>
+                                            <span class="c-primary cursor" @click.stop="viewFile(scope.row)">查看</span>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <div class="ww100 bo-e ptb10 flex-cc cursor bg-white" style="border-top: none;" @click="uploadFile({name: '新上传图表.png', type: '图表文件'}, 'charts')">
+                                <span class="c-primary f16">添加+</span>
+                            </div>
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane label="支撑材料" name="materials">
+                         <div class="layout-col">
+                            <el-table :data="state.draft.step2.materialsList" border stripe header-cell-class-name="bgi16 c3" empty-text="暂无数据">
+                                <el-table-column label="序号" type="index" width="80" align="center" />
+                                <el-table-column prop="type" label="文件类型" width="120" align="center" />
+                                <el-table-column prop="time" label="上传时间" width="180" align="center" />
+                                <el-table-column label="已上传文件">
+                                    <template #default="scope">
+                                        <span class="c-primary cursor" @click.stop="viewFile(scope.row)">{{ scope.row.name }}</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="上传状态" width="150" align="center">
+                                    <template #default="scope">
+                                        <span :class="scope.row.status === 'success' ? 'c-success' : 'c-danger'" @click="checkFileStatus(scope.row.id)" class="cursor">{{ scope.row.statusText }}</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="操作" width="120" align="center">
+                                    <template #default="scope">
+                                        <div class="flex-cc">
+                                            <span class="c-primary cursor mr10" @click.stop="deleteFile(scope.row)">删除</span>
+                                            <span class="c-primary cursor" @click.stop="viewFile(scope.row)">查看</span>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <div class="ww100 bo-e ptb10 flex-cc cursor bg-white" style="border-top: none;" @click="uploadFile({name: '新上传材料.docx', type: '文档文件'}, 'materials')">
+                                <span class="c-primary f16">添加+</span>
+                            </div>
+                        </div>
+                    </el-tab-pane>
+                </el-tabs>
+            </el-form>
           </div>
 
           <div class="flex-ec mt10 pb15">
@@ -613,8 +786,148 @@
         update_potential: null as any,
         function_format: null as any,
       },
+      fileList: [
+        { id: 1, type: '图表文件', time: '2025-12-12 12:00', name: '更新潜力.pdf', status: 'success', statusText: '上传成功' },
+        { id: 2, type: '文本文件', time: '2025-12-12 12:00', name: '功能业态.pdf', status: 'fail', statusText: '上传失败，查看日志' },
+      ],
+      // Step 2 Data
+      step2: {
+        plan_name: '',
+        compilation_unit: '',
+        approval_time: '',
+        summary: '',
+        conditions: '',
+        activeTaskTab: 'key_tasks',
+        task_years: [2026, 2027],
+        key_tasks: [
+           { id: 1, type: '危险住房改造', content: 'D级危险住房改造（套）', scale: 10, goals: { 2026: '', 2027: '' } },
+           { id: 2, type: '危险住房改造', content: 'C级危险住房改造（套）', scale: 10, goals: { 2026: '', 2027: '' } },
+           { id: 3, type: '危险住房改造', content: '非成套住房改造（套）', scale: 10, goals: { 2026: '', 2027: '' } },
+           { id: 4, type: '危险住房改造', content: '居住建筑节能改造（平方米）', scale: 10, goals: { 2026: '', 2027: '' } },
+        ],
+        rectification_tasks: [],
+        time_sequences: [
+            { year: '2026', desc: '', invest: '' },
+            { year: '2027', desc: '', invest: '' },
+            { year: '2028', desc: '', invest: '' },
+        ],
+        activeFileTab: 'plan_text',
+        files: {
+            plan_text: { basic_conditions: null, update_method: null, design_plan: null },
+            charts: {},
+            materials: {}
+        },
+        fileList: [],
+        chartsList: [],
+        materialsList: []
+      }
     } as any,
   })
+
+  // 获取实施方案文件列表
+  const fetchImplementationFiles = async () => {
+    // 构建查询参数
+    const query = {
+        model: 't_file',
+        args: '1=1', // 这里可以加上 project_id 等筛选条件
+        order: 'time DESC'
+    }
+    const res = await publicStore.http({ Api: query })
+    if (!proxy.isNull(res)) {
+        // 根据 class (对应 category) 分类
+        state.draft.step2.fileList = res.filter((v: any) => v.class === 'plan_text').map((v: any) => ({
+            id: v.id,
+            type: v.type,
+            time: v.time,
+            name: v.order, // 使用 order 字段存储文件名
+            status: v.status,
+            statusText: v.status === 'success' ? '上传成功' : '上传失败',
+            path: v.path
+        }))
+        state.draft.step2.chartsList = res.filter((v: any) => v.class === 'charts').map((v: any) => ({
+            id: v.id,
+            type: v.type,
+            time: v.time,
+            name: v.order,
+            status: v.status,
+            statusText: v.status === 'success' ? '上传成功' : '上传失败',
+            path: v.path
+        }))
+        state.draft.step2.materialsList = res.filter((v: any) => v.class === 'materials').map((v: any) => ({
+            id: v.id,
+            type: v.type,
+            time: v.time,
+            name: v.order,
+            status: v.status,
+            statusText: v.status === 'success' ? '上传成功' : '上传失败',
+            path: v.path
+        }))
+    }
+  }
+
+  // 上传文件接口
+  const uploadFile = async (file: any, category: string) => {
+      // 模拟上传逻辑
+      const form = {
+          id: proxy.uuid(), // 生成UUID
+          user_id: configStore.user?.id || 'admin',
+          class: category,
+          type: file.type || '文本文件',
+          order: file.name, // 使用 order 存储文件名
+          path: '/static/uploads/' + file.name, // 假设上传后的路径
+          time: parseTime(new Date()),
+          status: 'success'
+      }
+      try {
+          const res: any = await api.addApi({ model: 't_file', list: [form] })
+          if (res && (res.code === 200 || res.code === '200')) {
+              ElNotification({ title: '提示', message: '上传成功', type: 'success' })
+              await fetchImplementationFiles() // 刷新列表
+          } else {
+              ElNotification({ title: '提示', message: '上传失败', type: 'error' })
+          }
+      } catch (e) {
+          ElNotification({ title: '提示', message: '上传出错', type: 'error' })
+      }
+  }
+
+  // 删除文件接口
+  const deleteFile = async (row: any) => {
+      ElMessageBox.confirm('确认删除该文件吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(async () => {
+          try {
+             // 构造删除参数，假设支持 deleteApi 删除指定 ID
+             // 这里使用模拟的删除逻辑，实际需要调用 api.deleteApi
+             // await api.deleteApi({ model: 't_file', ids: [row.id] })
+             console.log('Delete file id:', row.id)
+             ElNotification({ title: '提示', message: '删除成功(模拟)', type: 'success' })
+             // 实际项目中应调用: await api.deleteApi(...)
+             await fetchImplementationFiles()
+          } catch (e) {
+             ElNotification({ title: '提示', message: '删除失败', type: 'error' })
+          }
+      })
+  }
+
+  // 查看文件接口
+  const viewFile = (row: any) => {
+      if (row.path) {
+          window.open(row.path, '_blank')
+      } else {
+          ElNotification({ title: '提示', message: '文件路径不存在', type: 'warning' })
+      }
+  }
+
+  // 查看上传状态接口
+  const checkFileStatus = async (id: string) => {
+      const res = await publicStore.http({ Api: { model: 't_file', args: `id='${id}'`, field: 'status' } })
+      if (!proxy.isNull(res) && res.length > 0) {
+          const status = res[0]
+          const statusText = status.status === 'success' ? '上传成功' : '上传失败'
+          ElNotification({ title: '状态查询', message: `当前状态: ${statusText}`, type: 'info' })
+          return status
+      }
+      return null
+  }
 
   onMounted(async () => {
     restoreFromRoute()
@@ -889,10 +1202,11 @@
     })
   }
 
-  const onOpenCreate = () => {
+  const onOpenCreate = async () => {
     state.drawerVisible = true
     state.drawerStep = 0
     restoreDraft()
+    await fetchImplementationFiles()
   }
 
   const onOpenProjectLibrary = () => {

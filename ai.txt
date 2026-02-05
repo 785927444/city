@@ -1,0 +1,33 @@
+golang 我是使用sq "github.com/Masterminds/squirrel"
+前端使用是vue3
+请求参数如下 
+model是form部分，
+args是 where部分，
+field是 select部分
+join是left join部分
+order是order by部分
+group是group by部分
+组合原生sql语句直接去数据库
+
+前端参数
+let model = 't_scheme_project'
+let field = `id, name`
+let args = `status = '0'`
+
+传入封装好的请求 如：
+let query = {model: model, args: args, field: field}
+let res = await publicStore.http({Api: query})
+打印res
+
+基础表 
+任务类型表  t_task_type
+任务内容表  t_task_content
+文件类型表  t_file_type
+文件内容表  t_file_content
+问题类型表  t_problem_type
+问题内容表  t_task_problem
+
+规划与策划表 t_scheme_plan
+项目表 t_scheme_project
+任务表 t_scheme_task
+问题表  t_scheme_problem

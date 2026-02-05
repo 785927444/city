@@ -48,11 +48,11 @@
           </div>
 
           <div class="layout-col hh100 hidden" style="background: transparent;" v-if="state.activeColumnCode === 'policy'">
-             <div class="flex-sc align-start hh100" style="align-items: stretch;">
+             <div class="flex-sc align-start hh100" style="align-items: stretch; gap: 16px;">
                 <!-- Left Column: Banner + List -->
-                <div class="flex1 flex-col hh100 mr15 bg-white rad8 overflow-hidden">
+                <div class="flex-col hh100 bg-white rad8 overflow-hidden" style="flex: 1299;">
                        <!-- Policy Layout -->
-                       <div class="policy-banner flex-col-cc white relative overflow-hidden" style="border-radius: 8px 8px 0 0; height: 180px; min-height: 180px; max-height: 180px; flex: 0 0 180px;">
+                       <div class="policy-banner flex-col-cc white relative overflow-hidden" style="border-radius: 8px 8px 0 0; height: 140px; min-height: 140px; max-height: 140px; flex: 0 0 140px;">
                           <div class="f36 fw z10 text-shadow">政策法规</div>
                            <div class="absolute ww100 hh100" style="background: linear-gradient(135deg, #66b1ff 0%, #A6D4FE 100%); opacity: 0.9;"></div>
                       </div>
@@ -65,7 +65,7 @@
                             <div v-for="(item, index) in state.items" :key="index" class="policy-item flex-sc p15 bb-e cursor hover-bg" @click="openItem(item.id)">
                                 <div class="date-box mr20 tc">
                                     <div class="f24 fw c-primary">{{ getDayMonth(item.publish_time) }}</div>
-                                    <div class="c9 f12">{{ getYear(item.publish_time) }}</div>
+                                    <div class="c9 f12">- {{ getYear(item.publish_time) }} -</div>
                                 </div>
                                 <div class="flex-col flex1 mr20">
                                     <div class="f16 fw mb10 line1">{{ item.title }}</div>
@@ -96,12 +96,12 @@
                 </div>
 
                 <!-- Right Column: Hot Knowledge -->
-                <div class="w280 hh100 bg-white rad8 flex-col overflow-hidden p20">
-                    <div class="f16 fw mb15 pl10 bl-primary">热门知识</div>
+                <div class="hh100 bg-white rad8 flex-col overflow-hidden p20" style="flex: 421;">
+                    <div class="f16 fw mb20">热门知识</div>
                     <div class="flex1 overflow-y-auto">
-                        <div v-for="(h, hi) in hotList" :key="hi" class="mb20 cursor hover-text-primary">
-                            <div class="f14 fw line2 mb5">{{ h.title }}</div>
-                            <div class="f12 c9 line3">{{ h.desc }}</div>
+                        <div v-for="(h, hi) in hotList" :key="hi" class="mb50 cursor hover-text-primary">
+                            <div class="f15 fw line2 mb15" style="line-height: 1.8;">{{ h.title }}</div>
+                            <div class="f13 c9 line3" style="line-height: 1.8;">{{ h.desc }}</div>
                         </div>
                     </div>
                 </div>
