@@ -147,7 +147,7 @@
                 <span class="w50x5 line2">{{ v.name }}</span>
                 <span class="flex1 flex-sc ml15">
                   <el-radio-group v-model="publicStore.form.orther_text[v.key]" size="large">
-                    <el-radio  v-for="sel in dictStore.isList || []"  :key="sel.value" :label="sel.value">
+                    <el-radio  v-for="sel in dictStore.isList || []"  :key="sel.value" :value="sel.value">
                       {{ sel.name }}
                     </el-radio>
                   </el-radio-group>
@@ -170,39 +170,6 @@
           </el-form-item>
           <el-form-item label="文件上传" prop="files" class="ww100 flex-ss">
             <FileList v-if="publicStore.form?.attr" v-model:files="publicStore.form.attr" :contents="props.contents" :active="props.active"  />
-
-            <!-- <div class="ww100 plr30 ptb22 bo-i16-1 rad5 flex-sc warp bg-white">
-              <div class="ww25 flex-sc ptb8 pr16" v-if="props.active&&publicStore.form.attr" v-for="(v, i) in props.contents?props.contents.filter(a=>a.parent_id==props.active.id):[]" :key="i">
-                <div class="ww100 bs bo-i16-1 relative rad8">
-                    <div class="ww100 flex-sc p12 bob-ce-1">
-                      <span class="f15">{{ v.name }}</span>
-                      <span class="flex1 flex-ec">
-                        <UploadText v-if="v.type" v-model:model="publicStore.form.attr[v.type]" />
-                      </span>
-                    </div>
-                    <div class="ww100 flex-col p12">
-                      <div class="ww100 flex-sc">
-                        <span class="w90 c8">上传状态</span>
-                        <span class="flex1 line1">{{ publicStore.form.attr[v.type]&&publicStore.form.attr[v.type]['status']?publicStore.form.attr[v.type]['status']=='success'?'成功':'失败':'-' }}</span>
-                      </div>
-                      <div class="ww100 flex-sc mt12">
-                        <span class="w90 c8">文件类型</span>
-                        <span class="flex1 line1">{{ publicStore.form.attr[v.type]&&publicStore.form.attr[v.type]['type']?publicStore.form.attr[v.type]['type']:'-' }}</span>
-                      </div>
-                      <div class="ww100 flex-sc mt12">
-                        <span class="w90 c8">上传时间</span>
-                        <span class="flex1 line1">{{ publicStore.form.attr[v.type]&&publicStore.form.attr[v.type]['time']?parseTime(publicStore.form.attr[v.type]['time']):'-' }}</span>
-                      </div>
-                      <div class="ww100 flex-ec mt12">
-                        <span v-if="publicStore.form.attr[v.type]" class="ml12 i1" @click.stop="viewFile(v)">预览</span>
-                        <span v-else class="ml12 ca">预览</span>
-                        <span v-if="publicStore.form.attr[v.type]" class="ml12 i9" @click.stop="delFile(v)">删除</span>
-                        <span v-else class="ml12 ca">删除</span>
-                      </div>
-                    </div>
-                  </div>
-              </div>
-            </div> -->
           </el-form-item>
         </div>
       </el-form>
@@ -211,7 +178,6 @@
       </div>
     </div>
     <projects :state="state" ref="projectRef" />
-    <ViewFiles ref="viewRef" />
   </div>
 </template>
 
@@ -226,7 +192,6 @@
   let projectRef = $ref()
   let formRef = ref()
   let ruleList= $ref({})
-  let viewRef = $ref()
   const areaList = computed(() => {
     // 在这里传入你想限制的层级：'province' | 'city' | 'district'
     return setAreaLevel('city') 
@@ -238,16 +203,16 @@
     expandTrigger: 'hover' // 次级菜单的展开方式 (可选: click/hover)
   }
   const fund_sources = [
-    {name: '中央预算内投资' , vlaue: 'value1'},
-    {name: '信贷融资' , vlaue: 'value2'},
-    {name: '超长期国债' , vlaue: 'value3'},
-    {name: '证券化融资' , vlaue: 'value4'},
-    {name: '专项债' , vlaue: 'value5'},
-    {name: '企业融资' , vlaue: 'value6'},
-    {name: '财政' , vlaue: 'value7'},
-    {name: '居民出资' , vlaue: 'value8'},
-    {name: '其他渠道' , vlaue: 'value9'},
-    {name: '待定' , vlaue: 'value10'},
+    {name: '中央预算内投资' , key: 'value1'},
+    {name: '信贷融资' , key: 'value2'},
+    {name: '超长期国债' , key: 'value3'},
+    {name: '证券化融资' , key: 'value4'},
+    {name: '专项债' , key: 'value5'},
+    {name: '企业融资' , key: 'value6'},
+    {name: '财政' , key: 'value7'},
+    {name: '居民出资' , key: 'value8'},
+    {name: '其他渠道' , key: 'value9'},
+    {name: '待定' , key: 'value10'},
   ]
   const orther_texts = [
     {name: '是否申请抗疫特别国债', key: 'value1'},
@@ -289,6 +254,8 @@
       if (valid) {
         console.log("publicStore.form.---", publicStore.form)
         publicStore.actIndex++
+      }else{
+        ElNotification({ title: '提示', message: '任务信息不完整，请继续补充', type: 'error' })
       }
     })
   }
@@ -309,30 +276,30 @@
         ElNotification({ title: '提示', message: '删除成功', type: 'success' })
         delete publicStore.form.attr[v.type]
         if(publicStore.form.id){
-        // 查询原信息
-        let query = {model: 't_scheme_plan', args: `id='${publicStore.form.id}'`}
-          publicStore.http({Api: query}).then(ress=>{
-            if(!proxy.isNull(ress)){
-              let data = ress[0]
-              if(data.attr){
-                let attr = JSON.parse(data.attr)
-                if(attr[v.type]){
-                  delete attr[v.type]
-                  // 更新数据库
-                  let form = {id: publicStore.form.id, attr: JSON.stringify(attr)}
-                  let params = {model: 't_scheme_plan', list: [form]}
-                  api['updApi'](params).then((resss:any) => {
-                    if(resss.code == 200){
-                      ElNotification({ title: '提示', message: '清理成功', type: 'success' })
-                      // init()
-                    }else{
-                      ElNotification({ title: '提示', message: resss.msg?resss.msg:'清理失败(400)', type: 'error' })
-                    }
-                  })
-                }
-              }
-            }
-          })
+          // 查询原信息
+          // let query = {model: 't_scheme_plan', args: `id='${publicStore.form.id}'`}
+          // publicStore.http({Api: query}).then(ress=>{
+          //   if(!proxy.isNull(ress)){
+          //     let data = ress[0]
+          //     if(data.attr){
+          //       let attr = JSON.parse(data.attr)
+          //       if(attr[v.type]){
+          //         delete attr[v.type]
+          //         // 更新数据库
+          //         let form = {id: publicStore.form.id, attr: JSON.stringify(attr)}
+          //         let params = {model: 't_scheme_plan', list: [form]}
+          //         api['updApi'](params).then((resss:any) => {
+          //           if(resss.code == 200){
+          //             ElNotification({ title: '提示', message: '清理成功', type: 'success' })
+          //             // init()
+          //           }else{
+          //             ElNotification({ title: '提示', message: resss.msg?resss.msg:'清理失败(400)', type: 'error' })
+          //           }
+          //         })
+          //       }
+          //     }
+          //   }
+          // })
         }
       }else{
         ElNotification({ title: '提示', message: res.msg?res.msg:'删除失败(400)', type: 'error' })
