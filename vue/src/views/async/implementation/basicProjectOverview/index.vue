@@ -198,7 +198,7 @@
                   <el-input v-model="state.draft.project_name" placeholder="请输入" />
                 </el-form-item>
                 <el-form-item label="所属专项规划">
-                  <el-select v-model="state.draft.scheme_plan_id" placeholder="请选择" style="width: 100%" filterable clearable @change="onSchemePlanChange">
+                  <el-select v-model="state.draft.scheme_plan_id" placeholder="请选择" style="width: 100%" filterable clearable>
                     <el-option v-for="(v, i) in state.schemePlans" :key="i" :value="String(v.id || v.value)" :label="v.name || v.label || v.id" />
                   </el-select>
                 </el-form-item>
@@ -227,7 +227,7 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item label="项目类型">
-                  <el-select v-model="state.draft.project_type" placeholder="请选择" style="width: 100%" clearable @change="onAutoFillProjectInfo">
+                  <el-select v-model="state.draft.project_type" placeholder="请选择" style="width: 100%" clearable>
                     <el-option v-for="(v, i) in state.projectTypes" :key="i" :value="String(v.value)" :label="v.name" />
                   </el-select>
                 </el-form-item>
@@ -248,7 +248,7 @@
                   </div>
                 </el-form-item>
                 <el-form-item label="所属规划片区">
-                  <el-select v-model="state.draft.scheme_area" placeholder="请选择" style="width: 100%" filterable clearable @change="onAutoFillProjectInfo">
+                  <el-select v-model="state.draft.scheme_area" placeholder="请选择" style="width: 100%" filterable clearable>
                     <el-option v-for="(v, i) in state.schemeAreas" :key="i" :value="String(v.value)" :label="v.name" />
                   </el-select>
                 </el-form-item>
@@ -631,6 +631,14 @@
             <el-button type="primary" v-if="state.drawerStep === 1" @click="onDrawerSubmit()">提交</el-button>
           </div>
         </div>
+        <SchemeAutoFill
+          :scheme-id="state.draft.scheme_plan_id"
+          :area-value="state.draft.scheme_area"
+          :task-type="state.draft.project_type"
+          :draft="state.draft"
+          :scheme-plans="state.schemePlans"
+          :scheme-areas="state.schemeAreas"
+        />
       </div>
     </el-dialog>
   </div>
@@ -641,6 +649,7 @@
   import api from '@/api'
   import router from '@/router'
   import UploadText from '@/components/UploadText.vue'
+  import SchemeAutoFill from '@/components/SchemeAutoFill.vue'
   import { exportExcel } from '@/utils/excelTools'
   import { parseTime, toPath, decrypt } from '@/utils/common'
 

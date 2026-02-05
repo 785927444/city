@@ -105,6 +105,7 @@ declare module 'vue' {
     RichEditor: typeof import('./components/RichEditor.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SchemeAutoFill: typeof import('./components/SchemeAutoFill.vue')['default']
     Setback: typeof import('./components/Setback.vue')['default']
     Setlist: typeof import('./components/Setlist.vue')['default']
     Setting: typeof import('./components/Setting.vue')['default']
