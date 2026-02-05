@@ -23,7 +23,7 @@
         </ab-title>
         </div>
         <!-- 内容 -->
-        <div class="layout-col white-rgba50 rady8 bo-i16-1" style="height: 2000px !important;min-height: 2000px;">
+        <div class="layout-col white-rgba50 rady8 bo-i16-1">
           <div class="ww100 hh100 flex-col-sc f24 cc hidden bg-white" v-if="!isNull(publicStore.active.attr) && !isNull(state.active)">
             <div v-if="!state.active.file" class="ww100 hh100 flex-cc f24 cc">未找到资源</div>
             <!-- <div>{{ state.active.file }}</div> -->

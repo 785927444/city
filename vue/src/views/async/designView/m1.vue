@@ -4,7 +4,7 @@
       <span class="bob-ca-3 pb10">{{ publicStore.active.name??'' }}</span>
       <span class="plr12 ptb8 rad4 bgi1 white cursor f14" @click.stop="toPath('/schemeDesignsManagerCity')">返 回</span>
     </div>
-    <div class="ww100 flex-sc warp bgi16 p10 rad5 mt30">
+    <div class="ww100 flex-sc warp bgi16 p10 rad5 mt20">
       <div class="ww33 flex-sc p10">
         <span class="w110">所属专项规划</span>
         <span class="flex1 line1 flex-sc">{{ state.schemePlans&&publicStore.active.parent_id?find(state.schemePlans, ['id', publicStore.active.parent_id], 'name'):'-' }}</span>

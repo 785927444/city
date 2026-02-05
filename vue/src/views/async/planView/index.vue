@@ -1,7 +1,7 @@
 <template>
-  <div class="layout-col">
+  <div class="ww100 hh100 overlay">
     <m1 class="rad8 hidden" />
-    <m2 class="flex1 hh100 rad8 hidden" />
+    <m2 class="rad8 hidden" :class="publicStore.actIndex==1?'hhover':''" />
   </div>
 </template>
 
@@ -52,18 +52,6 @@
 </script>
   
 <style scoped lang="scss">
-.fullscreen-absolute {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  /* 高度可以任意设置 */
-  height: 20000px;
-  /* 如果需要滚动 */
-  overflow-y: auto;
-  /* 如果需要覆盖原有内容 */
-  z-index: 10;
-  background: white; /* 添加背景避免透出 */
-}
+.hhover{height: 1000px;}
 </style>
   
