@@ -16,8 +16,13 @@
           <el-form-item label="项目名称" prop="name" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
             <el-input size="large" v-model="publicStore.form.name" placeholder="请输入" />
           </el-form-item>
+          <el-form-item label="所属等级" prop="level" class="ww50 flex-sc" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
+            <el-select v-model="publicStore.form.level" placeholder="请选择" size="large" style="width:100%" filterable clearable>
+              <el-option v-for="(v, i) in dictStore.levels||[]" :key="v.value" :value="String(v.value)" :label="v.name" />
+            </el-select> 
+          </el-form-item>  
           <el-form-item label="所属区域" prop="area" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
-            <el-input size="large" v-model="publicStore.form.area" placeholder="请输入" />
+            <el-cascader v-model="publicStore.form.area" size="large" :options="setAreaLevel(publicStore.form.level?publicStore.form.level:'') " :props="cascaderProps" placeholder="请选择" clearable style="width: 100%" />
           </el-form-item>
           <el-form-item label="所属专项规划" prop="parent_id" class="ww50 flex-sc">
             <el-select v-model="publicStore.form.parent_id" placeholder="请选择" size="large" style="width:100%" filterable clearable>
@@ -32,21 +37,18 @@
           <el-form-item label="建设单位" prop="construct_unit" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
             <el-input size="large" v-model="publicStore.form.construct_unit" placeholder="请输入" />
           </el-form-item>
-          <el-form-item label="主管单位" prop="construct_main" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
-            <el-input size="large" v-model="publicStore.form.construct_main" placeholder="请输入" />
-          </el-form-item>
           <el-form-item label="施工阶段" prop="completion_status" class="ww50 flex-sc">
             <el-select v-model="publicStore.form.completion_status" placeholder="请选择" size="large" style="width:100%" filterable clearable>
               <el-option v-for="(v, i) in dictStore.project_completion_statuss||[]" :key="v.value" :value="String(v.value)" :label="v.name" />
             </el-select> 
+          </el-form-item> 
+          <el-form-item label="主管单位" prop="construct_main" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
+            <el-input size="large" v-model="publicStore.form.construct_main" placeholder="请输入" />
           </el-form-item>
-          <el-form-item label="项目类别" prop="class" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
-            <el-input size="large" v-model="publicStore.form.class" placeholder="请输入" />
-          </el-form-item>   
           <el-form-item label="总投资" prop="construct_price" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
             <el-input size="large" v-model="publicStore.form.construct_price" placeholder="请输入" />
           </el-form-item> 
-          <el-form-item label="本年度计划投资" prop="estimate" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
+          <el-form-item label="本年度计划投资" prop="estimate_year" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
             <div class="flex-sc ww100">
               <el-date-picker class="w100 mr15" v-model="publicStore.form.estimate_year" size="large" type="year" placeholder="请选择" value-format="YYYY" format="YYYY" />
               <el-input size="large" v-model="publicStore.form.estimate_price" placeholder="请输入">
@@ -56,7 +58,7 @@
               </el-input>   
             </div>
           </el-form-item>   
-          <el-form-item label="累计下达投资" prop="total_price" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
+          <el-form-item label="累计下达投资" prop="total_put_price" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
             <el-input size="large" v-model="publicStore.form.total_put_price" placeholder="请输入">
               <template #suffix>
                 <span class="unit-text">万元</span>
@@ -167,27 +169,29 @@
             </div>
           </el-form-item>
           <el-form-item label="文件上传" prop="files" class="ww100 flex-ss">
-            <div class="ww100 plr30 ptb22 bo-i16-1 rad5 flex-sc warp bg-white" v-if="!isNull(publicStore.form.attr)">
-              <div class="ww25 flex-sc ptb8 pr16" v-for="(v, i) in files" :key="i">
+            <FileList v-if="publicStore.form?.attr" v-model:files="publicStore.form.attr" :contents="props.contents" :active="props.active"  />
+
+            <!-- <div class="ww100 plr30 ptb22 bo-i16-1 rad5 flex-sc warp bg-white">
+              <div class="ww25 flex-sc ptb8 pr16" v-if="props.active&&publicStore.form.attr" v-for="(v, i) in props.contents?props.contents.filter(a=>a.parent_id==props.active.id):[]" :key="i">
                 <div class="ww100 bs bo-i16-1 relative rad8">
                     <div class="ww100 flex-sc p12 bob-ce-1">
                       <span class="f15">{{ v.name }}</span>
                       <span class="flex1 flex-ec">
-                        <UploadText v-if="v.key" v-model:model="publicStore.form.attr[v.key]" />
+                        <UploadText v-if="v.type" v-model:model="publicStore.form.attr[v.type]" />
                       </span>
                     </div>
                     <div class="ww100 flex-col p12">
                       <div class="ww100 flex-sc">
                         <span class="w90 c8">上传状态</span>
-                        <span class="flex1 line1">{{ publicStore.form.attr[v.key]&&publicStore.form.attr[v.key]['status']?publicStore.form.attr[v.key]['status']=='success'?'成功':'失败':'-' }}</span>
+                        <span class="flex1 line1">{{ publicStore.form.attr[v.type]&&publicStore.form.attr[v.type]['status']?publicStore.form.attr[v.type]['status']=='success'?'成功':'失败':'-' }}</span>
                       </div>
                       <div class="ww100 flex-sc mt12">
                         <span class="w90 c8">文件类型</span>
-                        <span class="flex1 line1">{{ publicStore.form.attr[v.key]&&publicStore.form.attr[v.key]['type']?publicStore.form.attr[v.key]['type']:'-' }}</span>
+                        <span class="flex1 line1">{{ publicStore.form.attr[v.type]&&publicStore.form.attr[v.type]['type']?publicStore.form.attr[v.type]['type']:'-' }}</span>
                       </div>
                       <div class="ww100 flex-sc mt12">
                         <span class="w90 c8">上传时间</span>
-                        <span class="flex1 line1">{{ publicStore.form.attr[v.key]&&publicStore.form.attr[v.key]['time']?parseTime(publicStore.form.attr[v.key]['time']):'-' }}</span>
+                        <span class="flex1 line1">{{ publicStore.form.attr[v.type]&&publicStore.form.attr[v.type]['time']?parseTime(publicStore.form.attr[v.type]['time']):'-' }}</span>
                       </div>
                       <div class="ww100 flex-ec mt12">
                         <span v-if="publicStore.form.attr[v.type]" class="ml12 i1" @click.stop="viewFile(v)">预览</span>
@@ -198,7 +202,7 @@
                     </div>
                   </div>
               </div>
-            </div>
+            </div> -->
           </el-form-item>
         </div>
       </el-form>
@@ -207,10 +211,12 @@
       </div>
     </div>
     <projects :state="state" ref="projectRef" />
+    <ViewFiles ref="viewRef" />
   </div>
 </template>
 
 <script lang="ts" setup>
+	import { setAreaLevel } from '@/utils/areaData'
   import api from '@/api'
   import projects from './projects'
 	const { proxy }:any = getCurrentInstance()
@@ -220,6 +226,17 @@
   let projectRef = $ref()
   let formRef = ref()
   let ruleList= $ref({})
+  let viewRef = $ref()
+  const areaList = computed(() => {
+    // 在这里传入你想限制的层级：'province' | 'city' | 'district'
+    return setAreaLevel('city') 
+  })
+  const cascaderProps = {
+    value: 'code',    // 指定选项的值为节点对象中的 code 属性
+    label: 'name',    // 指定选项的标签为节点对象中的 name 属性
+    children: 'children', // 指定子选项的字段名
+    expandTrigger: 'hover' // 次级菜单的展开方式 (可选: click/hover)
+  }
   const fund_sources = [
     {name: '中央预算内投资' , vlaue: 'value1'},
     {name: '信贷融资' , vlaue: 'value2'},
@@ -249,11 +266,6 @@
     {name: '是否超长期特别国债项目', key: 'value14'},
     {name: '是否有民间投资参与', key: 'value15'},
   ]
-  const files = [
-    {name: '基础条件', key: 'value1'},
-    {name: '更新方式', key: 'value2'},
-    {name: '设计方案', key: 'value3'},
-  ]
   const state = reactive({
 	  ...publicStore.$state,
   })
@@ -262,12 +274,68 @@
       type: [Object, Array],
       default: ()=>{return {}}
     },
+    contents: {
+      type: Array,
+      default: []
+    },
+    active: {
+      type: [Object, Array],
+      default: ()=>{return {}}
+    },
   })
 
   const onStepNext = (formEl) => {
     formEl.validate (async valid => {
       if (valid) {
-       console.log("valid", valid)
+        console.log("publicStore.form.---", publicStore.form)
+        publicStore.actIndex++
+      }
+    })
+  }
+
+  // 预览
+  const viewFile = (v) => {
+    let val = publicStore.form.attr[v.type]
+    const filePath = val.data
+    viewRef.onVisable(filePath)
+  }
+
+  // 删除
+  const delFile = async(v) => {
+    let val = publicStore.form.attr[v.type]
+    const filePath = val.data
+    publicStore.http({deleteFile: {filepath: filePath}}).then(res=>{
+      if(res == 'success') {
+        ElNotification({ title: '提示', message: '删除成功', type: 'success' })
+        delete publicStore.form.attr[v.type]
+        if(publicStore.form.id){
+        // 查询原信息
+        let query = {model: 't_scheme_plan', args: `id='${publicStore.form.id}'`}
+          publicStore.http({Api: query}).then(ress=>{
+            if(!proxy.isNull(ress)){
+              let data = ress[0]
+              if(data.attr){
+                let attr = JSON.parse(data.attr)
+                if(attr[v.type]){
+                  delete attr[v.type]
+                  // 更新数据库
+                  let form = {id: publicStore.form.id, attr: JSON.stringify(attr)}
+                  let params = {model: 't_scheme_plan', list: [form]}
+                  api['updApi'](params).then((resss:any) => {
+                    if(resss.code == 200){
+                      ElNotification({ title: '提示', message: '清理成功', type: 'success' })
+                      // init()
+                    }else{
+                      ElNotification({ title: '提示', message: resss.msg?resss.msg:'清理失败(400)', type: 'error' })
+                    }
+                  })
+                }
+              }
+            }
+          })
+        }
+      }else{
+        ElNotification({ title: '提示', message: res.msg?res.msg:'删除失败(400)', type: 'error' })
       }
     })
   }

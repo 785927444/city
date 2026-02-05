@@ -7,7 +7,7 @@
       <div class="rad4 ptb6 plr14 flex-cc cursor bgi13 i15 bo-i14-1 mr15" @click.stop="handleClick('out')">导出</div>
       <div class="rad4 ptb6 plr14 flex-cc cursor bgi1 white bo-i1-1 mr15" @click.stop="handleClick('add')">新增</div>
     </div>
-    <List @handleClick="handleClick" :state="state" :hasLists="true" :lists="publicStore.form.task" /><List @handleClick="handleClick" :state="state" :hasLists="true" :lists="publicStore.form.task" />
+    <List @handleClick="handleClick" :state="state" :hasLists="true" :lists="publicStore.form.task" />
     <!-- 导入 -->
     <ImportDatax :state="state" @setLists="(lists)=>publicStore.form.task=[...publicStore.form.task, ...lists]"  ref="importRef"/>
     <step222 :state="state" :type="props.type" ref="addRef" />

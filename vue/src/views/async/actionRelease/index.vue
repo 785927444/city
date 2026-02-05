@@ -43,7 +43,9 @@
           <i-ep-filter class="f12 fw" /><span class="f14 ml5">搜索</span>
         </div>
       </template>
-      <template #right-content></template>
+      <template #right-content>
+        <div class="rad4 ptb6 plr12 flex-cc cursor bg-white c8 bo-cc-1" @click.stop="toPath('/actionApply')">新建项目</div>
+      </template>
     </aa-title>
     <!-- 内容 -->
     <div class="layout-col bg-white rad8 p8">

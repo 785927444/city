@@ -2,15 +2,15 @@
   <div class="layout-col plr15">
     <div class="layout-col white-rgba50 rad8">
       <div class="ww100 flex-bc f20 p15 mb20 bob-cd-1">
-        <div class="fw">信息补充</div>
+        <div class="fw">{{route.query && route.query.id?'创建项目':'信息补充'}}</div>
         <div class="flex1 flex-ec">
           <div class="plr14 ptb5 rad4 mr15 cursor c9 bg-white bo-c9-1" @click.stop="onBack()">返 回</div>
         </div>
       </div>
       <div class="layout-col">
         <step-title />
-        <step1 :state="state" v-show="publicStore.actIndex == 1" />
-        <step2 :state="state" v-show="publicStore.actIndex == 2" />
+        <step1 :state="state" :contents="state.contents1" :active="state.active1"  v-show="publicStore.actIndex == 1" />
+        <step2 :state="state" :contents="state.contents2" :active="state.active2" v-show="publicStore.actIndex == 2" />
       </div>
     </div>
   </div>
@@ -40,9 +40,22 @@
   })
 
   const init = async(key) => {
-    let query = {model: 't_project_report', args: `id='${route.query.id}'`}
-    let res = await publicStore.http({Api: query})
-    let data = !proxy.isNull(res)? {...res[0]} : {}
+    let data = {}
+    if(route.query && route.query.id){
+      let query = {model: 't_project_report', args: `id='${route.query.id}'`}
+      let res = await publicStore.http({Api: query})
+      data = !proxy.isNull(res)? {...res[0]} : {}
+    }
+    // 资金来源
+    if(data.area) {
+      try {
+        data.area = JSON.parse(data.area)
+      } catch (error) {
+        console.error("解析失败:", error.message)
+      }
+    }else{
+      data.area = []
+    }
     // 资金来源
     if(data.fund_source) {
       try {
@@ -71,7 +84,7 @@
         console.error("解析失败:", error.message)
       }
     }else{
-      data.attr = {value1: '', value2: '', value3: ''}
+      data.attr = {}
     }
     // 方案上传
     if(data.plan_attr) {
@@ -81,9 +94,10 @@
         console.error("解析失败:", error.message)
       }
     }else{
-      data.plan_attr = {value1: '', value2: '', value3: ''}
+      data.plan_attr = {}
     }
     publicStore.form = {...data}
+    publicStore._public.form = JSON.parse(JSON.stringify(data))
     // 获取专项规划
     getPlan()
     // 获取片区策划
@@ -92,6 +106,8 @@
     getTaskType()
     // 获取已选任务
     getTask()
+    // 获取文件
+    getFile()
     // console.log("publicStore.form", publicStore.form)
   }
 
@@ -131,6 +147,58 @@
       publicStore._public.tasks = JSON.parse(JSON.stringify(tasks))
       // console.log('publicStore._public.tasks---', publicStore._public.tasks)
     })
+  }
+
+  const getFile = async() => {
+    let query1 = {model: 't_file_type'}
+    let query2 = {model: 't_file_content'}
+    let res = await publicStore.http({Api1: query1, Api2: query2})
+    let list1 = proxy.isNull(res.Api1)? [] : res.Api1.sort((a, b) => a.orderd - b.orderd)
+    let list2 = proxy.isNull(res.Api2)? [] : res.Api2.sort((a, b) => a.orderd - b.orderd)
+    getFileAttr1(list1, list2, "019c2c63-cf59-719f-b942-7c7bb535413d")
+    getFileAttr2(list1, list2, "019c2cc4-d276-7805-9685-7a5dde449721")
+  }
+
+  const getFileAttr1 = (list1, list2, id) => {
+    let plan = list1.find(a=>a.id==id)
+    if(plan){
+      let contents = []
+      state.plans = list1.filter(a=>a.parent_id == id)
+      state.plans.forEach(v => { 
+        v.parent_type = `${plan.type}/${v.type}`
+        let content = list2.filter(a=>a.parent_id == v.id)
+        if(!proxy.isNull(content)){
+          content.forEach(vv => {
+            vv.parent_type = `${v.parent_type }/${vv.type}`
+            contents.push(vv)
+          })
+        }
+      })
+      state.contents1 = contents
+      publicStore._public.contents1 = contents
+      state.active1 = proxy.isNull(state.plans)? {} : {...state.plans[0]}
+    }
+  }
+
+  const getFileAttr2 = (list1, list2, id) => {
+    let plan = list1.find(a=>a.id==id)
+    if(plan){
+      let contents = []
+      state.plans = list1.filter(a=>a.parent_id == id)
+      state.plans.forEach(v => { 
+        v.parent_type = `${plan.type}/${v.type}`
+        let content = list2.filter(a=>a.parent_id == v.id)
+        if(!proxy.isNull(content)){
+          content.forEach(vv => {
+            vv.parent_type = `${v.parent_type }/${vv.type}`
+            contents.push(vv)
+          })
+        }
+      })
+      state.contents2 = contents
+      publicStore._public.contents2 = contents
+      state.active2 = proxy.isNull(state.plans)? {} : {...state.plans[0]}
+    }
   }
 
   const onBack = () => {

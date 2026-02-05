@@ -68,6 +68,11 @@ const dictStore = defineStore('dict', {
 			{value: '0', name: '无'},
 			{value: '1', name: '储备阶段'},
 		],
+		levels: [
+			{value: 'province', name: '省'},
+			{value: 'city',     name: '市'},
+			{value: 'district', name: '区'},
+		],
 	})
 })
 

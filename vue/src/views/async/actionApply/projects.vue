@@ -60,10 +60,11 @@
           </el-table-column>
           <el-table-column label="操作" align="center" width="100">
             <template #default="scope, $index">
-              <span class="i1 cursor" @click.stop="">导入</span>
+              <span class="i1 cursor" @click.stop="handleClick('exportdata', scope.row)">导入</span>
             </template>
           </el-table-column>
           </el-table>
+          <Pagination class="" style="padding-bottom: 0;" v-show="state.total>0" :total="state.total" v-model:page.sync="state.page" v-model:limit.sync="state.limit" @pagination="init" />
         </div>
       </div>
       <ViewFiles ref="viewRef" />
@@ -88,6 +89,7 @@
       default: ()=>{return {}}
     },
   })
+  const indexMethod = (index) => { return parseInt(state.page) + index }
 
   const emit = defineEmits(['init'])
 
@@ -95,78 +97,57 @@
     state.isFalse = !state.isFalse
     if(!state.isFalse) return
     state.active = {...val}
-    console.log("state.active---", state.active)
     init()
   }
 
-  const init = async() => {
-    let query = {model: 't_scheme_project', args: `scheme_id='${state.active.scheme_id}'`}
-    if(!proxy.isNull(state.construct_datetime)) {
-      const [start, end] = state.construct_datetime
-      query.args += ` and construct_datetime_start>='${start}' and construct_datetime_end<='${end}'`
-    }
-    if(state.completion_status) query.args += ` and completion_status='${state.completion_status}'`
-    if(state.search) query.args += ` and name LIKE '%${state.search}%'`
-    let res = await publicStore.http({Api: query})
-    state.list = proxy.isNull(res)? [] : res
-  }
-
-  const handleSubmit = (formEl) => {
-    formEl.validate(async valid =>{
-      let aera = (configStore.user.city_name?configStore.user.city_name:'') + (configStore.user.city_name&&configStore.user.district_name?'-':'') + (configStore.user.district_name?configStore.user.district_name:'')
-      if(!aera) aera = configStore.user.province_name
-      let form = {
-        "model": "t_scheme_project", 
-        list:[
-          {
-            name: state.form.name,
-            task_type: state.form.task_type,
-            construct_scale: state.form.construct_scale,
-            construct_nature: state.form.construct_nature,
-            construct_price: state.form.construct_price,
-            construct_datetime_start: state.form.construct_datetime_start?state.form.construct_datetime_start:'',
-            construct_datetime_end: state.form.construct_datetime_end?state.form.construct_datetime_end:'',
-            construct_datetime: state.form.construct_datetime_start&&state.form.construct_datetime_end?`${state.form.construct_datetime_start}-${state.form.construct_datetime_end}`:'',
-            num: getNum(configStore.user.city_name?configStore.user.city_name:configStore.user.province_name?configStore.user.province_name:''),
-            type: props.type, 
-            aera: aera,
-            user_id: configStore.user.id,
-            user_name: configStore.user.name,
-            province: configStore.user.province,
-            province_name: configStore.user.province_name,
-            city: configStore.user.city,
-            city_name: configStore.user.city_name,
-            district: configStore.user.district,
-            district_name: configStore.user.district_name,
-          }
-        ]
+  const init = async(key) => {
+    let model = 't_scheme_project p'
+    let field = `p.*, sp.name as schemeName, sp.parent_area`
+    let join = `t_scheme_plan sp ON p.scheme_id = sp.id`
+    let args = `sp.release_status = '1'`
+    let query = {model: model, field: field, join: join, args: args}
+    if(state.province) {
+      query.args += ` and sp.province='${state.province}'`
+      if(state.city) query.args += ` and sp.city='${state.city}'`
+      if(!proxy.isNull(state.construct_datetime)) {
+        const [start, end] = state.construct_datetime
+        query.args += ` and p.construct_datetime_start>='${start}' and p.construct_datetime_end<='${end}'`
       }
-      publicStore.form.project = [...publicStore.form.project, ...form.list]
-      onVisable()
-      // api.addApi(form).then((res:any) => {
-      //   if(res.code == 200){
-      //     ElNotification({ title: '提示', message: '操作成功', type: 'success' })
-      //     emit('init')
-      //     onVisable()
-      //   }
-      // }).catch((err) => {
-      //   ElNotification({ title: '提示', message: '操作失败', type: 'error' })
-      // })
-	  }).catch((err:any) =>{
-			state.loading = false
-		  console.log('表单错误信息：', err);
-	  })
+      if(state.completion_status) query.args += ` and p.completion_status='${state.completion_status}'`
+      if(state.search) query.args += ` and p.name LIKE '%${state.search}%'`
+    }
+    let q1 = {limit: state.limit, page: state.page}
+    let q2 = {field: `COUNT(*)`}
+    let query1 = {}
+    let query2 = {}
+    Object.assign(query1, query, q1)
+    Object.assign(query2, query, q2)
+    let res = await publicStore.http({Api1: query1, Api2: query2})
+    state.total = proxy.isNull(res.Api2)? 0 : res.Api2[0]['COUNT(*)']
+    state.empty = proxy.isNull(res.Api1)? true : false
+    state.list = proxy.isNull(res.Api1)? [] : res.Api1
+    state.list.forEach(v => {
+      v.area = (v.province_name||'') + (v.city_name?`-${v.city_name}`:'') + (v.district_name?`-${v.district_name}`:'')
+    })
   }
 
-  const getNum = (str) => {
-    const result = pinyin(str, { 
-      pattern: 'first', 
-      toneType: 'none',
-      type: 'array' 
-    })
-    const pyStr = result.join('').toUpperCase()
-    const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '')
-    return pyStr + dateStr
+  const handleClick = (remark, val) => {
+    if(remark == 'exportdata'){
+      // 项目名称 任务类型 建设规模 建设性质 投资预估
+      let data ={
+        num: val.num, 
+        name: val.name, 
+        task_type: val.task_type,
+        construct_scale: val.construct_scale,
+        construct_nature: val.construct_nature,
+        construct_price: val.construct_price,
+        construct_datetime_start: val.construct_datetime_start,
+        construct_datetime_end: val.construct_datetime_end,
+      }
+      publicStore.form = {...publicStore.form, ...data}
+      ElNotification({ title: '提示', message: '导入成功', type: 'success' })
+      onVisable()
+    }
   }
  
   // 暴露给父组件
