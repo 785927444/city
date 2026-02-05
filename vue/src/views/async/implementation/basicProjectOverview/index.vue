@@ -198,14 +198,14 @@
                   <el-input v-model="state.draft.project_name" placeholder="请输入" />
                 </el-form-item>
                 <el-form-item label="所属专项规划">
-                  <el-select v-model="state.draft.scheme_plan_id" placeholder="请选择" style="width: 100%" filterable clearable>
+                  <el-select v-model="state.draft.scheme_plan_id" placeholder="请选择" style="width: 100%" filterable clearable @change="onSchemePlanChange">
                     <el-option v-for="(v, i) in state.schemePlans" :key="i" :value="String(v.id || v.value)" :label="v.name || v.label || v.id" />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="建设单位" required>
                   <el-input v-model="state.draft.build_unit" placeholder="请输入" />
                 </el-form-item>
-                <el-form-item label="建设阶段">
+                <el-form-item label="建设阶段/规模">
                   <el-input v-model="state.draft.build_stage" placeholder="请输入" />
                 </el-form-item>
                 <el-form-item label="总投资" required>
@@ -227,7 +227,7 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item label="项目类型">
-                  <el-select v-model="state.draft.project_type" placeholder="请选择" style="width: 100%" clearable>
+                  <el-select v-model="state.draft.project_type" placeholder="请选择" style="width: 100%" clearable @change="onAutoFillProjectInfo">
                     <el-option v-for="(v, i) in state.projectTypes" :key="i" :value="String(v.value)" :label="v.name" />
                   </el-select>
                 </el-form-item>
@@ -248,7 +248,7 @@
                   </div>
                 </el-form-item>
                 <el-form-item label="所属规划片区">
-                  <el-select v-model="state.draft.scheme_area" placeholder="请选择" style="width: 100%" filterable clearable>
+                  <el-select v-model="state.draft.scheme_area" placeholder="请选择" style="width: 100%" filterable clearable @change="onAutoFillProjectInfo">
                     <el-option v-for="(v, i) in state.schemeAreas" :key="i" :value="String(v.value)" :label="v.name" />
                   </el-select>
                 </el-form-item>
@@ -999,7 +999,7 @@
     state.projectTypes = (proxy.isNull(res2) ? [] : res2)
       .sort((a, b) => (a.orderd ?? 0) - (b.orderd ?? 0))
       .map((v) => ({ name: v.name || v.type || v.id, value: v.id || v.type || v.name }))
-    const planRes = await publicStore.http({ Api: { model: 't_scheme_plan', field: 'id,name', args: `release_status='1'` } })
+    const planRes = await publicStore.http({ Api: { model: 't_scheme_plan', field: 'id,name,datetime,attr', args: `release_status='1'` } })
     state.schemePlans = proxy.isNull(planRes) ? [] : planRes
     state.schemeAreas = [{ value: '1', name: '龙城片区' }]
     state.projectCategoryLevel1Options = [
@@ -1012,6 +1012,184 @@
         { name: '管网改造', value: '1-2' },
         { name: '绿化提升', value: '1-3' }
     ]
+  }
+
+  const onSchemePlanChange = (val: string) => {
+    const plan = state.schemePlans.find((v) => String(v.id) === String(val))
+    if (plan) {
+      // 1. Auto-fill Dates
+      if (plan.datetime) {
+        try {
+          const dates = typeof plan.datetime === 'string' ? JSON.parse(plan.datetime) : plan.datetime
+          if (Array.isArray(dates) && dates.length === 2) {
+            state.draft.planned_start_date = `${dates[0]}-01-01`
+            state.draft.expected_finish_date = `${dates[1]}-12-31`
+            state.draft.plan_year = dates[0]
+          }
+        } catch (e) {
+          console.error('Failed to parse plan datetime', e)
+        }
+      }
+
+      // 2. Parse attr for other fields
+      if (plan.attr) {
+        try {
+          const attr = typeof plan.attr === 'string' ? JSON.parse(plan.attr) : plan.attr
+          
+          // Fill Text Fields
+          if (attr['规划说明']) {
+             if (typeof attr['规划说明'] === 'string') {
+                 state.draft.step2.summary = attr['规划说明']
+             } else if (attr['规划说明']?.name) {
+                 state.draft.step2.summary = `(自动导入) 详见：${attr['规划说明'].name}`
+             }
+          }
+
+          if (attr['规划目标']) {
+              if (typeof attr['规划目标'] === 'string') {
+                 state.draft.contacts.target_2030 = attr['规划目标']
+              }
+          }
+
+          if (attr['编制单位']) state.draft.step2.compilation_unit = attr['编制单位']
+          if (attr['批复时间']) state.draft.step2.approval_time = attr['批复时间']
+          if (attr['基础建设条件']) state.draft.step2.conditions = attr['基础建设条件']
+
+          // Fill Files
+          // Helper to create file entry
+          const createEntry = (sourceFile: any, typeName: string) => {
+              if (!sourceFile) return null
+              return {
+                  id: proxy.uuid(),
+                  type: typeName,
+                  time: parseTime(new Date()),
+                  name: sourceFile.name || '未命名文件',
+                  path: sourceFile.data, // Assuming 'data' holds the path from UploadText
+                  status: 'success',
+                  statusText: '自动导入'
+              }
+          }
+
+          // Clear existing auto-imported files? Maybe better to append.
+          // For now, let's append.
+
+          if (attr['规划文本']) {
+              const entry = createEntry(attr['规划文本'], '方案文本')
+              if (entry) state.draft.step2.fileList.push(entry)
+          }
+          
+          if (attr['规划图表']) {
+              const entry = createEntry(attr['规划图表'], '重要图表')
+              if (entry) state.draft.step2.chartsList.push(entry)
+          }
+
+          if (attr['支撑材料']) {
+              const entry = createEntry(attr['支撑材料'], '支撑材料')
+              if (entry) state.draft.step2.materialsList.push(entry)
+          }
+
+          if (attr['矢量文件']) {
+              const entry = createEntry(attr['矢量文件'], '矢量文件')
+              if (entry) state.draft.step2.materialsList.push(entry)
+          }
+
+        } catch (e) {
+          console.error('Failed to parse plan attr', e)
+        }
+      }
+      
+      // Try to fetch project info if other fields are already selected
+      onAutoFillProjectInfo()
+    }
+  }
+
+  const onAutoFillProjectInfo = async () => {
+    const schemeId = state.draft.scheme_plan_id
+    const areaVal = state.draft.scheme_area
+    const taskType = state.draft.project_type
+    
+    if (!schemeId || !areaVal || !taskType) return
+
+    const areaObj = state.schemeAreas.find((v) => String(v.value) === String(areaVal))
+    const areaName = areaObj ? areaObj.name : ''
+    
+    if (!areaName) return
+
+    const query = {
+        model: 't_scheme_project',
+        args: `scheme_id='${schemeId}' AND aera='${areaName}' AND task_type='${taskType}'`
+    }
+    
+    const res = await publicStore.http({ Api: query })
+    if (!proxy.isNull(res) && res.length > 0) {
+        const project = res[0]
+        
+        // Overwrite fields
+        if (project.name) state.draft.project_name = project.name
+        if (project.num) state.draft.project_code = project.num
+        if (project.code) state.draft.unified_project_code = project.code
+        if (project.construct_scale) state.draft.build_stage = project.construct_scale
+        if (project.construct_price) state.draft.total_invest = project.construct_price
+        if (project.construct_datetime_start) state.draft.planned_start_date = project.construct_datetime_start
+        if (project.construct_datetime_end) state.draft.expected_finish_date = project.construct_datetime_end
+        if (project.completion_status) state.draft.project_stage = project.completion_status
+        if (project.construct_unit) state.draft.build_unit = project.construct_unit
+        if (project.construct_main) state.draft.supervisor_unit = project.construct_main
+        if (project.class) state.draft.project_category_level1 = project.class
+        if (project.construct_content) state.draft.build_content = project.construct_content
+        if (project.construct_note) state.draft.remark = project.construct_note
+        if (project.mapdata) state.draft.project_range = project.mapdata
+
+        // Investments
+        if (project.total_put_price) state.draft.cumulative_invest_issued = project.total_put_price
+        if (project.total_completion_price) state.draft.cumulative_completed_invest = project.total_completion_price
+        if (project.total_income_price) state.draft.project_benefit = project.total_income_price
+        if (project.estimate_year) state.draft.plan_year = project.estimate_year
+        if (project.estimate_price) state.draft.plan_year_amount = project.estimate_price
+
+        // Contacts & Policy
+        if (project.response_person) state.draft.contacts.project_owner = project.response_person
+        if (project.contact_phone) state.draft.contacts.project_owner_phone = project.contact_phone
+        if (project.contact_person) state.draft.contacts.project_contact = project.contact_person
+        if (project.vast_scheme) state.draft.contacts.major_strategy = project.vast_scheme
+        if (project.industrial_policy) state.draft.contacts.industry_policy = project.industrial_policy
+        if (project.gc_investmentd_irection) state.draft.contacts.government_invest_direction = project.gc_investmentd_irection
+        if (project.qu_stage_objective) state.draft.contacts.target_2030 = project.qu_stage_objective
+
+        // Funds (JSON)
+        if (project.fund_source) {
+            try {
+                const funds = typeof project.fund_source === 'string' ? JSON.parse(project.fund_source) : project.fund_source
+                const map: any = {
+                    value1: 'central_budget', value2: 'credit_financing', value3: 'ultra_long_bond',
+                    value4: 'securitization_financing', value5: 'special_debt', value6: 'enterprise_financing',
+                    value7: 'fiscal', value8: 'resident_contribution', value9: 'other_channel', value10: 'tbd'
+                }
+                for (const key in funds) {
+                    if (map[key]) state.draft.funds[map[key]] = funds[key]
+                }
+            } catch (e) {}
+        }
+
+        // Other Info (JSON)
+        if (project.orther_text) {
+            try {
+                const others = typeof project.orther_text === 'string' ? JSON.parse(project.orther_text) : project.orther_text
+                const map: any = {
+                    value1: 'apply_special_bond', value2: 'apply_central_budget_fund', value3: 'need_land_support',
+                    value4: 'apply_policy_fin_tool', value5: 'is_medium_long_term_loan', value6: 'is_2023_bond_invest',
+                    value7: 'is_key_private_invest', value8: 'apply_upgrade_argument', value9: 'apply_major_project',
+                    value10: 'is_local_special_debt', value11: 'apply_14th_102_project', value12: 'apply_14th_energy_plan',
+                    value13: 'apply_tech_financing', value14: 'is_ultra_long_special_bond', value15: 'has_private_invest'
+                }
+                for (const key in others) {
+                    if (map[key]) state.draft.other_info[map[key]] = others[key] === '1' || others[key] === true // Assuming '1' or true means yes
+                }
+            } catch (e) {}
+        }
+        
+        ElNotification({ title: '提示', message: '已自动填充规划项目信息', type: 'success' })
+    }
   }
 
   const buildArgs = () => {
@@ -1312,6 +1490,7 @@
     const start = state.draft.planned_start_date || ''
     const end = state.draft.expected_finish_date || ''
     const totalInvest = Number(state.draft.total_invest)
+    const plan = state.schemePlans.find((v) => String(v.id) === String(state.draft.scheme_plan_id))
     const form: any = {
       id: '',
       type: 'plan',
@@ -1319,7 +1498,7 @@
       code: state.draft.unified_project_code || '',
       name: state.draft.project_name || '',
       scheme_id: state.draft.scheme_plan_id || '',
-      scheme_name: '',
+      scheme_name: plan ? plan.name : '',
       aera: `${configStore.user?.province_name || ''}${configStore.user?.city_name ? `-${configStore.user?.city_name}` : ''}${configStore.user?.district_name ? `-${configStore.user?.district_name}` : ''}`,
       construct_scale: state.draft.build_stage || '',
       construct_datetime_start: start,
