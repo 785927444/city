@@ -194,6 +194,14 @@
         <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="onStepNext(formRef)">下一步</div>
       </div>
     </div>
+    <SchemeAutoFill
+      :scheme-id="publicStore.form.parent_id"
+      :area-value="publicStore.form.parent_area"
+      :task-type="publicStore.form.task_type"
+      :draft="publicStore.form"
+      :scheme-plans="publicStore._public?.schemePlans ? publicStore._public.schemePlans : []"
+      :scheme-areas="publicStore._public?.schemeAreas ? publicStore._public.schemeAreas : []"
+    />
     <projects :state="state" ref="projectRef" />
   </div>
 </template>
@@ -202,10 +210,32 @@
 	import { setAreaLevel } from '@/utils/areaData'
   import api from '@/api'
   import projects from './projects'
+  import SchemeAutoFill from '@/components/SchemeAutoFill.vue'
 	const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
   const dictStore = proxy.dictStore()
+  const DEBUG_KEY = '__ACTION_APPLY_DEBUG__'
+  const getDebug = () => {
+    const g: any = globalThis as any
+    if (!g[DEBUG_KEY]) g[DEBUG_KEY] = { events: [], last: null }
+    return g[DEBUG_KEY]
+  }
+  const safeClone = (val: any) => {
+    try {
+      return JSON.parse(JSON.stringify(val))
+    } catch {
+      return val
+    }
+  }
+  const pushEvent = (type: string, payload: any) => {
+    const dbg = getDebug()
+    const event = { t: Date.now(), type, payload: safeClone(payload) }
+    dbg.last = event
+    dbg.events.push(event)
+    if (dbg.events.length > 120) dbg.events.splice(0, dbg.events.length - 120)
+  }
+  pushEvent('step1.moduleLoaded', { href: (globalThis as any)?.location?.href })
   let projectRef = $ref()
   let formRef = ref()
   let ruleList= $ref({})
@@ -265,6 +295,59 @@
       default: ()=>{return {}}
     },
   })
+
+  onMounted(() => {
+    pushEvent('step1.mounted', {
+      actIndex: publicStore.actIndex,
+      parent_id: publicStore.form?.parent_id,
+      parent_area: publicStore.form?.parent_area,
+      task_type: publicStore.form?.task_type,
+    })
+  })
+
+  watch(
+    () => publicStore.actIndex,
+    (val) => {
+      pushEvent('step1.actIndexChanged', { val })
+    },
+    { immediate: true }
+  )
+
+  watch(
+    () => publicStore.form,
+    (val) => {
+      pushEvent('step1.formRefChanged', {
+        parent_id: val?.parent_id,
+        parent_area: val?.parent_area,
+        task_type: val?.task_type,
+      })
+    },
+    { immediate: true }
+  )
+
+  watch(
+    () => publicStore.form?.parent_id,
+    (val) => {
+      pushEvent('step1.parent_idChanged', { val })
+    },
+    { immediate: true }
+  )
+
+  watch(
+    () => publicStore.form?.parent_area,
+    (val) => {
+      pushEvent('step1.parent_areaChanged', { val })
+    },
+    { immediate: true }
+  )
+
+  watch(
+    () => publicStore.form?.task_type,
+    (val) => {
+      pushEvent('step1.task_typeChanged', { val })
+    },
+    { immediate: true }
+  )
 
   const onStepNext = (formEl) => {
     formEl.validate (async valid => {

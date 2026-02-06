@@ -19,11 +19,11 @@
             <el-input size="large" v-model="publicStore.form.condition" type="textarea" :rows="4"  placeholder="请输入" />
           </el-form-item>
 
-          <!-- <el-form-item label="项目任务" prop="tasks" class="ww100 flex-ss">
+          <el-form-item label="项目任务" prop="tasks" class="ww100 flex-ss">
             <div class="ww100 flex-sc pb20">
               <div class="mr40 pb10 f18 relative cursor actfont" 
               :class="publicStore.current.value == v.value?'i1 bob-i1-2':'bob-tt-2'" 
-              v-for="(v, i) in props.state.type=='plan'?activeTab:activeTab" :key="i" @click.stop="publicStore.current = {...v}" >
+              v-for="(v, i) in activeTab" :key="i" @click.stop="publicStore.current = {...v}" >
               <el-popover :content="v.describe" placement="top-start">
                   <template #reference>
                     <div class="absolute f14 t10 r-18">
@@ -34,9 +34,16 @@
                 <span>{{ v.name }}</span>
               </div>
             </div>
-            <List @handleClick="handleClick" :state="state" :hasLists="true" :lists="publicStore.form.task" />
-          </el-form-item> -->
-          <!-- <SchemeAutoFill />  -->
+            <List @handleClick="handleClick" :state="state" :hasLists="true" :lists="filteredTasks" />
+          </el-form-item>
+          <SchemeAutoFill
+            :scheme-id="publicStore.form.parent_id"
+            :area-value="publicStore.form.parent_area"
+            :task-type="publicStore.form.task_type"
+            :draft="publicStore.form"
+            :scheme-plans="publicStore._public?.schemePlans ? publicStore._public.schemePlans : []"
+            :scheme-areas="publicStore._public?.schemeAreas ? publicStore._public.schemeAreas : []"
+          />
 
           <el-form-item label="实施方案文件上传" prop="files" class="ww100 flex-ss">
              <FileList v-if="publicStore.form?.plan_attr" v-model:files="publicStore.form.plan_attr" :contents="props.contents" :active="props.active"  />
@@ -56,6 +63,7 @@
   import { pinyin } from 'pinyin-pro'
   import { v6 as uuidv6 } from 'uuid'
   import { areaOptions } from '@/utils/areaData'
+  import SchemeAutoFill from '@/components/SchemeAutoFill.vue'
 	const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
@@ -74,6 +82,60 @@
   ]
   const state = reactive({
 	  ...publicStore.$state,
+    content: [
+      { name: '任务中类', key: 'task_class', type: 'input', width: 'flex1' },
+      { name: '建设内容', key: 'construct_content', type: 'input', width: 'w300' },
+      { name: '年份', key: 'year', type: 'input', width: 'w100' },
+      { name: '值', key: 'value', type: 'input', width: 'w100' },
+      { name: '操作', key: { add: '新增', del: '删除' }, width: 'w100' },
+    ]
+  })
+  const createEmptyTask = (type: any) => ({
+    id: uuidv6(),
+    task_type: type,
+    task_class: '',
+    construct_content: '',
+    year: '',
+    value: '',
+  })
+
+  const ensureTaskArray = () => {
+    if (!publicStore.form) return
+    if (!Array.isArray(publicStore.form.task)) publicStore.form.task = []
+  }
+
+  const ensureTaskRowForType = (type: any) => {
+    ensureTaskArray()
+    if (!type) return
+    const list = publicStore.form.task as any[]
+    const exists = list.some((t: any) => String(t.task_type) === String(type))
+    if (!exists) list.push(createEmptyTask(type))
+  }
+
+  if (!publicStore.current || !publicStore.current.value) publicStore.current = activeTab[0]
+  ensureTaskRowForType(publicStore.current.value)
+
+  watch(
+    () => publicStore.current?.value,
+    (type) => {
+      ensureTaskRowForType(type)
+    },
+    { immediate: true }
+  )
+
+  watch(
+    () => publicStore.form?.task,
+    () => {
+      ensureTaskRowForType(publicStore.current?.value)
+    },
+    { immediate: true }
+  )
+
+  const filteredTasks = computed(() => {
+    const type = publicStore.current?.value
+    const list = Array.isArray(publicStore.form?.task) ? publicStore.form.task : []
+    const filtered = (list as any[]).filter((item: any) => String(item.task_type) === String(type))
+    return filtered.length > 0 ? filtered : [createEmptyTask(type)]
   })
   const props = defineProps({
     state: {
@@ -170,7 +232,22 @@
               if(!proxy.isNull(changeFile1)) setChangeFile(changeFile1)
               // 转移方案文件
               if(!proxy.isNull(changeFile2)) setChangeFile(changeFile2)
-              // 三表保存逻辑
+              const projectId = form.id
+              if (Array.isArray(publicStore.form.task) && publicStore.form.task.length > 0) {
+                const tasksToSave = publicStore.form.task.filter((t: any) => {
+                  return t.task_class || t.construct_content || t.year || t.value
+                }).map((t: any) => {
+                  t.project_id = projectId
+                  if (!t.id) t.id = uuidv6()
+                  return t
+                })
+                if (tasksToSave.length > 0) {
+                  const taskParams = { model: 't_project_task', list: tasksToSave }
+                  api.addApi(taskParams).catch(() => {
+                    api.updApi(taskParams)
+                  })
+                }
+              }
 
               // 刷新页面
               // emit('init', form.id)
@@ -198,7 +275,27 @@
     })
   }
 
-  const handleClick = (remark, val) => {}
+  const handleClick = (key, val) => {
+    ensureTaskArray()
+    if (key === 'add') {
+      publicStore.form.task.push({
+        id: uuidv6(),
+        task_type: publicStore.current.value,
+        task_class: '',
+        construct_content: '',
+        year: '',
+        value: ''
+      })
+    } else if (key === 'del') {
+      const index = publicStore.form.task.indexOf(val)
+      if (index > -1) {
+        publicStore.form.task.splice(index, 1)
+      }
+      if (val.id) {
+        publicStore.http({ deleteApi: { model: 't_project_task', list: [val.id] } })
+      }
+    }
+  }
 </script>
   
 <style scoped lang="scss">
