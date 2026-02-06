@@ -176,30 +176,23 @@ const loadDetail = async () => {
 }
 
 const fetchProjects = async () => {
-  const id = route.params.id as string
-  let where = `plan_id='${id}'`
-  if (filters.taskType) where += ` AND project_type='${filters.taskType}'`
-  if (filters.name) where += ` AND project_name LIKE '%${filters.name}%'`
-  if (filters.status) where += ` AND project_status='${filters.status}'`
-  const res = await publicStore.http({
-    Api: {
-      model: 't_annual_plan_project',
-      args: where,
-      order: 'id asc',
-      page: currentPage.value,
-      limit: pageSize.value
-    }
+  const demoList = [
+    { project_name: '老旧小区综合改造一期', city_name: '太原市', district_name: '小店区', project_type: '既有建筑改造利用', project_status: '进行中', construction_type: '改建', investment_amount: '5600', construction_period: '2026-2027', construction_scale: '320亩' },
+    { project_name: '社区服务中心提升工程', city_name: '太原市', district_name: '迎泽区', project_type: '完善社区服务设施', project_status: '未开始', construction_type: '新建', investment_amount: '2100', construction_period: '2026-2026', construction_scale: '120亩' },
+    { project_name: '雨污分流改造项目', city_name: '太原市', district_name: '杏花岭区', project_type: '完善社区服务设施', project_status: '进行中', construction_type: '改造', investment_amount: '3400', construction_period: '2025-2027', construction_scale: '260亩' },
+    { project_name: '历史街区修缮项目', city_name: '太原市', district_name: '万柏林区', project_type: '既有建筑改造利用', project_status: '已完成', construction_type: '修缮', investment_amount: '1800', construction_period: '2024-2025', construction_scale: '90亩' },
+    { project_name: '口袋公园建设项目', city_name: '太原市', district_name: '晋源区', project_type: '完善社区服务设施', project_status: '进行中', construction_type: '新建', investment_amount: '900', construction_period: '2026-2026', construction_scale: '60亩' },
+    { project_name: '城市道路微循环优化', city_name: '太原市', district_name: '尖草坪区', project_type: '既有建筑改造利用', project_status: '未开始', construction_type: '改建', investment_amount: '2400', construction_period: '2026-2027', construction_scale: '150亩' }
+  ]
+  const filtered = demoList.filter((item) => {
+    const matchType = filters.taskType ? item.project_type === filters.taskType : true
+    const matchName = filters.name ? item.project_name.includes(filters.name) : true
+    const matchStatus = filters.status ? item.project_status === filters.status : true
+    return matchType && matchName && matchStatus
   })
-  if (res && res.list) {
-    tableData.value = res.list
-    total.value = res.total || 0
-  } else if (Array.isArray(res)) {
-    tableData.value = res
-    total.value = res.length
-  } else {
-    tableData.value = []
-    total.value = 0
-  }
+  total.value = filtered.length
+  const start = (currentPage.value - 1) * pageSize.value
+  tableData.value = filtered.slice(start, start + pageSize.value)
 }
 
 const resetFilters = () => {

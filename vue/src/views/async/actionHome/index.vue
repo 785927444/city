@@ -6,7 +6,7 @@
         <div class="shape shape-2"></div>
       </div>
       
-      <div class="card flex-col-ss cursor w100 h50x5" @click.stop="toPath('/actionRelease')">
+      <div class="card flex-col-ss cursor w100 h50x5" @click.stop="toPath('/basicProjectOverview')">
         <h2 class="fw f28 mb16">项目基础库</h2>
         <p class="c6 f16">所有上报的城市更新项目</p>
       </div>
@@ -16,12 +16,12 @@
         <p class="c6 f16">符合储备项目条件的城市更新项目</p>
       </div>
       
-      <div class="card flex-col-ss cursor w100 h50x5">
+      <div class="card flex-col-ss cursor w100 h50x5" @click.stop="toPath('/project-push')">
         <h2 class="fw f28 mb16">项目推送库</h2>
         <p class="c6 f16">符合贷款条件的项目</p>
       </div>
       
-      <div class="card flex-col-ss cursor w100 h50x5">
+      <div class="card flex-col-ss cursor w100 h50x5" @click.stop="toPath('/annual-plan')">
         <h2 class="fw f28 mb16">年度计划</h2>
         <p class="c6 f16">本年度计划实施的城市更新项目</p>
       </div>

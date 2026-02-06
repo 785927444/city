@@ -139,29 +139,22 @@ const loadDetail = async () => {
 }
 
 const fetchAttachments = async () => {
-  const id = route.params.id as string
-  let where = `plan_id='${id}'`
-  if (filters.fileType) where += ` AND file_type='${filters.fileType}'`
-  if (filters.fileName) where += ` AND file_name LIKE '%${filters.fileName}%'`
-  const res = await publicStore.http({
-    Api: {
-      model: 't_annual_plan_attachment',
-      args: where,
-      order: 'upload_time desc',
-      page: currentPage.value,
-      limit: pageSize.value
-    }
+  const demoList = [
+    { file_name: '年度计划汇总说明.pdf', file_type: 'PDF文件', upload_time: '2026-01-18 09:20', file_url: '/static/uploads/33fa95f0152e4543912b88c636b26f9f.pdf' },
+    { file_name: '实施图纸.docx', file_type: '文本文档', upload_time: '2026-01-19 14:10', file_url: '/static/uploads/3fe8234a9a194f0c9da7f477accfe2ec.docx' },
+    { file_name: '规划批复.docx', file_type: '文本文档', upload_time: '2026-01-20 10:05', file_url: '/static/uploads/4f2d187ff80441d991ae60570d19cabb.docx' },
+    { file_name: '现场照片.jpg', file_type: '图片文件', upload_time: '2026-01-21 16:30', file_url: '/static/uploads/124c8032a0c947acac3565414d59e3da.jpg' },
+    { file_name: '节点成效.png', file_type: '图片文件', upload_time: '2026-01-22 11:45', file_url: '/static/uploads/53fc120ecca44c12bce7ee9dc45ce35f.png' },
+    { file_name: '资金测算.pdf', file_type: 'PDF文件', upload_time: '2026-01-23 08:50', file_url: '/static/uploads/4eaa30b8a7ab40a798cf5b98924fde30.pdf' }
+  ]
+  const filtered = demoList.filter((item) => {
+    const matchType = filters.fileType ? item.file_type === filters.fileType : true
+    const matchName = filters.fileName ? item.file_name.includes(filters.fileName) : true
+    return matchType && matchName
   })
-  if (res && res.list) {
-    tableData.value = res.list
-    total.value = res.total || 0
-  } else if (Array.isArray(res)) {
-    tableData.value = res
-    total.value = res.length
-  } else {
-    tableData.value = []
-    total.value = 0
-  }
+  total.value = filtered.length
+  const start = (currentPage.value - 1) * pageSize.value
+  tableData.value = filtered.slice(start, start + pageSize.value)
 }
 
 const resetFilters = () => {
@@ -181,8 +174,7 @@ const back = () => {
 }
 
 const viewAttachment = (row: any) => {
-  // 预留查看逻辑（可跳下载或详情页）
-  console.log('view attachment', row)
+  if (row.file_url) window.open(row.file_url, '_blank')
 }
 
 onMounted(async () => {

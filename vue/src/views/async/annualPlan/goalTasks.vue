@@ -110,26 +110,16 @@ const loadDetail = async () => {
 }
 
 const fetchGoals = async () => {
-  const id = route.params.id as string
-  const res = await publicStore.http({
-    Api: {
-      model: 't_annual_plan_goal',
-      args: `plan_id='${id}'`,
-      order: 'id asc',
-      page: currentPage.value,
-      limit: pageSize.value
-    }
-  })
-  if (res && res.list) {
-    tableData.value = res.list
-    total.value = res.total || 0
-  } else if (Array.isArray(res)) {
-    tableData.value = res
-    total.value = res.length
-  } else {
-    tableData.value = []
-    total.value = 0
-  }
+  const demoList = [
+    { task_type: '城市更新示范区建设', task_category: '老旧小区改造', build_content: '完成5个小区外立面与屋面修缮', target_value: '5个' },
+    { task_type: '社区服务设施完善', task_category: '养老托育', build_content: '新建社区养老服务站2处', target_value: '2处' },
+    { task_type: '市政基础设施提升', task_category: '道路交通', build_content: '实施主干道微循环优化', target_value: '6条' },
+    { task_type: '生态环境整治', task_category: '海绵城市', build_content: '完成雨污分流管网改造', target_value: '18公里' },
+    { task_type: '公共空间提升', task_category: '公园绿地', build_content: '新增口袋公园及绿地', target_value: '12处' }
+  ]
+  total.value = demoList.length
+  const start = (currentPage.value - 1) * pageSize.value
+  tableData.value = demoList.slice(start, start + pageSize.value)
 }
 
 const handlePageChange = (page: number) => {

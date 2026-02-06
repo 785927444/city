@@ -328,6 +328,9 @@ onMounted(() => {
   margin-bottom: 20px;
   .filter-form {
     .el-form-item { margin-bottom: 0; }
+    :deep(.el-select__selected-item) { color: #303133; }
+    :deep(.el-select__input) { color: #303133; }
+    :deep(.el-input__inner) { color: #303133; }
   }
 }
 

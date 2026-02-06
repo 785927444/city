@@ -141,7 +141,19 @@ const loadDetail = async () => {
   const res = await publicStore.http({ Api: query })
   if (Array.isArray(res) && res.length > 0) {
     Object.assign(detail, res[0])
+    return
   }
+  Object.assign(detail, {
+    id,
+    city_name: '太原市',
+    district_name: '小店区',
+    status: 'in_progress',
+    report_time: '2026-01-20',
+    plan_year: '2026',
+    investment_amount: '38000',
+    project_count: '8',
+    report_unit: '太原市城市更新中心'
+  })
 }
 
 const back = () => {

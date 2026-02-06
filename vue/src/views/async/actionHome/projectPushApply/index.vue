@@ -2,30 +2,29 @@
   <div class="layout-col plr15">
     <div class="layout-col white-rgba50 rad8">
       <div class="ww100 flex-bc f20 p15 mb20 bob-cd-1">
-        <div class="fw">{{route.query && route.query.id?'创建项目':'信息补充'}}</div>
+        <div class="fw">{{ route.query && route.query.id ? '创建项目' : '信息补充' }}</div>
         <div class="flex1 flex-ec">
           <div class="plr14 ptb5 rad4 mr15 cursor c9 bg-white bo-c9-1" @click.stop="onBack()">返 回</div>
         </div>
       </div>
       <div class="layout-col">
         <step-title />
-        <step1 :state="state" :contents="state.contents1" :active="state.active1"  v-show="publicStore.actIndex == 1" />
+        <step1 :state="state" :contents="state.contents1" :active="state.active1" v-show="publicStore.actIndex == 1" />
         <step2 :state="state" :contents="state.contents2" :active="state.active2" v-show="publicStore.actIndex == 2" />
+        <step3 v-show="publicStore.actIndex == 3" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import api from '@/api'
   import stepTitle from './stepTitle'
-  import step1 from './step1'
+  import step3 from './step3'
   import step2 from './step2'
-  import router from '@/router'
+  import step1 from '@/views/async/actionApply/step1.vue'
   const route = useRoute()
 	const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
-  const configStore = proxy.configStore()
   const state = reactive({
 	  ...publicStore.$state,
   })
@@ -82,12 +81,30 @@
         condition: '基础设施老旧，公共服务配套不足',
         fund_source: {value1: '3000', value2: '1200', value3: '800', value4: '600', value5: '400', value6: '900', value7: '500', value8: '200', value9: '300', value10: '100'},
         orther_text: {value1: '1', value2: '1', value3: '1', value4: '0', value5: '1', value6: '0', value7: '1', value8: '0', value9: '1', value10: '0', value11: '1', value12: '0', value13: '1', value14: '0', value15: '1'},
-        attr: { value1: { status: 'success', type: '基础条件', time: now, name: '基础条件.pdf', data: '/uploads/demo/基础条件.pdf' } },
-        plan_attr: { value1: { status: 'success', type: '实施方案', time: now, name: '实施方案.pdf', data: '/uploads/demo/实施方案.pdf' } },
+        attr: {
+          value1: { status: 'success', type: '基础资料', time: now, name: '33fa95f0152e4543912b88c636b26f9f.pdf', data: '/static/uploads/33fa95f0152e4543912b88c636b26f9f.pdf' },
+          value2: { status: 'success', type: '区位图', time: now, name: '879d409c37f94ed8bf5ad09fcb0240b7.png', data: '/static/uploads/879d409c37f94ed8bf5ad09fcb0240b7.png' }
+        },
+        plan_attr: {
+          value1: { status: 'success', type: '实施方案正文', time: now, name: '4eaa30b8a7ab40a798cf5b98924fde30.pdf', data: '/static/uploads/4eaa30b8a7ab40a798cf5b98924fde30.pdf' },
+          value2: { status: 'success', type: '实施方案附件', time: now, name: '3fe8234a9a194f0c9da7f477accfe2ec.docx', data: '/static/uploads/3fe8234a9a194f0c9da7f477accfe2ec.docx' }
+        },
         task: [
           { id: 'demo-task-1', task_type: '1', task_class: '道路改造', construct_content: '主干道提升', year: '2026', value: '3' },
           { id: 'demo-task-2', task_type: '2', task_class: '环境整治', construct_content: '雨污分流', year: '2027', value: '2' }
-        ]
+        ],
+        project_status: '实施中',
+        invested_amount: '3500',
+        constructed_scale: '道路提升8公里、雨污分流12公里',
+        implementation_effect: '已完成主干道拓宽与雨污分流一期建设，居民出行效率显著提升。',
+        progress_tasks: [
+          { id: 'progress-1', task_type: '1', task_name: '城市更新示范片区建设', construction_content: '老旧片区基础设施提升', project_goal: '完善交通与公共配套', completed_goal: '完成主干道拓宽' },
+          { id: 'progress-2', task_type: '1', task_name: '雨污分流改造', construction_content: '管网改造与错接改正', project_goal: '改善排水系统', completed_goal: '完成一期改造' },
+          { id: 'progress-3', task_type: '2', task_name: '体检整改任务A', construction_content: '违建整治与环境提升', project_goal: '改善人居环境', completed_goal: '完成整改方案' }
+        ],
+        process_files: { process_file: { status: 'success', type: '过程材料', time: now, name: 'c9115ee8414a4d1c82f2ca0462ec4e28.pdf', data: '/static/uploads/c9115ee8414a4d1c82f2ca0462ec4e28.pdf' } },
+        effect_files: { effect_file: { status: 'success', type: '实施成效', time: now, name: 'f6931994aa2a4e1194c5192f14aba60b.pdf', data: '/static/uploads/f6931994aa2a4e1194c5192f14aba60b.pdf' } },
+        approval_opinion: '进度更新信息齐全，建议继续推进。'
       }
     } else if(route.query && route.query.id){
       let query = {model: 't_project_report', args: `id='${route.query.id}'`}
@@ -149,19 +166,39 @@
     }else{
       data.plan_attr = {}
     }
+    if(!data.process_files) data.process_files = {}
+    if(!data.effect_files) data.effect_files = {}
+    if(!data.progress_tasks) data.progress_tasks = []
+    if(!data.project_status) data.project_status = ''
+    if(!data.invested_amount) data.invested_amount = ''
+    if(!data.constructed_scale) data.constructed_scale = ''
+    if(!data.implementation_effect) data.implementation_effect = ''
+    if(!data.approval_opinion) data.approval_opinion = ''
     publicStore.form = {...data}
     publicStore._public.form = JSON.parse(JSON.stringify(data))
-    // 获取专项规划
     getPlan()
-    // 获取片区策划
     getDesign()
-    // 获取任务类型
     getTaskType()
-    // 获取已选任务
     getTask()
-    // 获取文件
     getFile()
-    // console.log("publicStore.form", publicStore.form)
+    if (isDemo) {
+      if (!state.contents1 || state.contents1.length === 0) {
+        state.contents1 = [
+          { id: 'demo-base-1', parent_id: 'demo-base', name: '基础资料', type: 'value1' },
+          { id: 'demo-base-2', parent_id: 'demo-base', name: '区位图', type: 'value2' }
+        ]
+        publicStore._public.contents1 = state.contents1
+        state.active1 = { id: 'demo-base', name: '基础资料' }
+      }
+      if (!state.contents2 || state.contents2.length === 0) {
+        state.contents2 = [
+          { id: 'demo-plan-1', parent_id: 'demo-plan', name: '实施方案正文', type: 'value1' },
+          { id: 'demo-plan-2', parent_id: 'demo-plan', name: '实施方案附件', type: 'value2' }
+        ]
+        publicStore._public.contents2 = state.contents2
+        state.active2 = { id: 'demo-plan', name: '实施方案' }
+      }
+    }
   }
 
   const getPlan = async() => {
@@ -198,7 +235,6 @@
       let tasks = proxy.isNull(res)? [] : res
       publicStore.form.tasks = [...res]
       publicStore._public.tasks = JSON.parse(JSON.stringify(tasks))
-      // console.log('publicStore._public.tasks---', publicStore._public.tasks)
     })
   }
 
@@ -257,7 +293,7 @@
   const onBack = () => {
     let msg = publicStore.form.id? '正在编辑中,是否确定退出?' : '正在编辑中,信息未保存是否确定退出?'
     ElMessageBox.confirm(msg, '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(() => { 
-      proxy.toPath('/actionRelease')
+      proxy.toPath('/project-push')
     })
   }
 
@@ -266,4 +302,3 @@
 <style scoped lang="scss">
 
 </style>
-  

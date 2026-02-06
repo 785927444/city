@@ -132,9 +132,9 @@
                     <span class="w110">更新进度时间</span>
                     <span class="flex1 line1">{{ v.rate_time ? parseTime(v.rate_time) : '-' }}</span>
                   </div>
-                  <div class="rad5 ptb5 plr12 cursor bgi1 white" v-if="state.tab === 'enterprise'" @click.stop="onStartReserve(v)">开始储备</div>
                 </div>
               </div>
+              <div class="project-reserve-btn rad5 ptb5 plr12 cursor bgi1 white" @click.stop="onStartReserve(v)">开始储备</div>
             </div>
           </div>
         </div>
@@ -174,7 +174,7 @@
       </div>
     </div>
 
-    <el-dialog v-model="state.drawerVisible" title="新建项目" width="70%" top="5vh" append-to-body align-center custom-class="basic-project-overview-dialog">
+    <el-dialog v-if="false" title="新建项目" width="70%" top="5vh" append-to-body align-center custom-class="basic-project-overview-dialog">
       <div class="layout-col drawer-shell">
         <el-steps :active="state.drawerStep" finish-status="success" align-center>
           <el-step title="基础信息" />
@@ -1385,15 +1385,12 @@
 
   const onStartReserve = (row: any) => {
     ElMessageBox.confirm('是否将该项目开始储备?', '温馨提示', { confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn' }).then(() => {
-      toPath('/actionApply', { id: row.id })
+      toPath('/actionApply', { demo: '1', name: row.name })
     })
   }
 
-  const onOpenCreate = async () => {
-    state.drawerVisible = true
-    state.drawerStep = 0
-    restoreDraft()
-    await fetchImplementationFiles()
+  const onOpenCreate = () => {
+    toPath('/actionApply')
   }
 
   const onOpenProjectLibrary = () => {
@@ -1586,6 +1583,12 @@
     color: rgba(16, 16, 16, 1);
     font-size: 14px;
     font-family: -regular;
+    padding-bottom: 44px;
+  }
+  .project-reserve-btn {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
   }
   .w360 {
     width: 360px;
