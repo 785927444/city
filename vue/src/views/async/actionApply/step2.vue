@@ -19,11 +19,11 @@
             <el-input size="large" v-model="publicStore.form.condition" type="textarea" :rows="4"  placeholder="请输入" />
           </el-form-item>
 
-          <el-form-item label="项目任务" prop="tasks" class="ww100 flex-ss">
+          <!-- <el-form-item label="项目任务" prop="tasks" class="ww100 flex-ss">
             <div class="ww100 flex-sc pb20">
               <div class="mr40 pb10 f18 relative cursor actfont" 
               :class="publicStore.current.value == v.value?'i1 bob-i1-2':'bob-tt-2'" 
-              v-for="(v, i) in activeTab" :key="i" @click.stop="publicStore.current = {...v}" >
+              v-for="(v, i) in props.state.type=='plan'?activeTab:activeTab" :key="i" @click.stop="publicStore.current = {...v}" >
               <el-popover :content="v.describe" placement="top-start">
                   <template #reference>
                     <div class="absolute f14 t10 r-18">
@@ -34,16 +34,9 @@
                 <span>{{ v.name }}</span>
               </div>
             </div>
-            <List @handleClick="handleClick" :state="state" :hasLists="true" :lists="filteredTasks" />
-          </el-form-item>
-          <SchemeAutoFill
-            :scheme-id="publicStore.form.parent_id"
-            :area-value="publicStore.form.parent_area"
-            :task-type="publicStore.form.task_type"
-            :draft="publicStore.form"
-            :scheme-plans="publicStore._public?.schemePlans ? publicStore._public.schemePlans : []"
-            :scheme-areas="publicStore._public?.schemeAreas ? publicStore._public.schemeAreas : []"
-          />
+            <List @handleClick="handleClick" :state="state" :hasLists="true" :lists="publicStore.form.task" />
+          </el-form-item> -->
+          <!-- <SchemeAutoFill />  -->
 
           <el-form-item label="实施方案文件上传" prop="files" class="ww100 flex-ss">
              <FileList v-if="publicStore.form?.plan_attr" v-model:files="publicStore.form.plan_attr" :contents="props.contents" :active="props.active"  />
@@ -63,7 +56,7 @@
   import { pinyin } from 'pinyin-pro'
   import { v6 as uuidv6 } from 'uuid'
   import { areaOptions } from '@/utils/areaData'
-  import SchemeAutoFill from '@/components/SchemeAutoFill.vue'
+  import router from '@/router'
 	const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
@@ -82,60 +75,6 @@
   ]
   const state = reactive({
 	  ...publicStore.$state,
-    content: [
-      { name: '任务中类', key: 'task_class', type: 'input', width: 'flex1' },
-      { name: '建设内容', key: 'construct_content', type: 'input', width: 'w300' },
-      { name: '年份', key: 'year', type: 'input', width: 'w100' },
-      { name: '值', key: 'value', type: 'input', width: 'w100' },
-      { name: '操作', key: { add: '新增', del: '删除' }, width: 'w100' },
-    ]
-  })
-  const createEmptyTask = (type: any) => ({
-    id: uuidv6(),
-    task_type: type,
-    task_class: '',
-    construct_content: '',
-    year: '',
-    value: '',
-  })
-
-  const ensureTaskArray = () => {
-    if (!publicStore.form) return
-    if (!Array.isArray(publicStore.form.task)) publicStore.form.task = []
-  }
-
-  const ensureTaskRowForType = (type: any) => {
-    ensureTaskArray()
-    if (!type) return
-    const list = publicStore.form.task as any[]
-    const exists = list.some((t: any) => String(t.task_type) === String(type))
-    if (!exists) list.push(createEmptyTask(type))
-  }
-
-  if (!publicStore.current || !publicStore.current.value) publicStore.current = activeTab[0]
-  ensureTaskRowForType(publicStore.current.value)
-
-  watch(
-    () => publicStore.current?.value,
-    (type) => {
-      ensureTaskRowForType(type)
-    },
-    { immediate: true }
-  )
-
-  watch(
-    () => publicStore.form?.task,
-    () => {
-      ensureTaskRowForType(publicStore.current?.value)
-    },
-    { immediate: true }
-  )
-
-  const filteredTasks = computed(() => {
-    const type = publicStore.current?.value
-    const list = Array.isArray(publicStore.form?.task) ? publicStore.form.task : []
-    const filtered = (list as any[]).filter((item: any) => String(item.task_type) === String(type))
-    return filtered.length > 0 ? filtered : [createEmptyTask(type)]
   })
   const props = defineProps({
     state: {
@@ -156,20 +95,33 @@
     formEl.validate (async valid => {
       if (valid) {
         console.log("publicStore.form---2", publicStore.form)
-        ElMessageBox.confirm('否确定操作继续', '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(() => {
+        ElMessageBox.confirm('否确定操作继续', '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(async() => {
           // 防干扰
           let form = JSON.parse(JSON.stringify(publicStore.form)) 
-          // 设置默认类型
+          // 当前时间
+          let nowtime = Date.now() + ''
+          // 默认类型
           form.type = 'report'
+          // 更新时间
+          form.update_time = nowtime
           // 设置所属
           form.user_id = configStore.user.id
           form.user_name = configStore.user.name
           // 判断新增与编辑
           let apikey = form.id?'updApi':'addApi'
-          // 如果是申请储备
+          //这里需要判断到哪一个步骤 publicStore.title 全局标志符
+          // 编辑-申请储备 
           if(apikey == 'updApi'){
             form.apply_status = '1'
-            form.apply_time = Date.now() + ''
+            form.apply_time = nowtime
+          }else{
+            // 新增-编号规则
+            const today = new Date().toISOString().slice(0, 10).replace(/-/g, '')
+            form.num_title = 'SX'
+            form.num_date = today
+            let query = {model: 't_project_report', args: `num_title='${form.num_title}' and num_date='${form.num_date}'`, field: `num_number`, order: `num_number asc`}
+            let temp = await publicStore.http({Api: query})
+            form.num_number = proxy.isNull(temp)? '000001': String(parseInt(temp[0]['num_number'], 10) + 1).padStart(6, '0')
           }
           // 生成带排序的uuid作为id
           if(!form.id) form.id=uuidv6()
@@ -178,11 +130,18 @@
             if(form.area.length>0){
               form.province = form.area.length>0? form.area[0] : ''
               let province = proxy.findNode(areaOptions, (node) => { return node.code == form.province })
-              console.log("province---", province)
+              if(province) form.province_name = province.name
             }
-
-            form.city = form.area.length>1? form.area[1] : ''
-            form.district = form.area.length>2? form.area[2] : ''
+            if(form.area.length>1){
+              form.city = form.area.length>1? form.area[1] : ''
+              let city = proxy.findNode(areaOptions, (node) => { return node.code == form.city })
+              if(city) form.city_name = city.name
+            }
+            if(form.area.length>2){
+              form.district = form.area.length>2? form.area[2] : ''
+              let district = proxy.findNode(areaOptions, (node) => { return node.code == form.district })
+              if(district) form.district_name = district.name
+            }
             form.area = JSON.stringify(form.area)
           }
           // 资金来源 10个值
@@ -195,7 +154,7 @@
             Object.keys(form.attr).forEach((key:any)=>{
               if(form.attr[key].data && form.attr[key].data.indexOf('/uploads')!=-1){
                 let content = publicStore._public.contents1.find(a=>a.type == key)
-                const newfile = `${content.parent_type}/${configStore.user.id}_${key}_${form.plan_attr[key]['name']}`
+                const newfile = `${content.parent_type}/${configStore.user.id}_${key}_${form.attr[key]['name']}`
                 form.attr[key].data = newfile
                 changeFile1.push({oldfile: publicStore.form.attr[key].data, newfile: newfile})
               }
@@ -224,38 +183,19 @@
           console.log("params", params)
           console.log("changeFile1", changeFile1)
           console.log("changeFile2", changeFile2)
-          return
           api[apikey](params).then(async(res:any) => {
             if(res.code == 200){
-              ElNotification({ title: '提示', message: '保存成功', type: 'success' })
+              let message = apikey == 'updApi'? '申请成功' : '保存成功'
+              ElNotification({ title: '提示', message: message, type: 'success' })
               // 转移基础文件
               if(!proxy.isNull(changeFile1)) setChangeFile(changeFile1)
               // 转移方案文件
               if(!proxy.isNull(changeFile2)) setChangeFile(changeFile2)
-              const projectId = form.id
-              if (Array.isArray(publicStore.form.task) && publicStore.form.task.length > 0) {
-                const tasksToSave = publicStore.form.task.filter((t: any) => {
-                  return t.task_class || t.construct_content || t.year || t.value
-                }).map((t: any) => {
-                  t.project_id = projectId
-                  if (!t.id) t.id = uuidv6()
-                  return t
-                })
-                if (tasksToSave.length > 0) {
-                  const taskParams = { model: 't_project_task', list: tasksToSave }
-                  api.addApi(taskParams).catch(() => {
-                    api.updApi(taskParams)
-                  })
-                }
-              }
+              // 三表保存逻辑
 
               // 刷新页面
               // emit('init', form.id)
-              // 如果没有id 跳转到首页
-              // 如果有id需要把数据复制到储备库
-              if(publicStore.form.id){
-
-              }
+              setTimeout(() => { router.back() }, 500)
             }else{
               ElNotification({ title: '提示', message: res.msg?res.msg:'保存失败(400)', type: 'error' })
             }
@@ -275,27 +215,7 @@
     })
   }
 
-  const handleClick = (key, val) => {
-    ensureTaskArray()
-    if (key === 'add') {
-      publicStore.form.task.push({
-        id: uuidv6(),
-        task_type: publicStore.current.value,
-        task_class: '',
-        construct_content: '',
-        year: '',
-        value: ''
-      })
-    } else if (key === 'del') {
-      const index = publicStore.form.task.indexOf(val)
-      if (index > -1) {
-        publicStore.form.task.splice(index, 1)
-      }
-      if (val.id) {
-        publicStore.http({ deleteApi: { model: 't_project_task', list: [val.id] } })
-      }
-    }
-  }
+  const handleClick = (remark, val) => {}
 </script>
   
 <style scoped lang="scss">

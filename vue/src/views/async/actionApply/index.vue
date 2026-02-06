@@ -40,111 +40,62 @@
   })
 
   const init = async(key) => {
-    let data: any = {}
-    const isDemo = route.query && String(route.query.demo) === '1'
-    if (isDemo) {
-      const now = Date.now()
-      data = {
-        code: 'TY-2026-0001',
-        name: route.query?.name ? String(route.query.name) : '龙城片区旧城改造项目',
-        level: '1',
-        area: ['140000', '140100', '140105'],
-        parent_id: '1',
-        parent_area: '1',
-        construct_unit: '太原市城市更新中心',
-        completion_status: '1',
-        construct_main: '太原市住建局',
-        construct_price: '12000',
-        estimate_year: '2026',
-        estimate_price: '2500',
-        total_put_price: '5600',
-        total_completion_price: '3200',
-        estimated_start_time: '2025-12-12',
-        estimated_end_time: '2028-12-30',
-        stage: '1',
-        total_income_price: '8000',
-        task_type: '1',
-        task_class: '1',
-        construct_content: '1',
-        construct_note: '以旧换新示范区改造',
-        response_person: '王伟',
-        contact_person: '张敏',
-        contact_phone: '13800001234',
-        vast_scheme: '新型城镇化',
-        industrial_policy: '城市更新行动',
-        gc_investmentd_irection: '民生改善',
-        qu_stage_objective: '2028年前完成片区更新',
-        mapdata: '龙城片区主干道及周边',
-        plan_name: '龙城片区更新实施方案',
-        plan_unit: '太原市城市更新中心',
-        approval_time: '2026-01-15',
-        plan_abstract: '围绕旧城片区综合更新，完善道路与公共配套',
-        condition: '基础设施老旧，公共服务配套不足',
-        fund_source: {value1: '3000', value2: '1200', value3: '800', value4: '600', value5: '400', value6: '900', value7: '500', value8: '200', value9: '300', value10: '100'},
-        orther_text: {value1: '1', value2: '1', value3: '1', value4: '0', value5: '1', value6: '0', value7: '1', value8: '0', value9: '1', value10: '0', value11: '1', value12: '0', value13: '1', value14: '0', value15: '1'},
-        attr: { value1: { status: 'success', type: '基础条件', time: now, name: '基础条件.pdf', data: '/uploads/demo/基础条件.pdf' } },
-        plan_attr: { value1: { status: 'success', type: '实施方案', time: now, name: '实施方案.pdf', data: '/uploads/demo/实施方案.pdf' } },
-        task: [
-          { id: 'demo-task-1', task_type: '1', task_class: '道路改造', construct_content: '主干道提升', year: '2026', value: '3' },
-          { id: 'demo-task-2', task_type: '2', task_class: '环境整治', construct_content: '雨污分流', year: '2027', value: '2' }
-        ]
-      }
-    } else if(route.query && route.query.id){
+    let data = {}
+    if(route.query && route.query.id){
       let query = {model: 't_project_report', args: `id='${route.query.id}'`}
       let res = await publicStore.http({Api: query})
       data = !proxy.isNull(res)? {...res[0]} : {}
+      // 申请储备
+      if(data.apply_status == '0') publicStore.title = 'apply'
+      // 审批
+      if(data.apply_status == '1' && data.reserve_status == '0') publicStore.title = 'reserve'
     }
+    // 资金来源
     if(data.area) {
-      if (typeof data.area === 'string') {
-        try {
-          data.area = JSON.parse(data.area)
-        } catch (error) {
-          console.error("解析失败:", error.message)
-        }
+      try {
+        data.area = JSON.parse(data.area)
+      } catch (error) {
+        console.error("解析失败:", error.message)
       }
     }else{
       data.area = []
     }
+    // 资金来源
     if(data.fund_source) {
-      if (typeof data.fund_source === 'string') {
-        try {
-          data.fund_source = JSON.parse(data.fund_source)
-        } catch (error) {
-          console.error("解析失败:", error.message)
-        }
+      try {
+        data.fund_source = JSON.parse(data.fund_source)
+      } catch (error) {
+        console.error("解析失败:", error.message)
       }
     }else{
       data.fund_source = {value1: '', value2: '', value3: '', value4: '', value5: '', value6: '', value7: '', value8: '', value9: '', value10: ''}
     }
+    // 其他信息
     if(data.orther_text) {
-      if (typeof data.orther_text === 'string') {
-        try {
-          data.orther_text = JSON.parse(data.orther_text)
-        } catch (error) {
-          console.error("解析失败:", error.message)
-        }
+      try {
+        data.orther_text = JSON.parse(data.orther_text)
+      } catch (error) {
+        console.error("解析失败:", error.message)
       }
     }else{
       data.orther_text = {value1: '', value2: '', value3: '', value4: '', value5: '', value6: '', value7: '', value8: '', value9: '', value10: '', value11: '', value12: '', value13: '', value14: '', value15: ''}
     }
+    // 图片上传
     if(data.attr) {
-      if (typeof data.attr === 'string') {
-        try {
-          data.attr = JSON.parse(data.attr)
-        } catch (error) {
-          console.error("解析失败:", error.message)
-        }
+      try {
+        data.attr = JSON.parse(data.attr)
+      } catch (error) {
+        console.error("解析失败:", error.message)
       }
     }else{
       data.attr = {}
     }
+    // 方案上传
     if(data.plan_attr) {
-      if (typeof data.plan_attr === 'string') {
-        try {
-          data.plan_attr = JSON.parse(data.plan_attr)
-        } catch (error) {
-          console.error("解析失败:", error.message)
-        }
+      try {
+        data.plan_attr = JSON.parse(data.plan_attr)
+      } catch (error) {
+        console.error("解析失败:", error.message)
       }
     }else{
       data.plan_attr = {}
@@ -257,7 +208,7 @@
   const onBack = () => {
     let msg = publicStore.form.id? '正在编辑中,是否确定退出?' : '正在编辑中,信息未保存是否确定退出?'
     ElMessageBox.confirm(msg, '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(() => { 
-      proxy.toPath('/actionRelease')
+      router.back()
     })
   }
 

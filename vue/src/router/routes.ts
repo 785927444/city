@@ -82,69 +82,6 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: { next: false },
         component: () => import('@/views/async/knowledge/detail.vue'),
         children: []
-      },
-      {
-        path: '/basicProjectOverview',
-        name: '项目基础库',
-        meta: { next: false },
-        component: () => import('@/views/async/implementation/basicProjectOverview/index.vue'),
-        children: []
-      },
-      {
-        path: '/project-push',
-        name: '项目推送库',
-        meta: { next: false },
-        component: () => import('../views/async/actionHome/projectPush.vue'),
-        children: []
-      },
-      {
-        path: '/project-push/apply',
-        name: '项目推送进度更新',
-        meta: { next: false },
-        component: () => import('@/views/async/actionHome/projectPushApply/index.vue'),
-        children: []
-      },
-      {
-        path: '/annual-plan',
-        name: '年度计划',
-        meta: { next: false },
-        component: () => import('@/views/async/annualPlan/index.vue'),
-        children: []
-      },
-      {
-        path: '/annual-plan/track',
-        name: '年度计划跟踪',
-        meta: { next: false },
-        component: () => import('@/views/async/annualPlan/track.vue'),
-        children: []
-      },
-      {
-        path: '/annual-plan/:id',
-        name: '年度计划详情',
-        meta: { next: false },
-        component: () => import('@/views/async/annualPlan/detail.vue'),
-        children: []
-      },
-      {
-        path: '/annual-plan/:id/projects',
-        name: '计划项目库',
-        meta: { next: false },
-        component: () => import('@/views/async/annualPlan/projectList.vue'),
-        children: []
-      },
-      {
-        path: '/annual-plan/:id/attachments',
-        name: '计划附件',
-        meta: { next: false },
-        component: () => import('@/views/async/annualPlan/attachments.vue'),
-        children: []
-      },
-      {
-        path: '/annual-plan/:id/goals',
-        name: '年度目标任务',
-        meta: { next: false },
-        component: () => import('@/views/async/annualPlan/goalTasks.vue'),
-        children: []
       }
     ]
   },

@@ -18,7 +18,8 @@ router.beforeEach(async (to: any, from: any, next) => {
   // 初始化
   publicStore().$reset()
   // 设置头部
-  document.title = to.name? to.name : ''
+  // document.title = to.name? to.name : ''
+  document.title = '山西省城市体检评估管理信息平台'
   // CSRF策略
   if(!configStore().csrfToken){
     await publicStore().http({Api: {}}, '/api/v1/terminal/base/csrfToken', {}, 'get')

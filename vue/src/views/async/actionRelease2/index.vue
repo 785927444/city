@@ -77,7 +77,7 @@
             <div class="ww100 flex-col p12 c6">
               <div class="ww100 flex-sc">
                 <span class="w110">所属地区</span>
-                <span>{{ v.province_name?v.province_name:'' }}{{ v.city_name?`-${v.city_name}`:'' }}{{ v.district_name?`-${v.district_name}`:'' }}</span>
+                <span>{{ v.area?v.area:'' }}</span>
               </div>
               <div class="ww100 flex-sc mt10">
                 <span class="w110">所属片区</span>
@@ -104,7 +104,7 @@
                   <span class="w110">更新进度时间</span>
                   <span>{{ v.update_time?parseTime(v.update_time):'-' }}</span>
                 </div>
-                <div class="rad5 ptb5 plr12 cursor bgi1 white" @click.stop="state.active = {...v}; state.isFalse = !state.isFalse">申请储备</div>
+                <div class="rad5 ptb5 plr12 cursor bgi1 white" @click.stop="toPath('/actionApply', {id: v.id})">查看</div>
               </div>
             </div>
           </div>
@@ -113,18 +113,6 @@
       <!-- 分页 -->
       <Pagination class="" style="padding-bottom: 0;" v-show="state.total>0" :total="state.total" v-model:page.sync="state.page" v-model:limit.sync="state.limit" @pagination="init" />
     </div>
-    <!-- 弹窗 -->
-    <el-dialog v-model="state.isFalse" title="温馨提示" :draggable="true" width="30%">
-      <div class="ww100 flex-col-cc">
-        <div class="f20 tc ptb30">是否将该项目申请纳入储备</div>
-      </div>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button size="large" class="bgc white" @click="state.isFalse = !state.isFalse">取 消</el-button>
-          <el-button size="large" class="bgi1 white" @click.stop="toPath('/actionApply', {id: state.active.id})">确 定</el-button>
-        </div>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
@@ -147,7 +135,7 @@
       {type: 'actionRelease1', name: '已申请', path: '/actionRelease1'},
       {type: 'actionRelease2', name: '已退回', path: '/actionRelease2'},
     ],
-    type: 'actionRelease',
+    type: 'actionRelease2',
     completion_status: '1',
     search: '',
     schemeAreas: [
@@ -177,9 +165,9 @@
   const init = async(key) => {
     let model = 't_project_report'
     let field = ``
-    let args = `apply_status = '0' and reserve_status ='0'`
+    let args = `apply_status = '2' and reserve_status ='0'`
     let args1 = `apply_status = '1' and reserve_status ='0'`
-    let args2 = `apply_status = '3' and reserve_status ='0'`
+    let args2 = `apply_status = '0' and reserve_status ='0'`
     let query = {model: model, args: args}
     let queryapi1 = {model: model, field: `COUNT(*)`, args: args1}
     let queryapi2 = {model: model, field: `COUNT(*)`, args: args2}
@@ -220,7 +208,7 @@
 
   const getApply2 = (query) => {
     publicStore.http({Api: query}).then(res=>{
-      state.types[2]['total'] = proxy.isNull(res)? 0 : res[0]['COUNT(*)']
+      state.types[0]['total'] = proxy.isNull(res)? 0 : res[0]['COUNT(*)']
     })
   }
 

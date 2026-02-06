@@ -3,49 +3,69 @@
     <!-- 标题 -->
     <aa-title title="">
       <template #left-content>
-        <div class="flex-sc mr30">
-          <span class="mr10">项目周期</span>
-          <span class="w50x4">
-            <el-date-picker style="width: 100%;" v-model="state.construct_datetime" start-placeholder="开始周期" end-placeholder="结束周期" type="yearrange" value-format="YYYY" format="YYYY" />
-          </span>
-        </div>        
-        <div class="flex-sc mr30">
-          <span class="mr10">所属行政</span>
-          <span class="w50x3">
-            <el-select v-model="state.province" placeholder="请选择" style="width:100%" filterable>
-              <el-option v-for="(v, i) in state.provinces" :key="v.value" :value="String(v.value)" :label="v.name" />
-            </el-select>
-          </span>
-        </div>
-        <div class="flex-sc mr30">
-          <span class="mr10">所属地市</span>
-          <span class="w50x3">
-            <el-select v-model="state.city" placeholder="请选择" style="width:100%" filterable :clearable="configStore.user.parent_id == '0'">
-              <el-option v-for="(v, i) in state.citys" :key="v.value" :value="String(v.value)" :label="v.name" />
-            </el-select>
-          </span>
-        </div>
-        <div class="flex-sc mr15">
-          <span class="mr10">实施状态</span>
-          <span class="w50x3">
-            <el-select v-model="state.completion_status" placeholder="请选择" style="width:100%" filterable clearable>
-              <el-option v-for="(v, i) in dictStore.project_completion_statuss" :key="v.value" :value="String(v.value)" :label="v.name" />
-            </el-select>
-          </span>
-        </div>
-        <div class="flex-sc mr15">
-          <span class="mr10">项目名称</span>
-          <span class="w50x3">
-            <el-input v-model="state.search" style="width: 100%;" placeholder="请输入" />
-          </span>
-        </div>
-        <div class="rad4 ptb6 plr12 flex-cc cursor bgi1 white" @click.stop="init()">
-          <i-ep-filter class="f12 fw" /><span class="f14 ml5">搜索</span>
+        <div class="flex-sc flex4 hidden warp">
+          <div class="flex-sc ww25 pr30">
+            <span class="mr10">项目周期</span>
+            <span class="flex1 flex-sc hidden">
+              <el-date-picker style="width: 100%;" v-model="state.construct_datetime" start-placeholder="开始周期" end-placeholder="结束周期" type="yearrange" value-format="YYYY" format="YYYY" />
+            </span>
+          </div>        
+          <div class="flex-sc ww25 pr30">
+            <span class="mr10">所属行政</span>
+            <span class="flex1 flex-sc hidden">
+              <el-select v-model="state.province" placeholder="请选择" style="width:100%" filterable>
+                <el-option v-for="(v, i) in state.provinces" :key="v.value" :value="String(v.value)" :label="v.name" />
+              </el-select>
+            </span>
+          </div>
+          <div class="flex-sc ww25 pr30">
+            <span class="mr10">所属地市</span>
+            <span class="flex1 flex-sc hidden">
+              <el-select v-model="state.city" placeholder="请选择" style="width:100%" filterable :clearable="configStore.user.parent_id == '0'">
+                <el-option v-for="(v, i) in state.citys" :key="v.value" :value="String(v.value)" :label="v.name" />
+              </el-select>
+            </span>
+          </div>
+          <div class="flex-sc ww25 pr30">
+            <span class="mr10">项目阶段</span>
+            <span class="flex1 flex-sc hidden">
+              <el-select v-model="state.stage" placeholder="请选择" style="width:100%" filterable clearable>
+                <el-option v-for="(v, i) in dictStore.project_stages" :key="v.value" :value="String(v.value)" :label="v.name" />
+              </el-select>
+            </span>
+          </div>
+          <div class="flex-sc ww25 pr30 mt10">
+            <span class="mr10">项目类型</span>
+            <span class="flex1 flex-sc hidden">
+              <el-select v-model="state.task_type" placeholder="请选择" style="width:100%" filterable clearable>
+                <el-option v-for="(v, i) in state.task_typess?state.task_typess:[]" :key="v.id" :value="String(v.id)" :label="v.name" />
+              </el-select>
+            </span>
+          </div>
+          <div class="flex-sc ww25 pr30 mt10">
+            <span class="mr10">投资金额</span>
+            <span class="flex1 flex-sc hidden">
+              <el-select v-model="state.construct_price" placeholder="请选择" style="width:100%" filterable clearable>
+                <el-option v-for="(v, i) in construct_prices?construct_prices:[]" :key="v.value" :value="String(v.value)" :label="v.name" />
+              </el-select>
+            </span>
+          </div>
+          <div class="flex-sc ww25 pr30 mt10">
+            <span class="mr10">项目名称</span>
+            <span class="flex1 flex-sc hidden">
+              <el-input v-model="state.search" style="width: 100%;" placeholder="请输入" />
+            </span>
+          </div>
+          <div class="rad4 ptb6 plr12 flex-cc cursor bgi1 white mt10" @click.stop="init()">
+            <i-ep-filter class="f12 fw" /><span class="f14 ml5">搜索</span>
+          </div>
         </div>
       </template>
       <template #right-content>
-        <div class="rad4 ptb6 plr12 flex-cc cursor ml15 bg-white c8 bo-cc-1" @click.stop="toPath('/actionApply')">新建项目</div>
-        <div class="rad4 ptb6 plr12 flex-cc cursor ml15 bgi1 white" @click.stop="toPath('/actionHome')">项目库</div>
+        <!-- <div class="flex-ec flex1 hidden">
+          <div class="rad4 ptb10 w100 tc flex-cc cursor ml15 bg-white c8 bo-cc-1" @click.stop="toPath('/actionApply')">项目台账</div>
+          <div class="rad4 ptb10 w100 tc flex-cc cursor ml15 bg-white c8 bo-cc-1" @click.stop="toPath('/actionApply')">项目实施跟踪</div>
+        </div> -->
       </template>
     </aa-title>
     <!-- 内容 -->
@@ -71,6 +91,9 @@
             <div class="ww100 flex-sc p12 bob-ce-1">
               <span class="f15">{{ v.name }}</span>
               <span class="flex1 flex-ec">
+                <span v-if="v.completion_status" class="rad3 ptb3 plr6" :class="v.completion_status=='1'?'bgi10 bo-i11-1 i12':'bgi13 bo-i14-1 i15'">
+                {{ find(dictStore.completion_statuss, ['value', v.completion_status], 'name') }}
+                </span>
                 <span class="w18 h18 tc lh18 rad3 ml10 white f12" :class="v.click?'bgi1 bo-i1-1':'bo-cc-1'" @click.stop="v.click = !v.click"><i-ep-check v-if="v.click"  /></span>
               </span>
             </div>
@@ -80,8 +103,11 @@
                 <span>{{ v.province_name?v.province_name:'' }}{{ v.city_name?`-${v.city_name}`:'' }}{{ v.district_name?`-${v.district_name}`:'' }}</span>
               </div>
               <div class="ww100 flex-sc mt10">
-                <span class="w110">所属片区</span>
-                <span>{{ v.parent_area?find(state.schemeAreas, ['value', v.parent_area], 'name'):'-' }}</span>
+                <span class="w110">征资条件</span>
+                <span class="flex-sc i12">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="success-icon svg-icon-path-icon fill" viewBox="0 0 32 32" width="13" height="13"><defs></defs><g><path d="M29.333 26.667h-26.667v-2.667h1.333v-9.292c0-6.651 5.373-12.041 12-12.041s12 5.391 12 12.041v9.292h1.333v2.667zM12.667 28h6.667c0 1.841-1.492 3.333-3.333 3.333s-3.333-1.492-3.333-3.333v0z"></path></g></svg>
+                  <span class="ml5">符合</span> 
+                </span>
               </div>
               <div class="ww100 flex-sc mt10">
                 <span class="w110">项目周期</span>
@@ -104,7 +130,7 @@
                   <span class="w110">更新进度时间</span>
                   <span>{{ v.update_time?parseTime(v.update_time):'-' }}</span>
                 </div>
-                <div class="rad5 ptb5 plr12 cursor bgi1 white" @click.stop="state.active = {...v}; state.isFalse = !state.isFalse">申请储备</div>
+                <div class="rad5 ptb5 plr12 cursor bgi1 white" @click.stop="toPath('/actionApply', {id: v.id})">审批</div>
               </div>
             </div>
           </div>
@@ -114,7 +140,7 @@
       <Pagination class="" style="padding-bottom: 0;" v-show="state.total>0" :total="state.total" v-model:page.sync="state.page" v-model:limit.sync="state.limit" @pagination="init" />
     </div>
     <!-- 弹窗 -->
-    <el-dialog v-model="state.isFalse" title="温馨提示" :draggable="true" width="30%">
+    <!-- <el-dialog v-model="state.isFalse" title="温馨提示" :draggable="true" width="30%">
       <div class="ww100 flex-col-cc">
         <div class="f20 tc ptb30">是否将该项目申请纳入储备</div>
       </div>
@@ -124,7 +150,7 @@
           <el-button size="large" class="bgi1 white" @click.stop="toPath('/actionApply', {id: state.active.id})">确 定</el-button>
         </div>
       </template>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -143,20 +169,32 @@
     citys: [],
     city: '',
     types: [
-      {type: 'actionRelease', name: '已上报', path: '/actionRelease'},
-      {type: 'actionRelease1', name: '已申请', path: '/actionRelease1'},
-      {type: 'actionRelease2', name: '已退回', path: '/actionRelease2'},
+      {type: 'actionReserve', name: '待审核', path: '/actionReserve'},
+      {type: 'actionReserve1', name: '已储备', path: '/actionReserve1'},
     ],
-    type: 'actionRelease',
-    completion_status: '1',
+    type: 'actionReserve',
+    stage: '',
+    task_type: '',
     search: '',
-    schemeAreas: [
-     {value: '1', name: '龙城片区'}
-    ],
   })
+
+  const construct_prices = [
+    {value1: '0',    value: '5000', name: '5000万以下'},
+    {value1: '5000',  value: '10000', name: '5000万-1亿'},
+    {value1: '10000',  value: '100000', name: '1亿-10亿'},
+    {value1: '100000',  value: '300000', name: '10亿-30亿'},
+    {value1: '300000',   value: '10000000', name: '30亿以上'},
+  ]
+
+  const condition = [
+    {value: '0', name: '不符合'},
+    {value: '1', name: '符合'},
+    {value: '2', name: '已征资'},
+  ]
 
   onMounted(async() => {
     await getInit()
+    getTaskType()
     init()
   })
 
@@ -174,17 +212,15 @@
     if(!proxy.isNull(state.citys) && configStore.user.parent_id != '0') state.city = state.citys[0]['value']
   }
 
+  // 已申请储备
   const init = async(key) => {
     let model = 't_project_report'
     let field = ``
-    let args = `apply_status = '0' and reserve_status ='0'`
-    let args1 = `apply_status = '1' and reserve_status ='0'`
-    let args2 = `apply_status = '3' and reserve_status ='0'`
+    let args = `apply_status = '1' and reserve_status ='0'`
+    let args1 = `apply_status = '1' and reserve_status ='1'`
     let query = {model: model, args: args}
     let queryapi1 = {model: model, field: `COUNT(*)`, args: args1}
-    let queryapi2 = {model: model, field: `COUNT(*)`, args: args2}
     getApply1(queryapi1)
-    getApply2(queryapi2)
     if(state.province) {
       query.args += ` and province='${state.province}'`
       if(state.city) query.args += ` and city='${state.city}'`
@@ -192,7 +228,12 @@
         const [start, end] = state.construct_datetime
         query.args += ` and construct_datetime_start>='${start}' and construct_datetime_end<='${end}'`
       }
-      if(state.completion_status) query.args += ` and completion_status='${state.completion_status}'`
+      if(state.construct_price) {
+        let price = construct_prices.find(a=>a.value == state.construct_price)
+        query.args += ` and construct_price>='${price.value1}' and construct_price<='${price.value}'`
+      }
+      if(state.stage) query.args += ` and stage='${state.stage}'`
+      if(state.task_type) query.args += ` and task_type='${state.task_type}'`
       if(state.search) query.args += ` and name LIKE '%${state.search}%'`
     }
     let q1 = {limit: state.limit, page: state.page}
@@ -210,6 +251,8 @@
     state.list.forEach(v => {
       v.area = (v.province_name||'') + (v.city_name?`-${v.city_name}`:'') + (v.district_name?`-${v.district_name}`:'')
     })
+    getData1()
+    getData2()
   }
 
   const getApply1 = (query) => {
@@ -218,11 +261,59 @@
     })
   }
 
-  const getApply2 = (query) => {
+   const getTaskType = () => {
+    let query = {model: 't_task_type', args: `parent_id!='0'`}
     publicStore.http({Api: query}).then(res=>{
-      state.types[2]['total'] = proxy.isNull(res)? 0 : res[0]['COUNT(*)']
+      state.task_typess = proxy.isNull(res)? [] : res
     })
   }
+
+  const getData1 = () => {
+    let completion_status1 =  state.list.filter(a=>a.completion_status == '1')
+    let completion_status2 =  state.list.filter(a=>a.completion_status == '2')
+	  let data1 = { 
+      sum: state.list.length,
+	    completion_status1: completion_status1.length,  
+	    completion_status2: completion_status2.length 
+	  }
+	  publicStore._public.percent = data1.sum ? Math.floor((data1.completion_status2 / data1.sum) * 100) / 100 : 0
+	  publicStore._public.data1 = data1
+	}
+
+	const getData2 = async() => {
+      // 1. 使用 Map 存储统计结果，key 为城市名
+    const cityMap = new Map();
+    // 2. 遍历列表进行统计
+    state.list.forEach(item => {
+      const city = item.city_name;
+      if (!city) return;
+      // 如果城市第一次出现，初始化计数为 0
+      if (!cityMap.has(city)) {
+        cityMap.set(city, { area: 0, impl: 0 });
+      }
+      const status = item.completion_status;
+      if (status === '1') {
+        // 谋划中 (completion_status == 1)
+        cityMap.get(city).area++;
+      } else if (status === '2') {
+        // 实施中 (completion_status == 2)
+        cityMap.get(city).impl++;
+      }
+      // 其他状态不操作，自然保持为 0
+    });
+    // 3. 生成最终结果
+    publicStore._public.responses = [
+      { 
+        name: '谋划中项目',   
+        data: Array.from(cityMap).map(([name, val]) => [name, String(val.area)]) 
+      },
+      { 
+        name: '实施中项目', 
+        data: Array.from(cityMap).map(([name, val]) => [name, String(val.impl)]) 
+      }
+    ];
+	}
+
 
   const handleClick = (remark, val) => {
     if(remark == 'remind') {
@@ -251,5 +342,6 @@
   
 <style scoped lang="scss">
 .w110 { width: 110px; }
+.success-icon { fill: #00b259; }
 </style>
   

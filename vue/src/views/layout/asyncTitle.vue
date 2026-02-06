@@ -4,7 +4,7 @@
     <div class="absolute-cc tc ww100 hh100 flex-bc plr15">
       <div class="f20 flex-sc ww20 fw">
         <img class="mr10 w30" src="@/assets/images/a_logo.png" />
-        <span>城市体检评估管理信息平台</span>
+        <span>山西省城市体检评估管理信息平台</span>
         <span> </span>
       </div>
       <div class="hh100 flex1 flex-ec i2 f16">

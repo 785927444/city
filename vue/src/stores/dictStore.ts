@@ -67,7 +67,11 @@ const dictStore = defineStore('dict', {
 		project_stages: [
 			{value: '0', name: '无'},
 			{value: '1', name: '储备阶段'},
+			{value: '2', name: '开工阶段'},
+			{value: '3', name: '续建阶段'},
+			{value: '4', name: '完工阶段'},
 		],
+		// 所属等级
 		levels: [
 			{value: 'province', name: '省'},
 			{value: 'city',     name: '市'},
