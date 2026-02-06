@@ -53,7 +53,9 @@
 
 <script lang="ts" setup>
   import api from '@/api'
+  import { pinyin } from 'pinyin-pro'
   import { v6 as uuidv6 } from 'uuid'
+  import { areaOptions } from '@/utils/areaData'
 	const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
@@ -97,15 +99,26 @@
           let form = JSON.parse(JSON.stringify(publicStore.form)) 
           // 设置默认类型
           form.type = 'report'
+          // 设置所属
           form.user_id = configStore.user.id
           form.user_name = configStore.user.name
           // 判断新增与编辑
           let apikey = form.id?'updApi':'addApi'
+          // 如果是申请储备
+          if(apikey == 'updApi'){
+            form.apply_status = '1'
+            form.apply_time = Date.now() + ''
+          }
           // 生成带排序的uuid作为id
           if(!form.id) form.id=uuidv6()
           // 所属地区 省市区
           if(!proxy.isNull(form.area)){
-            form.province = form.area.length>0? form.area[0] : ''
+            if(form.area.length>0){
+              form.province = form.area.length>0? form.area[0] : ''
+              let province = proxy.findNode(areaOptions, (node) => { return node.code == form.province })
+              console.log("province---", province)
+            }
+
             form.city = form.area.length>1? form.area[1] : ''
             form.district = form.area.length>2? form.area[2] : ''
             form.area = JSON.stringify(form.area)
@@ -131,7 +144,6 @@
           }
           // 方案文件
           let changeFile2 = []
-          console.log("xxcc", form.plan_attr)
           if(!proxy.isNull(form.plan_attr)){
             Object.keys(form.plan_attr).forEach((key:any)=>{
               if(form.plan_attr[key].data && form.plan_attr[key].data.indexOf('/uploads')!=-1){
@@ -150,6 +162,7 @@
           console.log("params", params)
           console.log("changeFile1", changeFile1)
           console.log("changeFile2", changeFile2)
+          return
           api[apikey](params).then(async(res:any) => {
             if(res.code == 200){
               ElNotification({ title: '提示', message: '保存成功', type: 'success' })
@@ -161,7 +174,11 @@
 
               // 刷新页面
               // emit('init', form.id)
-              // 跳转到首页
+              // 如果没有id 跳转到首页
+              // 如果有id需要把数据复制到储备库
+              if(publicStore.form.id){
+
+              }
             }else{
               ElNotification({ title: '提示', message: res.msg?res.msg:'保存失败(400)', type: 'error' })
             }

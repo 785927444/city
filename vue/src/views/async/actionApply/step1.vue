@@ -7,9 +7,9 @@
           <el-form-item label="项目信息" prop="" class="ww100 flex-sc">
             <div class="w50x3 tc rad3 ptb6 bgi1 white cursor" @click.stop="projectRef.onVisable(publicStore.form)">专项与片区项目库</div>
           </el-form-item>
-          <el-form-item label="项目编号" prop="num" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
+          <!-- <el-form-item label="项目编号" prop="num" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
             <el-input size="large" v-model="publicStore.form.num" placeholder="请输入" />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="统一项目代码" prop="code" class="ww50 flex-sc">
             <el-input size="large" v-model="publicStore.form.code" placeholder="请输入" />
           </el-form-item>
@@ -90,19 +90,36 @@
               </template>
             </el-input> 
           </el-form-item> 
-          <el-form-item label="任务类型" prop="task_type" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]" class="ww50 flex-sc">
+          <el-form-item label="" prop="" class="ww50 flex-ss">
+          </el-form-item>
+          <el-form-item label="任务类型" prop="task_type" class="ww33 flex-sc" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
+            <el-select size="large" v-model="publicStore.form.task_type" placeholder="请选择" style="width:100%" clearable filterable @change="publicStore.form.task_class='';publicStore.form.construct_content=''">
+              <el-option v-for="(v, i) in publicStore._public.task_types" :key="i" :label="v.name" :value="v.id.toString()" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="类型中类" prop="task_class" class="ww33 flex-sc" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
+            <el-select size="large" v-model="publicStore.form.task_class" placeholder="请选择" style="width:100%" clearable filterable @change="publicStore.form.construct_content=''">
+              <el-option v-for="(v, i) in publicStore.form.task_type&&publicStore._public.task_classs?publicStore._public.task_classs.filter(a=>a.parent_id == publicStore.form.task_type):[]" :key="i" :label="v.name" :value="v.id.toString()" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="建设内容" prop="construct_content" class="ww33 flex-sc" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
+            <el-select size="large" v-model="publicStore.form.construct_content" placeholder="请选择" style="width:100%" clearable filterable>
+              <el-option v-for="(v, i) in publicStore.form.task_type&&publicStore.form.task_class&&publicStore._public.construct_contents?publicStore._public.construct_contents.filter(a=>a.parent_id == publicStore.form.task_class):[]" :key="i" :label="v.name" :value="v.id.toString()" />
+            </el-select>
+          </el-form-item>
+          <!-- <el-form-item label="任务类型" prop="task_type" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]" class="ww50 flex-sc">
             <div class="ww100 flex-sc">
               <el-select v-model="publicStore.form.task_type" style="width:100%" placeholder="请选择" size="large" clearable filterable>
                 <el-option v-for="(v, i) in publicStore._public.task_types||[]" :key="i" :label="v.name" :value="v.id.toString()" />
               </el-select>
             </div>
-          </el-form-item>
-          <el-form-item label="任务类型值" prop="task_type_value" class="ww50 flex-sc">
+          </el-form-item> -->
+          <!-- <el-form-item label="任务类型值" prop="task_type_value" class="ww50 flex-sc">
             <el-input size="large" v-model="publicStore.form.task_type_value" style="width: 100%;" placeholder="请输入" />
           </el-form-item>
           <el-form-item label="建设内容" prop="construct_content" class="ww100 flex-ss" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
             <el-input size="large" v-model="publicStore.form.construct_content" style="width: 100%;" type="textarea" :rows="4" placeholder="请输入" />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="备注" prop="construct_note" class="ww100 flex-ss">
             <el-input size="large" v-model="publicStore.form.construct_note" style="width: 100%;" type="textarea" :rows="4" placeholder="请输入" />
           </el-form-item>
@@ -200,7 +217,7 @@
     value: 'code',    // 指定选项的值为节点对象中的 code 属性
     label: 'name',    // 指定选项的标签为节点对象中的 name 属性
     children: 'children', // 指定子选项的字段名
-    expandTrigger: 'hover' // 次级菜单的展开方式 (可选: click/hover)
+    expandTrigger: 'hover', // 次级菜单的展开方式 (可选: click/hover)
   }
   const fund_sources = [
     {name: '中央预算内投资' , key: 'value1'},

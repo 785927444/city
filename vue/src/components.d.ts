@@ -16,7 +16,6 @@ declare module 'vue' {
     Auth: typeof import('./components/Auth.vue')['default']
     CommParams: typeof import('./components/CommParams.vue')['default']
     Config: typeof import('./components/Config.vue')['default']
-    copy: typeof import('./components/Upload copy.vue')['default']
     Ctrl: typeof import('./components/Ctrl.vue')['default']
     CtrlLog: typeof import('./components/CtrlLog.vue')['default']
     Ctrls: typeof import('./components/Ctrls.vue')['default']

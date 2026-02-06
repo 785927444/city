@@ -69,7 +69,6 @@
 
 <script lang="ts" setup>
   import Setting from '@/components/Setting'
-import { toPath } from '@/utils/common'
   const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
