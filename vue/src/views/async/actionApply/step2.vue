@@ -384,6 +384,11 @@
           // 1.新建项目
           if(apikey == 'addApi' && publicStore.title == 'apply'){
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+            console.log("新增项目")
+            // 编号规则
+>>>>>>> Stashed changes
 =======
             console.log("新增项目")
             // 编号规则
@@ -400,6 +405,10 @@
             // 2.1申请储备
             if(form.apply_status = '0'){
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+              console.log("申请储备")
+>>>>>>> Stashed changes
 =======
               console.log("申请储备")
 >>>>>>> Stashed changes
@@ -409,6 +418,10 @@
             // 2.2更新信息
             if(form.apply_status = '1'){
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+              console.log("更新信息")
+>>>>>>> Stashed changes
 =======
               console.log("更新信息")
 >>>>>>> Stashed changes
@@ -486,7 +499,10 @@
               const reportId = await resolveReportId(res, form.id)
               await saveThreeTables(form, reportId)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
               // 刷新页面
@@ -661,6 +677,7 @@
 
   const handleClick = (remark, val) => {}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   let tabKey = $ref('key')
   const checkPage = reactive({ page: 2, limit: 10, total: 30 })
   const keyPage = reactive({ page: 2, limit: 10, total: 30 })
@@ -697,6 +714,8 @@
   ])
   const onTimelineOp = (row) => {}
 =======
+=======
+>>>>>>> Stashed changes
     let tabKey = $ref('key')
     const checkPage = reactive({ page: 2, limit: 10, total: 30 })
     const keyPage = reactive({ page: 2, limit: 10, total: 30 })
@@ -732,6 +751,9 @@
       { year: '2028', desc: '', investment: '' },
     ])
     const onTimelineOp = (row) => {}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 </script>
   

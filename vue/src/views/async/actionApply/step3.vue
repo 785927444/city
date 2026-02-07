@@ -13,6 +13,7 @@
           </el-form-item>
           <el-form-item label="已建设规模" prop="has_construct_price" class="ww50 flex-sc">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             <el-input size="large" v-model="publicStore.form.has_construct_price" placeholder="请输入" />
           </el-form-item>
 
@@ -29,6 +30,8 @@
           <el-form-item label="实施方案文件上传" prop="files" class="ww100 flex-ss">
              <FileList v-if="publicStore.form?.plan_attr" v-model:files="publicStore.form.plan_attr" :contents="props.contents" :active="props.active"  />
 =======
+=======
+>>>>>>> Stashed changes
             <el-input size="large" v-model="publicStore.form.has_construct_scale" placeholder="请输入" />
           </el-form-item>
           <el-form-item label="实施成效说明" prop="has_construct_effect" class="ww100 flex-ss">
@@ -41,6 +44,9 @@
           </el-form-item>
           <el-form-item label="审核结果" prop="reserve_res" class="ww100 flex-ss">
             <el-input size="large" v-model="publicStore.form.reserve_res" style="width: 100%;" type="textarea" :rows="4" placeholder="请输入" />
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
           </el-form-item>
         </div>
@@ -48,7 +54,12 @@
       <div class="ww100 flex-cc f18 p40 bot-i16-1 mt20">
         <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="publicStore.actIndex--">上一步</div>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="onSave(formRef)">保 存</div>
+=======
+        <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="onSave(formRef, '1')">通 过</div>
+        <div class="plr14 ptb5 rad4 ml15 cursor white bgi8 bo-i8-1" @click.stop="onSave(formRef, '2')">驳 回</div>
+>>>>>>> Stashed changes
 =======
         <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="onSave(formRef, '1')">通 过</div>
         <div class="plr14 ptb5 rad4 ml15 cursor white bgi8 bo-i8-1" @click.stop="onSave(formRef, '2')">驳 回</div>
@@ -71,12 +82,18 @@
   let projectRef = $ref()
   let formRef = ref()
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   let ruleList= $ref({})
 =======
+=======
+>>>>>>> Stashed changes
   let ruleList= $ref({
     completion_status: [{ required: true, message: '请选择', trigger: 'blur' }],
     reserve_res: [{ required: true, message: '请输入', trigger: 'blur' }],
   })
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   const activeTab = [
     {value: '1', name: '重点落实任务'},
@@ -100,11 +117,17 @@
       default: []
     },
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
     plans: {
       type: Array,
       default: []
     },
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     active: {
       type: [Object, Array],
@@ -112,6 +135,7 @@
     },
   })
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
   const onSave = (formEl) => {
     formEl.validate (async valid => {
@@ -134,6 +158,8 @@
           }
           if(!form.id) form.id=uuidv6()
 =======
+=======
+>>>>>>> Stashed changes
   const onSave = (formEl, status) => {
     formEl.validate (async valid => {
       if (valid) {
@@ -187,6 +213,9 @@
           // 生成带排序的uuid作为id
           if(!form.id) form.id=uuidv6()
           // 所属地区 省市区
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
           if(!proxy.isNull(form.area)){
             if(form.area.length>0){
@@ -207,14 +236,20 @@
             form.area = JSON.stringify(form.area)
           }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           form.fund_source = !proxy.isNull(form.fund_source)? JSON.stringify(form.fund_source) : ''
           form.orther_text = !proxy.isNull(form.orther_text)? JSON.stringify(form.orther_text) : ''
 =======
+=======
+>>>>>>> Stashed changes
           // 资金来源 10个值
           form.fund_source = !proxy.isNull(form.fund_source)? JSON.stringify(form.fund_source) : ''
           // 其他信息 15个值
           form.orther_text = !proxy.isNull(form.orther_text)? JSON.stringify(form.orther_text) : ''
           // 基础文件
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
           let changeFile1 = []
           if(!proxy.isNull(form.attr)){
@@ -231,6 +266,10 @@
             form.attr = ''
           }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+          // 方案文件
+>>>>>>> Stashed changes
 =======
           // 方案文件
 >>>>>>> Stashed changes
@@ -249,6 +288,7 @@
             form.plan_attr = ''
           }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           let params = {model: 't_project_report', list: [form]}
           api[apikey](params).then(async(res:any) => {
             if(res.code == 200){
@@ -257,6 +297,8 @@
               if(!proxy.isNull(changeFile1)) setChangeFile(changeFile1)
               if(!proxy.isNull(changeFile2)) setChangeFile(changeFile2)
 =======
+=======
+>>>>>>> Stashed changes
           // 方过程件
           let changeFile3 = []
           if(!proxy.isNull(form.has_attr)){
@@ -292,6 +334,9 @@
 
               // 刷新页面
               // emit('init', form.id)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
               setTimeout(() => { router.back() }, 500)
             }else{
@@ -307,14 +352,20 @@
 
   const setChangeFile = async(changeFile) => {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     if(proxy.isNull(changeFile)) return
     let query = {list: changeFile}
     publicStore.http({changeFileApi: query}).then(res=>{
 =======
+=======
+>>>>>>> Stashed changes
     if(proxy.isNull(changeFile)) return console.log("无需转移")
     let query = {list: changeFile}
     publicStore.http({changeFileApi: query}).then(res=>{
       console.log("转移基础文件res", res)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     })
   }
@@ -328,7 +379,11 @@
 .autoHeight{min-height: 100%; height: 3000px;}
 </style>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   
+=======
+  
+>>>>>>> Stashed changes
 =======
   
 >>>>>>> Stashed changes

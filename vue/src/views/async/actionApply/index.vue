@@ -10,9 +10,15 @@
       <div class="layout-col">
         <step-title />
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         <step1 :state="state" :contents="state.contents1" :active="state.active1"  v-show="publicStore.actIndex == 1" />
         <step2 :state="state" :contents="state.contents2" :active="state.active2" v-show="publicStore.actIndex == 2" />
         <step3 :state="state" :contents="state.contents2" :active="state.active2" v-show="publicStore.actIndex == 3" />
+=======
+        <step1 :state="state" :contents="state.contents1" :active="state.active1" :plans="state.plans1" v-show="publicStore.actIndex == 1" />
+        <step2 :state="state" :contents="state.contents2" :active="state.active2" :plans="state.plans2" v-show="publicStore.actIndex == 2" />
+        <step3 :state="state" :contents="state.contents3" :active="state.active3" :plans="state.plans3" v-show="publicStore.actIndex == 3" />
+>>>>>>> Stashed changes
 =======
         <step1 :state="state" :contents="state.contents1" :active="state.active1" :plans="state.plans1" v-show="publicStore.actIndex == 1" />
         <step2 :state="state" :contents="state.contents2" :active="state.active2" :plans="state.plans2" v-show="publicStore.actIndex == 2" />
