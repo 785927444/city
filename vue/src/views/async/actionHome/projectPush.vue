@@ -128,8 +128,8 @@
 
       <div class="right-panel ml15">
         <div class="quick-actions">
-          <div class="quick-card">项目台账</div>
-          <div class="quick-card">项目实施跟踪</div>
+          <div class="quick-card" @click.stop="toPath('/project-push/ledger')">项目台账</div>
+          <div class="quick-card" @click.stop="toPath('/project-push/tracking')">项目实施跟踪</div>
         </div>
 
         <div class="bg-white rad8 p15 mb15 right-card">
@@ -346,6 +346,7 @@ onBeforeUnmount(() => {
   font-weight: 700;
   font-size: 18px;
   color: #303133;
+  cursor: pointer;
 }
 
 .chart-title {

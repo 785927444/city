@@ -37,9 +37,11 @@ if(configStore.isMqtt && configStore.isMqtt != 'false'){
 }
 
 onMounted(async() => {
-  document.addEventListener('contextmenu', handleContextMenu)
-  document.addEventListener('keydown', handleKeyDown)
-  createScheduled('detectDevTools', 1000, () =>  detectDevTools())
+  if (!import.meta.env.DEV) {
+    document.addEventListener('contextmenu', handleContextMenu)
+    document.addEventListener('keydown', handleKeyDown)
+    createScheduled('detectDevTools', 1000, () => detectDevTools())
+  }
 })
 
 onUnmounted(() => {
@@ -70,6 +72,7 @@ const handleKeyDown = (e) => {
 }
 // 综合检测
 const detectDevTools = () => {
+  if (import.meta.env.DEV) return true
   if(configStore.debugger) return true
   // 方法1: debugger时间差检测
   const start = performance.now();

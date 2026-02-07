@@ -132,9 +132,9 @@
       </el-main>
 
       <!-- Right Sidebar -->
-      <el-aside width="320px" class="right-sidebar">
+      <el-aside width="400px" class="right-sidebar">
         <div class="sidebar-actions">
-          <el-button type="primary" class="action-btn">年度计划上报</el-button>
+          <el-button type="primary" class="action-btn" @click.stop="goReport">年度计划上报</el-button>
           <el-button class="action-btn" @click.stop="goTrack">年度计划跟踪</el-button>
         </div>
 
@@ -295,6 +295,10 @@ const goTrack = () => {
   proxy.toPath('/annual-plan/track')
 }
 
+const goReport = () => {
+  proxy.toPath('/annual-plan/report')
+}
+
 const handlePageChange = (page: number) => {
   currentPage.value = page
   fetchData()
@@ -393,6 +397,10 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   margin-top: 20px;
+}
+
+.main-content {
+  min-width: 0;
 }
 
 .right-sidebar {

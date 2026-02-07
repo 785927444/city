@@ -12,7 +12,7 @@
           <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/scheme')!=-1?'bob-i1-1':''" @click.stop="toPath('/scheme')">
             <span class="actfont" :class="route.path.indexOf('/scheme')!=-1?'i1':''">更新规划策划</span>
           </div>
-          <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/action')!=-1?'bob-i1-1':''" @click.stop="toPath('/action-home')">
+          <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/action')!=-1?'bob-i1-1':''" @click.stop="toPath('/actionHome')">
             <span class="actfont" :class="route.path.indexOf('/action')!=-1?'i1':''">实施与调度管理</span>
           </div> 
           <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/problem')!=-1?'bob-i1-1':''" @click.stop="toPath('/problem')">

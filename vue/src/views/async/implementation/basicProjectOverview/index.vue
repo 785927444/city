@@ -1385,7 +1385,10 @@
 
   const onStartReserve = (row: any) => {
     ElMessageBox.confirm('是否将该项目开始储备?', '温馨提示', { confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn' }).then(() => {
-      toPath('/actionApply', { demo: '1', name: row.name })
+      try {
+        sessionStorage.setItem('actionApply:reserveProject', JSON.stringify(row || {}))
+      } catch {}
+      toPath('/actionApply', { demo: '1', project_id: row.id || '', project_name: row.name || '' })
     })
   }
 

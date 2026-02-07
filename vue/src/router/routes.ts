@@ -105,10 +105,17 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         children: []
       },
       {
-        path: '/project-push/apply',
-        name: '项目推送进度更新',
+        path: '/project-push/ledger',
+        name: '项目台账',
         meta: { next: false },
-        component: () => import('@/views/async/actionHome/projectPushApply/index.vue'),
+        component: () => import('@/views/async/actionHome/projectPushLedger/index.vue'),
+        children: []
+      },
+      {
+        path: '/project-push/tracking',
+        name: '项目实施跟踪',
+        meta: { next: false },
+        component: () => import('@/views/async/actionHome/projectPushTracking/index.vue'),
         children: []
       },
       {
@@ -116,6 +123,27 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         name: '年度计划',
         meta: { next: false },
         component: () => import('@/views/async/annualPlan/index.vue'),
+        children: []
+      },
+      {
+        path: '/annual-plan/report',
+        name: '年度计划上报',
+        meta: { next: false },
+        component: () => import('@/views/async/annualPlan/report.vue'),
+        children: []
+      },
+      {
+        path: '/project-push/apply',
+        name: '项目推送进度更新',
+        meta: { next: false },
+        component: () => import('@/views/async/actionHome/projectPushApply/index.vue'),
+        children: []
+      },
+      {
+        path: '/actionApply',
+        name: '项目储备申请',
+        meta: { next: false },
+        component: () => import('@/views/async/actionApply/index.vue'),
         children: []
       },
       {

@@ -67,9 +67,9 @@
         </div>
       </el-form>
       <div class="ww100 flex-cc f18 p40 bot-i16-1 mt20">
-        <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="publicStore.actIndex--">上一步</div>
-        <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="onSave(formRef)">保 存</div>
-        <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="onSubmit(formRef)">提 交</div>
+        <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="onApprove(formRef)">通 过</div>
+        <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="onReject(formRef)">驳 回</div>
+        <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="onClose()">关 闭</div>
       </div>
     </div>
   </div>
@@ -128,22 +128,27 @@
     ensureTasks(val)
   })
 
-  const onSave = (formEl) => {
+  const onReject = (formEl) => {
     if (!formEl) return
     formEl.validate((valid) => {
       if (!valid) return
-      ElMessageBox.confirm('是否确定保存?', '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(() => {
-        ElNotification({ title: '提示', message: '保存成功', type: 'success' })
+      ElMessageBox.confirm('是否确定驳回?', '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(() => {
+        ElNotification({ title: '提示', message: '已驳回', type: 'success' })
+        proxy.toPath('/project-push')
       })
     })
   }
 
-  const onSubmit = (formEl) => {
+  const onClose = () => {
+    proxy.toPath('/project-push')
+  }
+
+  const onApprove = (formEl) => {
     if (!formEl) return
     formEl.validate((valid) => {
       if (!valid) return
-      ElMessageBox.confirm('是否确定提交?', '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(() => {
-        ElNotification({ title: '提示', message: '提交成功', type: 'success' })
+      ElMessageBox.confirm('是否确定通过?', '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(() => {
+        ElNotification({ title: '提示', message: '已通过', type: 'success' })
         proxy.toPath('/project-push')
       })
     })
