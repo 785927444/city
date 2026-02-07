@@ -580,7 +580,7 @@ onBeforeUnmount(() => {
   --stage-row: 440px;
   --bottom-row: 320px;
   display: grid;
-  grid-template-columns: 1.85fr 1fr;
+  grid-template-columns: 0.75fr 0.25fr;
   gap: 16px;
   align-items: stretch;
 }
@@ -740,6 +740,7 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: flex-end;
   padding-top: 14px;
+  padding-right: 220px;
   padding-bottom: 2px;
 }
 
