@@ -176,12 +176,11 @@
             <div class="ww100 plr30 ptb22 bo-i16-1 rad5 flex-col warp bg-white">
               <div class="ww100 flex-sc">
                 <el-input class="flex1" size="large" v-model="publicStore.form.mapdata" placeholder="请输入" />
-                <div class="plr10 ptb4 rad5 cursor bgi1 white ml15">地图绘制</div>
+                <div class="plr10 ptb4 rad5 cursor bgi1 white ml15" @click.stop="publicStore.check=!publicStore.check; gisRef.onVisable(publicStore.form)">地图绘制</div>
                 <div class="plr10 ptb4 rad5 cursor bgi1 white ml15">矢量文件上传</div>
               </div>
               <div class="ww100 h50x6 flex-sc rad5 hidden relative mt20">
-                <img class="ww100" src="@/assets/images/mapdata.png" />
-                <div class="plr10 ptb4 rad5 cursor bgi1 white ml15 absolute b10 r10">完成绘制</div>
+                <GisShow class="ww100 hh100" v-if="!publicStore.check" v-model:mapdata="publicStore.form.mapdata"  />
               </div>
             </div>
           </el-form-item>
@@ -195,6 +194,7 @@
       </div>
     </div>
     <projects :state="state" ref="projectRef" />
+    <view-gis :state="state" ref="gisRef" />
   </div>
 </template>
 
@@ -207,6 +207,7 @@
   const configStore = proxy.configStore()
   const dictStore = proxy.dictStore()
   let projectRef = $ref()
+  let gisRef = $ref()
   let formRef = ref()
   let ruleList= $ref({})
   const areaList = computed(() => {
@@ -273,53 +274,6 @@
         publicStore.actIndex++
       }else{
         ElNotification({ title: '提示', message: '任务信息不完整，请继续补充', type: 'error' })
-      }
-    })
-  }
-
-  // 预览
-  const viewFile = (v) => {
-    let val = publicStore.form.attr[v.type]
-    const filePath = val.data
-    viewRef.onVisable(filePath)
-  }
-
-  // 删除
-  const delFile = async(v) => {
-    let val = publicStore.form.attr[v.type]
-    const filePath = val.data
-    publicStore.http({deleteFile: {filepath: filePath}}).then(res=>{
-      if(res == 'success') {
-        ElNotification({ title: '提示', message: '删除成功', type: 'success' })
-        delete publicStore.form.attr[v.type]
-        if(publicStore.form.id){
-          // 查询原信息
-          // let query = {model: 't_scheme_plan', args: `id='${publicStore.form.id}'`}
-          // publicStore.http({Api: query}).then(ress=>{
-          //   if(!proxy.isNull(ress)){
-          //     let data = ress[0]
-          //     if(data.attr){
-          //       let attr = JSON.parse(data.attr)
-          //       if(attr[v.type]){
-          //         delete attr[v.type]
-          //         // 更新数据库
-          //         let form = {id: publicStore.form.id, attr: JSON.stringify(attr)}
-          //         let params = {model: 't_scheme_plan', list: [form]}
-          //         api['updApi'](params).then((resss:any) => {
-          //           if(resss.code == 200){
-          //             ElNotification({ title: '提示', message: '清理成功', type: 'success' })
-          //             // init()
-          //           }else{
-          //             ElNotification({ title: '提示', message: resss.msg?resss.msg:'清理失败(400)', type: 'error' })
-          //           }
-          //         })
-          //       }
-          //     }
-          //   }
-          // })
-        }
-      }else{
-        ElNotification({ title: '提示', message: res.msg?res.msg:'删除失败(400)', type: 'error' })
       }
     })
   }
