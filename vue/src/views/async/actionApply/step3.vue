@@ -12,6 +12,7 @@
             <el-input size="large" v-model="publicStore.form.has_construct_price" placeholder="请输入" />
           </el-form-item>
           <el-form-item label="已建设规模" prop="has_construct_price" class="ww50 flex-sc">
+<<<<<<< Updated upstream
             <el-input size="large" v-model="publicStore.form.has_construct_price" placeholder="请输入" />
           </el-form-item>
 
@@ -27,12 +28,31 @@
 
           <el-form-item label="实施方案文件上传" prop="files" class="ww100 flex-ss">
              <FileList v-if="publicStore.form?.plan_attr" v-model:files="publicStore.form.plan_attr" :contents="props.contents" :active="props.active"  />
+=======
+            <el-input size="large" v-model="publicStore.form.has_construct_scale" placeholder="请输入" />
+          </el-form-item>
+          <el-form-item label="实施成效说明" prop="has_construct_effect" class="ww100 flex-ss">
+            <el-input size="large" v-model="publicStore.form.has_construct_effect" style="width: 100%;" type="textarea" :rows="4" placeholder="请输入" />
+          </el-form-item>
+          <el-form-item label="过程材料上传" prop="files3" class="ww100 flex-ss">
+            <div class="ww100 plr30 ptb22 bo-i16-1 rad8 bg-white">
+              <FileList v-if="publicStore.form?.has_attr" v-model:files="publicStore.form.has_attr" :plans="props.plans" :contents="props.contents" :active="props.active"  />
+            </div>
+          </el-form-item>
+          <el-form-item label="审核结果" prop="reserve_res" class="ww100 flex-ss">
+            <el-input size="large" v-model="publicStore.form.reserve_res" style="width: 100%;" type="textarea" :rows="4" placeholder="请输入" />
+>>>>>>> Stashed changes
           </el-form-item>
         </div>
       </el-form>
       <div class="ww100 flex-cc f18 p40 bot-i16-1 mt20">
         <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="publicStore.actIndex--">上一步</div>
+<<<<<<< Updated upstream
         <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="onSave(formRef)">保 存</div>
+=======
+        <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="onSave(formRef, '1')">通 过</div>
+        <div class="plr14 ptb5 rad4 ml15 cursor white bgi8 bo-i8-1" @click.stop="onSave(formRef, '2')">驳 回</div>
+>>>>>>> Stashed changes
       </div>
     </div>
   </div>
@@ -50,7 +70,14 @@
   const dictStore = proxy.dictStore()
   let projectRef = $ref()
   let formRef = ref()
+<<<<<<< Updated upstream
   let ruleList= $ref({})
+=======
+  let ruleList= $ref({
+    completion_status: [{ required: true, message: '请选择', trigger: 'blur' }],
+    reserve_res: [{ required: true, message: '请输入', trigger: 'blur' }],
+  })
+>>>>>>> Stashed changes
   const activeTab = [
     {value: '1', name: '重点落实任务'},
     {value: '2', name: '体检整改任务'},
@@ -72,12 +99,20 @@
       type: Array,
       default: []
     },
+<<<<<<< Updated upstream
+=======
+    plans: {
+      type: Array,
+      default: []
+    },
+>>>>>>> Stashed changes
     active: {
       type: [Object, Array],
       default: ()=>{return {}}
     },
   })
 
+<<<<<<< Updated upstream
   const onSave = (formEl) => {
     formEl.validate (async valid => {
       if (valid) {
@@ -98,6 +133,61 @@
             }
           }
           if(!form.id) form.id=uuidv6()
+=======
+  const onSave = (formEl, status) => {
+    formEl.validate (async valid => {
+      if (valid) {
+        console.log("publicStore.form---3", publicStore.form)
+        ElMessageBox.confirm('否确定操作继续', '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(async() => {
+          // 防干扰
+          let form = JSON.parse(JSON.stringify(publicStore.form)) 
+          // 当前时间
+          let nowtime = Date.now() + ''
+          // 默认类型
+          form.type = 'report'
+          // 更新时间
+          form.update_time = nowtime
+          // 设置所属
+          form.user_id = configStore.user.id
+          form.user_name = configStore.user.name
+          // 判断新增与编辑
+          let apikey = form.id?'updApi':'addApi'
+          //这里需要判断到哪一个步骤 publicStore.title 全局标志符
+          // 1.新建项目
+          if(apikey == 'addApi' && publicStore.title == 'apply'){
+            console.log("新增项目")
+            // 编号规则
+            const today = new Date().toISOString().slice(0, 10).replace(/-/g, '')
+            form.num_title = 'SX'
+            form.num_date = today
+            let query = {model: 't_project_report', args: `num_title='${form.num_title}' and num_date='${form.num_date}'`, field: `num_number`, order: `num_number asc`}
+            let temp = await publicStore.http({Api: query})
+            form.num_number = proxy.isNull(temp)? '000001': String(parseInt(temp[0]['num_number'], 10) + 1).padStart(6, '0')
+          }
+          // 2.编辑项目 
+          if(apikey == 'updApi'){  
+            // 2.1申请储备
+            if(publicStore.title = 'apply'){
+              console.log("申请储备")
+              form.apply_status = '1'
+              form.apply_time = nowtime
+            }
+            // 2.2更新信息
+            if(form.apply_status = '1'){
+              console.log("更新信息")
+            }
+            // 2.3审批操作
+            if(publicStore.title = 'reserve'){
+              form.reserve_status = status
+              form.reserve_time = nowtime
+              if(status == '1') form.apply_status = '2'
+              if(status == '2') form.apply_status = '3'
+            }
+          }
+          // 生成带排序的uuid作为id
+          if(!form.id) form.id=uuidv6()
+          // 所属地区 省市区
+>>>>>>> Stashed changes
           if(!proxy.isNull(form.area)){
             if(form.area.length>0){
               form.province = form.area.length>0? form.area[0] : ''
@@ -116,8 +206,16 @@
             }
             form.area = JSON.stringify(form.area)
           }
+<<<<<<< Updated upstream
           form.fund_source = !proxy.isNull(form.fund_source)? JSON.stringify(form.fund_source) : ''
           form.orther_text = !proxy.isNull(form.orther_text)? JSON.stringify(form.orther_text) : ''
+=======
+          // 资金来源 10个值
+          form.fund_source = !proxy.isNull(form.fund_source)? JSON.stringify(form.fund_source) : ''
+          // 其他信息 15个值
+          form.orther_text = !proxy.isNull(form.orther_text)? JSON.stringify(form.orther_text) : ''
+          // 基础文件
+>>>>>>> Stashed changes
           let changeFile1 = []
           if(!proxy.isNull(form.attr)){
             Object.keys(form.attr).forEach((key:any)=>{
@@ -132,6 +230,10 @@
           }else{
             form.attr = ''
           }
+<<<<<<< Updated upstream
+=======
+          // 方案文件
+>>>>>>> Stashed changes
           let changeFile2 = []
           if(!proxy.isNull(form.plan_attr)){
             Object.keys(form.plan_attr).forEach((key:any)=>{
@@ -146,6 +248,7 @@
           }else{
             form.plan_attr = ''
           }
+<<<<<<< Updated upstream
           let params = {model: 't_project_report', list: [form]}
           api[apikey](params).then(async(res:any) => {
             if(res.code == 200){
@@ -153,6 +256,43 @@
               ElNotification({ title: '提示', message: message, type: 'success' })
               if(!proxy.isNull(changeFile1)) setChangeFile(changeFile1)
               if(!proxy.isNull(changeFile2)) setChangeFile(changeFile2)
+=======
+          // 方过程件
+          let changeFile3 = []
+          if(!proxy.isNull(form.has_attr)){
+            Object.keys(form.has_attr).forEach((key:any)=>{
+              if(form.has_attr[key].data && form.has_attr[key].data.indexOf('/uploads')!=-1){
+                let content = publicStore._public.contents2.find(a=>a.type == key)
+                const newfile = `${content.parent_type}/${configStore.user.id}_${key}_${form.has_attr[key]['name']}`
+                form.has_attr[key].data = newfile
+                changeFile3.push({oldfile: publicStore.form.has_attr[key].data, newfile: newfile})
+              }
+            })
+            form.has_attr = JSON.stringify(form.has_attr)
+          }else{
+            form.has_attr = ''
+          }
+          // 开始请求
+          let params = {model: 't_project_report', list: [form]}
+          console.log("params", params)
+          console.log("changeFile1", changeFile1)
+          console.log("changeFile2", changeFile2)
+          console.log("changeFile3", changeFile3)
+          api[apikey](params).then(async(res:any) => {
+            if(res.code == 200){
+              let message = apikey == 'updApi'? '操作成功' : '保存成功'
+              ElNotification({ title: '提示', message: message, type: 'success' })
+              // 转移基础文件
+              if(!proxy.isNull(changeFile1)) setChangeFile(changeFile1)
+              // 转移方案文件
+              if(!proxy.isNull(changeFile2)) setChangeFile(changeFile2)
+              // 转移过程文件
+              if(!proxy.isNull(changeFile3)) setChangeFile(changeFile3)
+              // 三表保存逻辑
+
+              // 刷新页面
+              // emit('init', form.id)
+>>>>>>> Stashed changes
               setTimeout(() => { router.back() }, 500)
             }else{
               ElNotification({ title: '提示', message: res.msg?res.msg:'保存失败(400)', type: 'error' })
@@ -166,9 +306,16 @@
   }
 
   const setChangeFile = async(changeFile) => {
+<<<<<<< Updated upstream
     if(proxy.isNull(changeFile)) return
     let query = {list: changeFile}
     publicStore.http({changeFileApi: query}).then(res=>{
+=======
+    if(proxy.isNull(changeFile)) return console.log("无需转移")
+    let query = {list: changeFile}
+    publicStore.http({changeFileApi: query}).then(res=>{
+      console.log("转移基础文件res", res)
+>>>>>>> Stashed changes
     })
   }
 
@@ -180,4 +327,8 @@
 .r-18{ right: -18px; }
 .autoHeight{min-height: 100%; height: 3000px;}
 </style>
+<<<<<<< Updated upstream
   
+=======
+  
+>>>>>>> Stashed changes

@@ -74,7 +74,6 @@
     if(!data) return
     if (Object.prototype.hasOwnProperty.call(file,'response') && file.response.data){
       model.value = {data: data, name: file.name, time: file.uid, status: file.status, type: file.raw.type}
-      console.log("data---", data)
       ElNotification({ title: '提示', message: file.status=='success'?'上传成功':'上传失败', type: file.status=='success'?'success':'error' })
     }
   }

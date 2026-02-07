@@ -130,7 +130,7 @@
                   <span class="w110">更新进度时间</span>
                   <span>{{ v.update_time?parseTime(v.update_time):'-' }}</span>
                 </div>
-                <div class="rad5 ptb5 plr12 cursor bgi1 white" @click.stop="toPath('/actionApply', {id: v.id})">审批</div>
+                <div class="rad5 ptb5 plr12 cursor bgi1 white" @click.stop="toPath('/actionApply', {id: v.id})">进度更新</div>
               </div>
             </div>
           </div>

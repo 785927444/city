@@ -107,19 +107,6 @@
               <el-option v-for="(v, i) in publicStore.form.task_type&&publicStore.form.task_class&&publicStore._public.construct_contents?publicStore._public.construct_contents.filter(a=>a.parent_id == publicStore.form.task_class):[]" :key="i" :label="v.name" :value="v.id.toString()" />
             </el-select>
           </el-form-item>
-          <!-- <el-form-item label="任务类型" prop="task_type" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]" class="ww50 flex-sc">
-            <div class="ww100 flex-sc">
-              <el-select v-model="publicStore.form.task_type" style="width:100%" placeholder="请选择" size="large" clearable filterable>
-                <el-option v-for="(v, i) in publicStore._public.task_types||[]" :key="i" :label="v.name" :value="v.id.toString()" />
-              </el-select>
-            </div>
-          </el-form-item> -->
-          <!-- <el-form-item label="任务类型值" prop="task_type_value" class="ww50 flex-sc">
-            <el-input size="large" v-model="publicStore.form.task_type_value" style="width: 100%;" placeholder="请输入" />
-          </el-form-item>
-          <el-form-item label="建设内容" prop="construct_content" class="ww100 flex-ss" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
-            <el-input size="large" v-model="publicStore.form.construct_content" style="width: 100%;" type="textarea" :rows="4" placeholder="请输入" />
-          </el-form-item> -->
           <el-form-item label="备注" prop="construct_note" class="ww100 flex-ss">
             <el-input size="large" v-model="publicStore.form.construct_note" style="width: 100%;" type="textarea" :rows="4" placeholder="请输入" />
           </el-form-item>
@@ -180,12 +167,22 @@
                 <div class="plr10 ptb4 rad5 cursor bgi1 white ml15">矢量文件上传</div>
               </div>
               <div class="ww100 h50x6 flex-sc rad5 hidden relative mt20">
+<<<<<<< Updated upstream
                 <GisShow class="ww100 hh100" v-if="!publicStore.check" v-model:mapdata="publicStore.form.mapdata"  />
+=======
+                <!-- <img class="ww100" src="@/assets/images/mapdata.png" /> -->
+                <GisShow class="ww100 hh100" v-if="!publicStore.check" v-model:mapdata="publicStore.form.mapdata"  />
+                <!-- <div class="ww100 flex-ec absolute b10 r10">
+                  <div class="plr10 ptb4 rad5 cursor bgi1 white ml15">完成绘制</div>
+                </div> -->
+>>>>>>> Stashed changes
               </div>
             </div>
           </el-form-item>
           <el-form-item label="文件上传" prop="files" class="ww100 flex-ss">
-            <FileList v-if="publicStore.form?.attr" v-model:files="publicStore.form.attr" :contents="props.contents" :active="props.active"  />
+            <div class="ww100 plr30 ptb22 bo-i16-1 rad8 bg-white">
+              <FileList v-if="publicStore.form?.attr" v-model:files="publicStore.form.attr" :plans="props.plans" :contents="props.contents" :active="props.active"  />
+            </div>
           </el-form-item>
         </div>
       </el-form>
@@ -261,6 +258,10 @@
       type: Array,
       default: []
     },
+    plans: {
+      type: Array,
+      default: []
+    },
     active: {
       type: [Object, Array],
       default: ()=>{return {}}
@@ -277,6 +278,10 @@
       }
     })
   }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 </script>
   
 <style scoped lang="scss">
