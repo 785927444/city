@@ -170,12 +170,15 @@
     getFileAttr1(list1, list2, "019c2c63-cf59-719f-b942-7c7bb535413d")
     getFileAttr2(list1, list2, "019c2cc4-d276-7805-9685-7a5dde449721")
     getFileAttr3(list1, list2, "019c385a-6706-7a8e-aafa-f4b68eb0a81f")
+    getFileAttr3(list1, list2, "019c385a-6706-7a8e-aafa-f4b68eb0a81f")
   }
 
   const getFileAttr1 = (list1, list2, id) => {
     let plan = list1.find(a=>a.id==id)
     if(plan){
       let contents = []
+      state.plans1 = list1.filter(a=>a.parent_id == id)
+      state.plans1.forEach(v => { 
       state.plans1 = list1.filter(a=>a.parent_id == id)
       state.plans1.forEach(v => { 
         v.parent_type = `${plan.type}/${v.type}`
@@ -190,6 +193,7 @@
       state.contents1 = contents
       publicStore._public.contents1 = contents
       state.active1 = proxy.isNull(state.plans1)? {} : {...state.plans1[0]}
+      state.active1 = proxy.isNull(state.plans1)? {} : {...state.plans1[0]}
     }
   }
 
@@ -197,6 +201,8 @@
     let plan = list1.find(a=>a.id==id)
     if(plan){
       let contents = []
+      state.plans2 = list1.filter(a=>a.parent_id == id)
+      state.plans2.forEach(v => { 
       state.plans2 = list1.filter(a=>a.parent_id == id)
       state.plans2.forEach(v => { 
         v.parent_type = `${plan.type}/${v.type}`
@@ -210,6 +216,28 @@
       })
       state.contents2 = contents
       publicStore._public.contents2 = contents
+      state.active2 = proxy.isNull(state.plans2)? {} : {...state.plans2[0]}
+    }
+  }
+
+  const getFileAttr3 = (list1, list2, id) => {
+    let plan = list1.find(a=>a.id==id)
+    if(plan){
+      let contents = []
+      state.plans3 = list1.filter(a=>a.parent_id == id)
+      state.plans3.forEach(v => { 
+        v.parent_type = `${plan.type}/${v.type}`
+        let content = list2.filter(a=>a.parent_id == v.id)
+        if(!proxy.isNull(content)){
+          content.forEach(vv => {
+            vv.parent_type = `${v.parent_type }/${vv.type}`
+            contents.push(vv)
+          })
+        }
+      })
+      state.contents3 = contents
+      publicStore._public.contents3 = contents
+      state.active3 = proxy.isNull(state.plans3)? {} : {...state.plans3[0]}
       state.active2 = proxy.isNull(state.plans2)? {} : {...state.plans2[0]}
     }
   }
