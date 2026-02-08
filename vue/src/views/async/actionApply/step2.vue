@@ -22,271 +22,151 @@
             <div class="ww100 plr30 ptb22 bo-i16-1 rad8 bg-white">
               <FileList v-if="publicStore.form?.plan_attr" v-model:files="publicStore.form.plan_attr" :plans="props.plans" :contents="props.contents" :active="props.active"  />
             </div>
-            </el-form-item>
-        </div>
-      <div class="ww100 white-rgba50 rad8 p15 mt16">
-        <div class="flex-sc f18 plr10">
-          <span>项目任务</span>
-        </div>
-        <div class="ww100 flex-sc pb20 mt10">
-          <div class="mr40 pb10 f18 relative cursor actfont" :class="tabKey==='key'?'i1 bob-i1-2':'bob-tt-2'" @click.stop="tabKey='key'">
-            <span>重点落实任务</span>
-          </div>
-          <div class="mr40 pb10 f18 relative cursor actfont" :class="tabKey==='check'?'i1 bob-i1-2':'bob-tt-2'" @click.stop="tabKey='check'">
-            <span>体检整改任务</span>
-          </div>
-        </div>
-        <div v-show="tabKey==='check'" class="layout-col white-rgba50 rad8 p15">
-          <el-table
-            header-cell-class-name="bgi16 c3"
-            :cell-style="{'background-color': '#FFFFFF', 'color': '#626366'}"
-            border
-            empty-text="暂无数据"
-            :data="checkTasksPage"
-            stripe
-            @selection-change="onCheckSelChange">
-            <el-table-column type="selection" width="60" />
-            <el-table-column type="index" label="序号" align="center" width="60" />
-            <el-table-column prop="type" label="体检类型" align="center" width="140">
-              <template #default="scope">
-                <el-input v-model="scope.row.type" size="small" />
-              </template>
-            </el-table-column>
-            <el-table-column prop="indicator" label="指标项" align="center" width="200">
-              <template #default="scope">
-                <el-input v-model="scope.row.indicator" size="small" />
-              </template>
-            </el-table-column>
-            <el-table-column prop="problem" label="存在问题">
-              <template #default="scope">
-                <el-input v-model="scope.row.problem" size="small" />
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" align="center" width="100">
-              <template #default="scope"><span class="i1 cursor" @click.stop="onChoose(scope.row)">选择</span></template>
-            </el-table-column>
-            <el-table-column label="内容" align="center" width="140">
-              <template #default="scope">
-                <el-input v-model="scope.row.content" size="small" />
-              </template>
-            </el-table-column>
-          </el-table>
-          <div class="ww100 flex-cc mt10"><span class="i1 cursor" @click.stop="onAddCheckTask">添加+</span></div>
-          <div class="ww100 flex-sb mt10">
-            <div class="flex-sc">
-              <div class="rad4 ptb5 plr15 cursor bo-c8-1 c8 mr10" @click.stop="onCheckSelectAll">全选</div>
-              <div class="rad4 ptb5 plr15 cursor bgi13 i15 mr10" @click.stop="onCheckDelete">删除</div>
-              <div class="rad4 ptb5 plr15 cursor bgi10 i12 mr10" @click.stop="onCheckImport">导入</div>
-            </div>
-            <el-pagination
-              layout="prev, pager, next"
-              :page-count="5"
-              :page-size="checkPage.limit"
-              :current-page="checkPage.page"
-              @current-change="p=>{checkPage.page=p}">
-            </el-pagination>
-          </div>
-        </div>
-        <div v-show="tabKey==='key'" class="layout-col white-rgba50 rad8 p15">
-          <el-table
-            header-cell-class-name="bgi16 c3"
-            :cell-style="{'background-color': '#FFFFFF', 'color': '#626366'}"
-            border
-            empty-text="暂无数据"
-            :data="keyTasksPage"
-            stripe
-            @selection-change="onKeySelChange">
-            <el-table-column type="selection" width="60" />
-            <el-table-column type="index" label="序号" align="center" width="60" />
-            <el-table-column prop="task_type" label="任务类型" align="center" width="140">
-              <template #default="scope">
-                <el-input v-model="scope.row.task_type" size="small" />
-              </template>
-            </el-table-column>
-            <el-table-column prop="construct_content" label="建设内容">
-              <template #default="scope">
-                <el-input v-model="scope.row.construct_content" size="small" />
-              </template>
-            </el-table-column>
-            <el-table-column prop="construct_scale" label="建设规模" align="center" width="120">
-              <template #default="scope">
-                <el-input v-model="scope.row.construct_scale" size="small" />
-              </template>
-            </el-table-column>
-            <el-table-column prop="t2026" label="2026年目标" align="center" width="120">
-              <template #default="scope">
-                <el-input v-model="scope.row.t2026" size="small" />
-              </template>
-            </el-table-column>
-            <el-table-column prop="t2027" label="2027年目标" align="center" width="120">
-              <template #default="scope">
-                <el-input v-model="scope.row.t2027" size="small" />
-              </template>
-            </el-table-column>
-          </el-table>
-          <div class="ww100 flex-se mt10">
-            <div></div>
-            <div class="i1 cursor" @click.stop="onAddYear">添加年度</div>
-          </div>
-          <div class="ww100 flex-sb mt10">
-            <div class="flex-sc">
-              <div class="rad4 ptb5 plr15 cursor bo-c8-1 c8 mr10" @click.stop="onKeySelectAll">全选</div>
-              <div class="rad4 ptb5 plr15 cursor bgi13 i15 mr10" @click.stop="onKeyDelete">删除</div>
-              <div class="rad4 ptb5 plr15 cursor bgi10 i12 mr10" @click.stop="onKeyImport">导入</div>
-            </div>
-            <List @handleClick="handleClick" :state="state" :hasLists="true" :lists="publicStore.form.task" />
-          </el-form-item> -->
-          <!-- <SchemeAutoFill />  -->
-
-          <el-form-item label="实施方案文件上传" prop="files2" class="ww100 flex-ss">
-            <div class="ww100 plr30 ptb22 bo-i16-1 rad8 bg-white">
-              <FileList v-if="publicStore.form?.plan_attr" v-model:files="publicStore.form.plan_attr" :plans="props.plans" :contents="props.contents" :active="props.active"  />
-            </div>
           </el-form-item>
         </div>
+        <div class="ww100 white-rgba50 rad8 p15 mt16">
+          <div class="flex-sc f18 plr10">
+            <span>项目任务</span>
+          </div>
+          <div class="ww100 flex-sc pb20 mt10">
+            <div class="mr40 pb10 f18 relative cursor actfont" :class="tabKey==='key'?'i1 bob-i1-2':'bob-tt-2'" @click.stop="tabKey='key'">
+              <span>重点落实任务</span>
+            </div>
+            <div class="mr40 pb10 f18 relative cursor actfont" :class="tabKey==='check'?'i1 bob-i1-2':'bob-tt-2'" @click.stop="tabKey='check'">
+              <span>体检整改任务</span>
+            </div>
+          </div>
+          <div v-show="tabKey==='check'" class="layout-col white-rgba50 rad8 p15">
+            <el-table
+              header-cell-class-name="bgi16 c3"
+              :cell-style="{'background-color': '#FFFFFF', 'color': '#626366'}"
+              border
+              empty-text="暂无数据"
+              :data="checkTasksPage"
+              stripe
+              @selection-change="onCheckSelChange">
+              <el-table-column type="selection" width="60" />
+              <el-table-column type="index" label="序号" align="center" width="60" />
+              <el-table-column prop="type" label="体检类型" align="center" width="140">
+                <template #default="scope">
+                  <el-input v-model="scope.row.type" size="small" />
+                </template>
+              </el-table-column>
+              <el-table-column prop="indicator" label="指标项" align="center" width="200">
+                <template #default="scope">
+                  <el-input v-model="scope.row.indicator" size="small" />
+                </template>
+              </el-table-column>
+              <el-table-column prop="problem" label="存在问题">
+                <template #default="scope">
+                  <el-input v-model="scope.row.problem" size="small" />
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" align="center" width="100">
+                <template #default="scope"><span class="i1 cursor" @click.stop="onChoose(scope.row)">选择</span></template>
+              </el-table-column>
+              <el-table-column label="内容" align="center" width="140">
+                <template #default="scope">
+                  <el-input v-model="scope.row.content" size="small" />
+                </template>
+              </el-table-column>
+            </el-table>
+            <div class="ww100 flex-cc mt10"><span class="i1 cursor" @click.stop="onAddCheckTask">添加+</span></div>
+            <div class="ww100 flex-sb mt10">
+              <div class="flex-sc">
+                <div class="rad4 ptb5 plr15 cursor bo-c8-1 c8 mr10" @click.stop="onCheckSelectAll">全选</div>
+                <div class="rad4 ptb5 plr15 cursor bgi13 i15 mr10" @click.stop="onCheckDelete">删除</div>
+                <div class="rad4 ptb5 plr15 cursor bgi10 i12 mr10" @click.stop="onCheckImport">导入</div>
+              </div>
+              <el-pagination
+                layout="prev, pager, next"
+                :page-count="5"
+                :page-size="checkPage.limit"
+                :current-page="checkPage.page"
+                @current-change="p=>{checkPage.page=p}">
+              </el-pagination>
+            </div>
+          </div>
+          <div v-show="tabKey==='key'" class="layout-col white-rgba50 rad8 p15">
+            <el-table
+              header-cell-class-name="bgi16 c3"
+              :cell-style="{'background-color': '#FFFFFF', 'color': '#626366'}"
+              border
+              empty-text="暂无数据"
+              :data="keyTasksPage"
+              stripe
+              @selection-change="onKeySelChange">
+              <el-table-column type="selection" width="60" />
+              <el-table-column type="index" label="序号" align="center" width="60" />
+              <el-table-column prop="task_type" label="任务类型" align="center" width="140">
+                <template #default="scope">
+                  <el-input v-model="scope.row.task_type" size="small" />
+                </template>
+              </el-table-column>
+              <el-table-column prop="construct_content" label="建设内容">
+                <template #default="scope">
+                  <el-input v-model="scope.row.construct_content" size="small" />
+                </template>
+              </el-table-column>
+              <el-table-column prop="construct_scale" label="建设规模" align="center" width="120">
+                <template #default="scope">
+                  <el-input v-model="scope.row.construct_scale" size="small" />
+                </template>
+              </el-table-column>
+              <el-table-column prop="t2026" label="2026年目标" align="center" width="120">
+                <template #default="scope">
+                  <el-input v-model="scope.row.t2026" size="small" />
+                </template>
+              </el-table-column>
+              <el-table-column prop="t2027" label="2027年目标" align="center" width="120">
+                <template #default="scope">
+                  <el-input v-model="scope.row.t2027" size="small" />
+                </template>
+              </el-table-column>
+            </el-table>
+            <div class="ww100 flex-se mt10">
+              <div></div>
+              <div class="i1 cursor" @click.stop="onAddYear">添加年度</div>
+            </div>
+            <div class="ww100 flex-sb mt10">
+              <div class="flex-sc">
+                <div class="rad4 ptb5 plr15 cursor bo-c8-1 c8 mr10" @click.stop="onKeySelectAll">全选</div>
+                <div class="rad4 ptb5 plr15 cursor bgi13 i15 mr10" @click.stop="onKeyDelete">删除</div>
+                <div class="rad4 ptb5 plr15 cursor bgi10 i12 mr10" @click.stop="onKeyImport">导入</div>
+              </div>
+              <el-pagination
+                layout="prev, pager, next"
+                :page-count="5"
+                :page-size="keyPage.limit"
+                :current-page="keyPage.page"
+                @current-change="p=>{keyPage.page=p}">
+              </el-pagination>
+            </div>
+          </div>
+        </div>
+        <div class="ww100 white-rgba50 rad8 p15 mt16">
+          <div class="flex-sc f18 plr10">
+            <span>时序管理</span>
+          </div>
+          <div class="layout-col white-rgba50 rad8 p15 mt10">
+            <el-table
+              header-cell-class-name="bgi16 c3"
+              :cell-style="{'background-color': '#FFFFFF', 'color': '#626366'}"
+              border
+              empty-text="暂无数据"
+              :data="timelineRows"
+              stripe>
+              <el-table-column type="index" label="序号" align="center" width="80" />
+              <el-table-column prop="year" label="年度" align="center" width="120" />
+              <el-table-column prop="desc" label="阶段任务描述" />
+              <el-table-column prop="investment" label="阶段投资" align="center" width="140" />
+              <el-table-column label="操作" align="center" width="120">
+                <template #default="scope"><span class="i1 cursor" @click.stop="onTimelineOp(scope.row)">查看</span></template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
       </el-form>
-      <div class="ww100 white-rgba50 rad8 p15 mt16">
-        <div class="flex-sc f18 plr10">
-          <span>项目任务</span>
-        </div>
-        <div class="ww100 flex-sc pb20 mt10">
-          <div class="mr40 pb10 f18 relative cursor actfont" :class="tabKey==='key'?'i1 bob-i1-2':'bob-tt-2'" @click.stop="tabKey='key'">
-            <span>重点落实任务</span>
-          </div>
-          <div class="mr40 pb10 f18 relative cursor actfont" :class="tabKey==='check'?'i1 bob-i1-2':'bob-tt-2'" @click.stop="tabKey='check'">
-            <span>体检整改任务</span>
-          </div>
-        </div>
-        <div v-show="tabKey==='check'" class="layout-col white-rgba50 rad8 p15">
-          <el-table
-            header-cell-class-name="bgi16 c3"
-            :cell-style="{'background-color': '#FFFFFF', 'color': '#626366'}"
-            border
-            empty-text="暂无数据"
-            :data="checkTasksPage"
-            stripe
-            @selection-change="onCheckSelChange">
-            <el-table-column type="selection" width="60" />
-            <el-table-column type="index" label="序号" align="center" width="60" />
-            <el-table-column prop="type" label="体检类型" align="center" width="140">
-              <template #default="scope">
-                <el-input v-model="scope.row.type" size="small" />
-              </template>
-            </el-table-column>
-            <el-table-column prop="indicator" label="指标项" align="center" width="200">
-              <template #default="scope">
-                <el-input v-model="scope.row.indicator" size="small" />
-              </template>
-            </el-table-column>
-            <el-table-column prop="problem" label="存在问题">
-              <template #default="scope">
-                <el-input v-model="scope.row.problem" size="small" />
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" align="center" width="100">
-              <template #default="scope"><span class="i1 cursor" @click.stop="onChoose(scope.row)">选择</span></template>
-            </el-table-column>
-            <el-table-column label="内容" align="center" width="140">
-              <template #default="scope">
-                <el-input v-model="scope.row.content" size="small" />
-              </template>
-            </el-table-column>
-          </el-table>
-          <div class="ww100 flex-cc mt10"><span class="i1 cursor" @click.stop="onAddCheckTask">添加+</span></div>
-          <div class="ww100 flex-sb mt10">
-            <div class="flex-sc">
-              <div class="rad4 ptb5 plr15 cursor bo-c8-1 c8 mr10" @click.stop="onCheckSelectAll">全选</div>
-              <div class="rad4 ptb5 plr15 cursor bgi13 i15 mr10" @click.stop="onCheckDelete">删除</div>
-              <div class="rad4 ptb5 plr15 cursor bgi10 i12 mr10" @click.stop="onCheckImport">导入</div>
-            </div>
-            <el-pagination
-              layout="prev, pager, next"
-              :page-count="5"
-              :page-size="checkPage.limit"
-              :current-page="checkPage.page"
-              @current-change="p=>{checkPage.page=p}">
-            </el-pagination>
-          </div>
-        </div>
-        <div v-show="tabKey==='key'" class="layout-col white-rgba50 rad8 p15">
-          <el-table
-            header-cell-class-name="bgi16 c3"
-            :cell-style="{'background-color': '#FFFFFF', 'color': '#626366'}"
-            border
-            empty-text="暂无数据"
-            :data="keyTasksPage"
-            stripe
-            @selection-change="onKeySelChange">
-            <el-table-column type="selection" width="60" />
-            <el-table-column type="index" label="序号" align="center" width="60" />
-            <el-table-column prop="task_type" label="任务类型" align="center" width="140">
-              <template #default="scope">
-                <el-input v-model="scope.row.task_type" size="small" />
-              </template>
-            </el-table-column>
-            <el-table-column prop="construct_content" label="建设内容">
-              <template #default="scope">
-                <el-input v-model="scope.row.construct_content" size="small" />
-              </template>
-            </el-table-column>
-            <el-table-column prop="construct_scale" label="建设规模" align="center" width="120">
-              <template #default="scope">
-                <el-input v-model="scope.row.construct_scale" size="small" />
-              </template>
-            </el-table-column>
-            <el-table-column prop="t2026" label="2026年目标" align="center" width="120">
-              <template #default="scope">
-                <el-input v-model="scope.row.t2026" size="small" />
-              </template>
-            </el-table-column>
-            <el-table-column prop="t2027" label="2027年目标" align="center" width="120">
-              <template #default="scope">
-                <el-input v-model="scope.row.t2027" size="small" />
-              </template>
-            </el-table-column>
-          </el-table>
-          <div class="ww100 flex-se mt10">
-            <div></div>
-            <div class="i1 cursor" @click.stop="onAddYear">添加年度</div>
-          </div>
-          <div class="ww100 flex-sb mt10">
-            <div class="flex-sc">
-              <div class="rad4 ptb5 plr15 cursor bo-c8-1 c8 mr10" @click.stop="onKeySelectAll">全选</div>
-              <div class="rad4 ptb5 plr15 cursor bgi13 i15 mr10" @click.stop="onKeyDelete">删除</div>
-              <div class="rad4 ptb5 plr15 cursor bgi10 i12 mr10" @click.stop="onKeyImport">导入</div>
-            </div>
-            <el-pagination
-              layout="prev, pager, next"
-              :page-count="5"
-              :page-size="keyPage.limit"
-              :current-page="keyPage.page"
-              @current-change="p=>{keyPage.page=p}">
-            </el-pagination>
-          </div>
-        </div>
-      </div>
-      <div class="ww100 white-rgba50 rad8 p15 mt16">
-        <div class="flex-sc f18 plr10">
-          <span>时序管理</span>
-        </div>
-        <div class="layout-col white-rgba50 rad8 p15 mt10">
-          <el-table
-            header-cell-class-name="bgi16 c3"
-            :cell-style="{'background-color': '#FFFFFF', 'color': '#626366'}"
-            border
-            empty-text="暂无数据"
-            :data="timelineRows"
-            stripe>
-            <el-table-column type="index" label="序号" align="center" width="80" />
-            <el-table-column prop="year" label="年度" align="center" width="120" />
-            <el-table-column prop="desc" label="阶段任务描述" />
-            <el-table-column prop="investment" label="阶段投资" align="center" width="140" />
-            <el-table-column label="操作" align="center" width="120">
-              <template #default="scope"><span class="i1 cursor" @click.stop="onTimelineOp(scope.row)">查看</span></template>
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
       <div class="ww100 flex-cc f18 p40 bot-i16-1 mt20">
         <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="publicStore.actIndex--">上一步</div>
         <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="onSave(formRef)" v-if="publicStore.title!='reserve'">保 存</div>
@@ -334,10 +214,6 @@
       type: Array,
       default: []
     },
-    plans: {
-      type: Array,
-      default: []
-    },
     active: {
       type: [Object, Array],
       default: ()=>{return {}}
@@ -365,16 +241,8 @@
           //这里需要判断到哪一个步骤 publicStore.title 全局标志符
           // 1.新建项目
           if(apikey == 'addApi' && publicStore.title == 'apply'){
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
             console.log("新增项目")
             // 编号规则
->>>>>>> Stashed changes
-=======
-            console.log("新增项目")
-            // 编号规则
->>>>>>> Stashed changes
             const today = new Date().toISOString().slice(0, 10).replace(/-/g, '')
             form.num_title = 'SX'
             form.num_date = today
@@ -386,27 +254,13 @@
           if(apikey == 'updApi'){  
             // 2.1申请储备
             if(form.apply_status = '0'){
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
               console.log("申请储备")
->>>>>>> Stashed changes
-=======
-              console.log("申请储备")
->>>>>>> Stashed changes
               form.apply_status = '1'
               form.apply_time = nowtime
             }
             // 2.2更新信息
             if(form.apply_status = '1'){
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
               console.log("更新信息")
->>>>>>> Stashed changes
-=======
-              console.log("更新信息")
->>>>>>> Stashed changes
             }
           }
           // 生成带排序的uuid作为id
@@ -480,13 +334,6 @@
               // 三表保存逻辑
               const reportId = await resolveReportId(res, form.id)
               await saveThreeTables(form, reportId)
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
               // 刷新页面
               // emit('init', form.id)
               setTimeout(() => { router.back() }, 500)
@@ -658,8 +505,6 @@
   }
 
   const handleClick = (remark, val) => {}
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
   let tabKey = $ref('key')
   const checkPage = reactive({ page: 2, limit: 10, total: 30 })
   const keyPage = reactive({ page: 2, limit: 10, total: 30 })
@@ -695,48 +540,6 @@
     { year: '2028', desc: '', investment: '' },
   ])
   const onTimelineOp = (row) => {}
-=======
-=======
->>>>>>> Stashed changes
-    let tabKey = $ref('key')
-    const checkPage = reactive({ page: 2, limit: 10, total: 30 })
-    const keyPage = reactive({ page: 2, limit: 10, total: 30 })
-    const checkTasks = $ref([
-      { type: '危险性排查', indicator: 'DR设备检定完成', problem: '部分设备未完成检定，影响年度达标', content: '整改10条' },
-      { type: '危险性排查', indicator: 'CB设备检定完成', problem: '检定记录缺失，需补录并复核', content: '整改10条' },
-      { type: '危险性排查', indicator: '住宅隐患排查（车东米）', problem: '老旧小区隐患较多，需分批治理', content: '整改10条' },
-    ])
-    const checkTasksPage = computed(() => checkTasks)
-    const keyTasks = $ref([
-      { task_type: '危险性改造', construct_content: 'DR设备检定改造（套）', construct_scale: '10', t2026: '10', t2027: '' },
-      { task_type: '危险性改造', construct_content: 'CB设备检定改造（套）', construct_scale: '10', t2026: '10', t2027: '' },
-      { task_type: '民住改造', construct_content: '居住隐患改造（车东米）', construct_scale: '10', t2026: '10', t2027: '' },
-    ])
-    const keyTasksPage = computed(() => keyTasks)
-    let keySel = $ref([])
-    let checkSel = $ref([])
-    const onKeySelChange = (val) => { keySel = val }
-    const onCheckSelChange = (val) => { checkSel = val }
-    const onAddCheckTask = () => { checkTasks.push({ type: '危险性排查', indicator: '新增指标项', problem: '请填写问题描述', content: '整改' }) }
-    const onCheckSelectAll = () => { checkSel = [...checkTasks] }
-    const onCheckDelete = () => { checkTasks.splice(0, checkTasks.length, ...checkTasks.filter(a => !checkSel.includes(a))) }
-    const onCheckImport = () => { checkTasks.push({ type: '危险性排查', indicator: '新增指标项', problem: '请填写问题描述', content: '整改' }) }
-    const onChoose = (row) => {}
-    const onViewRectify = (row) => {}
-    const onAddYear = () => {}
-    const onKeySelectAll = () => { keySel = [...keyTasks] }
-    const onKeyDelete = () => { keyTasks.splice(0, keyTasks.length, ...keyTasks.filter(a => !keySel.includes(a))) }
-    const onKeyImport = () => { keyTasks.push({ task_type: '新增任务类型', construct_content: '请输入建设内容', construct_scale: '', t2026: '', t2027: '' }) }
-    const timelineRows = $ref([
-      { year: '2026', desc: '', investment: '' },
-      { year: '2027', desc: '', investment: '' },
-      { year: '2028', desc: '', investment: '' },
-    ])
-    const onTimelineOp = (row) => {}
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 </script>
   
 <style scoped lang="scss">

@@ -88,47 +88,6 @@
       if (valid) {
         console.log("publicStore.form---3", publicStore.form)
         ElMessageBox.confirm('否确定操作继续', '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(async() => {
-          let form = JSON.parse(JSON.stringify(publicStore.form)) 
-          let nowtime = Date.now() + ''
-          form.type = 'report'
-          form.update_time = nowtime
-          form.user_id = configStore.user.id
-          form.user_name = configStore.user.name
-          let apikey = form.id?'updApi':'addApi'
-          if(apikey == 'addApi' && publicStore.title == 'apply'){
-            console.log("新增项目")
-            const today = new Date().toISOString().slice(0, 10).replace(/-/g, '')
-            form.num_title = 'SX'
-            form.num_date = today
-            let query = {model: 't_project_report', args: `num_title='${form.num_title}' and num_date='${form.num_date}'`, field: `num_number`, order: `num_number asc`}
-            let temp = await publicStore.http({Api: query})
-            form.num_number = proxy.isNull(temp)? '000001': String(parseInt(temp[0]['num_number'], 10) + 1).padStart(6, '0')
-          }
-          if(apikey == 'updApi'){  
-            if(publicStore.title = 'apply'){
-              console.log("申请储备")
-              form.apply_status = '1'
-              form.apply_time = nowtime
-            }
-            if(form.apply_status = '1'){
-              console.log("更新信息")
-            }
-            if(publicStore.title = 'reserve'){
-              form.reserve_status = status
-              form.reserve_time = nowtime
-              if(status == '1') form.apply_status = '2'
-              if(status == '2') form.apply_status = '3'
-            }
-          }
-          if(!form.id) form.id=uuidv6()
-=======
-=======
->>>>>>> Stashed changes
-  const onSave = (formEl, status) => {
-    formEl.validate (async valid => {
-      if (valid) {
-        console.log("publicStore.form---3", publicStore.form)
-        ElMessageBox.confirm('否确定操作继续', '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(async() => {
           // 防干扰
           let form = JSON.parse(JSON.stringify(publicStore.form)) 
           // 当前时间
@@ -177,10 +136,6 @@
           // 生成带排序的uuid作为id
           if(!form.id) form.id=uuidv6()
           // 所属地区 省市区
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
           if(!proxy.isNull(form.area)){
             if(form.area.length>0){
               form.province = form.area.length>0? form.area[0] : ''
@@ -199,22 +154,11 @@
             }
             form.area = JSON.stringify(form.area)
           }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-          form.fund_source = !proxy.isNull(form.fund_source)? JSON.stringify(form.fund_source) : ''
-          form.orther_text = !proxy.isNull(form.orther_text)? JSON.stringify(form.orther_text) : ''
-=======
-=======
->>>>>>> Stashed changes
           // 资金来源 10个值
           form.fund_source = !proxy.isNull(form.fund_source)? JSON.stringify(form.fund_source) : ''
           // 其他信息 15个值
           form.orther_text = !proxy.isNull(form.orther_text)? JSON.stringify(form.orther_text) : ''
           // 基础文件
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
           let changeFile1 = []
           if(!proxy.isNull(form.attr)){
             Object.keys(form.attr).forEach((key:any)=>{
@@ -229,14 +173,7 @@
           }else{
             form.attr = ''
           }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
           // 方案文件
->>>>>>> Stashed changes
-=======
-          // 方案文件
->>>>>>> Stashed changes
           let changeFile2 = []
           if(!proxy.isNull(form.plan_attr)){
             Object.keys(form.plan_attr).forEach((key:any)=>{
@@ -290,22 +227,10 @@
   }
 
   const setChangeFile = async(changeFile) => {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    if(proxy.isNull(changeFile)) return
-    let query = {list: changeFile}
-    publicStore.http({changeFileApi: query}).then(res=>{
-=======
-=======
->>>>>>> Stashed changes
     if(proxy.isNull(changeFile)) return console.log("无需转移")
     let query = {list: changeFile}
     publicStore.http({changeFileApi: query}).then(res=>{
       console.log("转移基础文件res", res)
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     })
   }
 
@@ -317,12 +242,3 @@
 .r-18{ right: -18px; }
 .autoHeight{min-height: 100%; height: 3000px;}
 </style>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-  
-=======
-  
->>>>>>> Stashed changes
-=======
-  
->>>>>>> Stashed changes

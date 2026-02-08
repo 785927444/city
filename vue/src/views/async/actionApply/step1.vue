@@ -167,21 +167,11 @@
                 <div class="plr10 ptb4 rad5 cursor bgi1 white ml15">矢量文件上传</div>
               </div>
               <div class="ww100 h50x6 flex-sc rad5 hidden relative mt20">
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-                <GisShow class="ww100 hh100" v-if="!publicStore.check" v-model:mapdata="publicStore.form.mapdata"  />
-=======
-=======
->>>>>>> Stashed changes
                 <!-- <img class="ww100" src="@/assets/images/mapdata.png" /> -->
                 <GisShow class="ww100 hh100" v-if="!publicStore.check" v-model:mapdata="publicStore.form.mapdata"  />
                 <!-- <div class="ww100 flex-ec absolute b10 r10">
                   <div class="plr10 ptb4 rad5 cursor bgi1 white ml15">完成绘制</div>
                 </div> -->
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
               </div>
             </div>
           </el-form-item>
@@ -284,13 +274,6 @@
       }
     })
   }
-<<<<<<< Updated upstream
-=======
-
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 </script>
   
 <style scoped lang="scss">
