@@ -1,0 +1,1 @@
+import{a5 as o,o as t,c as n,f as r}from"./index-BF5jje68.js";const a={viewBox:"0 0 1024 1024",width:"1.2em",height:"1.2em"};function s(c,e){return t(),n("svg",a,[...e[0]||(e[0]=[r("path",{fill:"currentColor",d:"M512 320L192 704h640z"},null,-1)])])}const i=o({name:"ep-caret-top",render:s});export{i as _};

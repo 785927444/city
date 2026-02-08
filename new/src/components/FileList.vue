@@ -1,0 +1,97 @@
+<template>
+  <div class="ww100 flex-col">
+    <!-- 切换 -->
+    <div class="ww100 flex-sc pb15 plr15">
+      <div class="mr40 pb10 f18 relative cursor actfont" :class="state.active.name == v.name?'i1 bob-i1-2':'bob-tt-2'" v-for="(v, i) in props.plans?props.plans:[]" :key="i" @click.stop="state.active = {...v}" >
+      <el-popover :content="v.describe" placement="top-start">
+          <template #reference>
+            <div class="absolute f14 t10 r-18">
+              <i-ep-questionFilled v-show="v.describe" />
+            </div>
+          </template>
+        </el-popover>
+        <span>{{ v.name }}</span>
+      </div>
+    </div>
+    <!-- 内容 -->
+    <div class="ww100 rad5 flex-sc warp">
+      <div class="ww25 flex-sc ptb8 pr16" v-if="state.active&&files" v-for="(v, i) in props.contents?props.contents.filter(a=>a.parent_id==state.active.id):[]" :key="i">
+        <div class="ww100 bs bo-i16-1 relative rad8">
+          <div class="ww100 flex-sc p12 bob-ce-1">
+            <span class="f15">{{ v.name }}</span>
+            <span class="flex1 flex-ec">
+              <UploadText v-if="v.type" v-model:model="files[v.type]" />
+            </span>
+          </div>
+          <div class="ww100 flex-col p12">
+            <div class="ww100 flex-sc">
+              <span class="w90 c8">上传状态</span>
+              <span class="flex1 line1">{{ files[v.type]&&files[v.type]['status']?files[v.type]['status']=='success'?'成功':'失败':'-' }}</span>
+            </div>
+            <div class="ww100 flex-sc mt12">
+              <span class="w90 c8">文件类型</span>
+              <span class="flex1 line1">{{ files[v.type]&&files[v.type]['type']?files[v.type]['type']:'-' }}</span>
+            </div>
+            <div class="ww100 flex-sc mt12">
+              <span class="w90 c8">上传时间</span>
+              <span class="flex1 line1">{{ files[v.type]&&files[v.type]['time']?parseTime(files[v.type]['time']):'-' }}</span>
+            </div>
+            <div class="ww100 flex-ec mt12">
+              <span v-if="files[v.type]" class="ml12 i1 cursor" @click.stop="viewFile(v)">预览</span>
+              <span v-else class="ml12 ca">预览</span>
+              <span v-if="files[v.type]" class="ml12 i9 cursor" @click.stop="delFile(v)">删除</span>
+              <span v-else class="ml12 ca">删除</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ViewFiles ref="viewRef" />
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+  const { proxy } = getCurrentInstance()
+  const publicStore = proxy.publicStore()
+  const configStore = proxy.configStore()
+  let viewRef = $ref()
+  const files = defineModel('files')
+  const props = defineProps({
+    contents: {
+      type: Array,
+      default: []
+    },
+    plans: {
+      type: Array,
+      default: []
+    },
+    active: {
+      type: [Object, Array],
+      default: ()=>{return {}}
+    },
+  })
+
+  const state = reactive({})
+
+  watch(() => props.active, async (val, old) => {
+    if(proxy.isNull(val)) return
+    state.active = {...val}
+  },{ immediate: false, deep: true })
+
+  // 预览
+  const viewFile = (v) => {
+    let val = files.value[v.type]
+    const filePath = val.data
+    viewRef.onVisable(filePath)
+  }
+
+  // 删除
+  const delFile = async(v) => {
+    delete files.value[v.type]
+  }
+
+</script>
+
+<style lang="scss" scoped>
+
+</style>

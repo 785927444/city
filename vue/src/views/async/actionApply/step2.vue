@@ -38,8 +38,10 @@
           </el-form-item> -->
           <!-- <SchemeAutoFill />  -->
 
-          <el-form-item label="实施方案文件上传" prop="files" class="ww100 flex-ss">
-             <FileList v-if="publicStore.form?.plan_attr" v-model:files="publicStore.form.plan_attr" :contents="props.contents" :active="props.active"  />
+          <el-form-item label="实施方案文件上传" prop="files2" class="ww100 flex-ss">
+            <div class="ww100 plr30 ptb22 bo-i16-1 rad8 bg-white">
+              <FileList v-if="publicStore.form?.plan_attr" v-model:files="publicStore.form.plan_attr" :plans="props.plans" :contents="props.contents" :active="props.active"  />
+            </div>
           </el-form-item>
         </div>
       </el-form>
@@ -225,6 +227,10 @@
       default: ()=>{return {}}
     },
     contents: {
+      type: Array,
+      default: []
+    },
+    plans: {
       type: Array,
       default: []
     },

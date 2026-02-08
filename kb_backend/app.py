@@ -71,6 +71,9 @@ def _candidate_public_dirs(base: Path) -> List[Path]:
 
 def _resolve_public_dir(base: Path) -> Path:
     for p in _candidate_public_dirs(base):
+        if (p / "static" / "knowledge").exists():
+            return p
+    for p in _candidate_public_dirs(base):
         if (p / "static" / "uploads").exists():
             return p
     for p in _candidate_public_dirs(base):
@@ -82,7 +85,7 @@ def _resolve_public_dir(base: Path) -> Path:
 
 APP_BASE_DIR = _app_base_dir()
 PUBLIC_DIR = _resolve_public_dir(APP_BASE_DIR)
-STATIC_DIR = PUBLIC_DIR / "static"
+STATIC_DIR = Path(os.getenv("KB_STATIC_DIR") or "/root/cyg-contron/om/3rdbin/dbservice/static")
 
 
 def _normalize_attachment_url(url: str) -> str:
@@ -129,12 +132,12 @@ def _resolve_attachment_path(url: str) -> Path | None:
     else:
         upload_dir = None
         for pub in public_dirs:
-            p = pub / "static" / "uploads"
+            p = pub / "static" / "knowledge"
             if p.exists() and p.is_dir():
                 upload_dir = p
                 break
         if upload_dir is None:
-            upload_dir = STATIC_DIR / "uploads"
+            upload_dir = STATIC_DIR / "knowledge"
     if raw:
         name = Path(raw).name
         p2 = upload_dir / name
@@ -154,7 +157,7 @@ def _resolve_upload_by_meta(file_name: str, file_size: int | None) -> Path | Non
     if upload_dir_env:
         upload_dirs.append(Path(upload_dir_env))
     for pub in public_dirs:
-        p = pub / "static" / "uploads"
+        p = pub / "static" / "knowledge"
         if p.exists() and p.is_dir() and p not in upload_dirs:
             upload_dirs.append(p)
     for ud in upload_dirs:
@@ -425,8 +428,8 @@ class MySQLStorage(Storage):
                         cur.execute(ddl)
                     except Exception:
                         pass
-                expert_img = json.dumps(["/static/uploads/zhuanjia.png"], ensure_ascii=False)
-                case_img = json.dumps(["/static/uploads/youxiuanli.png"], ensure_ascii=False)
+                expert_img = json.dumps(["/static/knowledge/zhuanjia.png"], ensure_ascii=False)
+                case_img = json.dumps(["/static/knowledge/youxiuanli.png"], ensure_ascii=False)
                 try:
                     cur.execute(
                         "UPDATE kb_item SET image_urls = %s WHERE column_code = 'expert' AND image_urls IS NULL",
@@ -661,8 +664,8 @@ class SQLiteStorage(Storage):
                 """,
                 cat_rows,
             )
-            expert_img = json.dumps(["/static/uploads/zhuanjia.png"], ensure_ascii=False)
-            case_img = json.dumps(["/static/uploads/youxiuanli.png"], ensure_ascii=False)
+            expert_img = json.dumps(["/static/knowledge/zhuanjia.png"], ensure_ascii=False)
+            case_img = json.dumps(["/static/knowledge/youxiuanli.png"], ensure_ascii=False)
             try:
                 cur.execute(
                     "UPDATE kb_item SET image_urls = ? WHERE column_code = 'expert' AND (image_urls IS NULL OR image_urls = '')",
@@ -985,7 +988,7 @@ async def upload_file(file: UploadFile = File(...), type: str = Query(None)):
     if not file.filename:
         raise HTTPException(status_code=400, detail="No filename")
     
-    upload_dir = Path(os.getenv("KB_UPLOAD_DIR") or (STATIC_DIR / "uploads"))
+    upload_dir = Path(os.getenv("KB_UPLOAD_DIR") or (STATIC_DIR / "knowledge"))
     upload_dir.mkdir(parents=True, exist_ok=True)
     
     ext = file.filename.split(".")[-1].lower()
@@ -996,7 +999,7 @@ async def upload_file(file: UploadFile = File(...), type: str = Query(None)):
     with open(file_path, "wb") as f:
         f.write(content)
         
-    url = f"/static/uploads/{unique_name}"
+    url = f"/static/knowledge/{unique_name}"
     
     if type == "simple":
         return {"code": 200, "data": url, "errno": 0}
@@ -1359,9 +1362,9 @@ def _seed_if_empty() -> None:
             author = "系统管理员" if i % 2 == 0 else "业务专员"
             image_urls = None
             if col_code == "expert":
-                image_urls = json.dumps(["/static/uploads/zhuanjia.png"], ensure_ascii=False)
+                image_urls = json.dumps(["/static/knowledge/zhuanjia.png"], ensure_ascii=False)
             elif col_code == "case":
-                image_urls = json.dumps(["/static/uploads/youxiuanli.png"], ensure_ascii=False)
+                image_urls = json.dumps(["/static/knowledge/youxiuanli.png"], ensure_ascii=False)
             to_insert.append((col_code, title, author, summary, content, org, doc_no, publish_time, image_urls, views))
 
     if storage_type == "sqlite":

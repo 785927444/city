@@ -185,7 +185,9 @@
             </div>
           </el-form-item>
           <el-form-item label="文件上传" prop="files" class="ww100 flex-ss">
-            <FileList v-if="publicStore.form?.attr" v-model:files="publicStore.form.attr" :contents="props.contents" :active="props.active"  />
+            <div class="ww100 plr30 ptb22 bo-i16-1 rad8 bg-white">
+              <FileList v-if="publicStore.form?.attr" v-model:files="publicStore.form.attr" :plans="props.plans" :contents="props.contents" :active="props.active"  />
+            </div>
           </el-form-item>
         </div>
       </el-form>
@@ -258,6 +260,10 @@
       default: ()=>{return {}}
     },
     contents: {
+      type: Array,
+      default: []
+    },
+    plans: {
       type: Array,
       default: []
     },

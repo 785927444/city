@@ -58,6 +58,7 @@
   "js-cookie": "^3.0.5",
   "loop-scroll": "^1.1.0",
   "mqtt": "^4.3.7",
+  "ol": "^10.7.0",
   "pinia": "^2.1.7",
   "pinia-plugin-persistedstate": "^3.2.1",
   "pinyin-pro": "^3.28.0",

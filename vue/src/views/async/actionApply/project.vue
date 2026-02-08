@@ -142,7 +142,6 @@
         ]
       }
       console.log('form---', form)
-      return
       publicStore.form.project = [...publicStore.form.project, ...form.list]
       onVisable()
       // api.addApi(form).then((res:any) => {

@@ -63,6 +63,7 @@ declare module 'vue' {
     ElTreeSelect: typeof import('element-plus/es')['ElTreeSelect']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     FileList: typeof import('./components/FileList.vue')['default']
+    GisShow: typeof import('./components/GisShow.vue')['default']
     Identify: typeof import('./components/Identify.vue')['default']
     IEpArrowDown: typeof import('~icons/ep/arrow-down')['default']
     IEpArrowRight: typeof import('~icons/ep/arrow-right')['default']
@@ -129,6 +130,7 @@ declare module 'vue' {
     UploadText: typeof import('./components/UploadText.vue')['default']
     UploadTextNoName: typeof import('./components/UploadTextNoName.vue')['default']
     ViewFiles: typeof import('./components/ViewFiles.vue')['default']
+    ViewGis: typeof import('./components/ViewGis.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
