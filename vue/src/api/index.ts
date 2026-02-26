@@ -223,6 +223,8 @@ function buildKbMockDb(): KbMockDb {
       const title = titleTpl[c.code]?.(i) ?? `${c.name}条目${i}`
       const summary = summaryTpl[c.code]?.(i) ?? `关于${area}的内容摘要。`
       const doc_no = docNoTpl[c.code]?.(i) ?? `${c.code.toUpperCase()}-${i}`
+      const implementation_time = c.code === 'standard' ? formatDate(new Date(d.getTime() + 1000 * 60 * 60 * 24 * 30)) : ''
+      const fields_involved = c.code === 'standard' ? `${area}、${t}` : ''
       const views = 200 + (20 - i) * 13 + c.code.length * 7
       const content = buildLongContent({ title, lvl, area, topic: t })
 
@@ -284,6 +286,8 @@ function buildKbMockDb(): KbMockDb {
         summary,
         publish_org: org,
         doc_no,
+        implementation_time,
+        fields_involved,
         publish_time,
         views,
         content,
@@ -442,6 +446,15 @@ const api:any = {
     })
   }, 
 
+  addApi2(data: any, url: any = "/api/v1/terminal/middle/add", headers: any = {}, method: any = 'post') {
+    return request({
+      headers: headers,
+      url: url,
+      method: method,
+      data: data
+    })
+  }, 
+
   updApi(data: any, url: any = "/api/v1/terminal/middle/upd", headers: any = {}, method: any = 'post') {
     return request({
       headers: headers,
@@ -460,6 +473,15 @@ const api:any = {
     })
   },
 
+  updApi2(data: any, url: any = "/api/v1/terminal/middle/upd", headers: any = {}, method: any = 'post') {
+    return request({
+      headers: headers,
+      url: url,
+      method: method,
+      data: data
+    })
+  },
+
   delApi(data: any, url: any = "/api/v1/terminal/middle/del", headers: any = {}, method: any = 'post') {
     return request({
       headers: headers,
@@ -470,6 +492,15 @@ const api:any = {
   },
 
   delApi1(data: any, url: any = "/api/v1/terminal/middle/del", headers: any = {}, method: any = 'post') {
+    return request({
+      headers: headers,
+      url: url,
+      method: method,
+      data: data
+    })
+  },
+
+  delApi2(data: any, url: any = "/api/v1/terminal/middle/del", headers: any = {}, method: any = 'post') {
     return request({
       headers: headers,
       url: url,
@@ -617,6 +648,82 @@ const api:any = {
 
   kbArticleUpdateApi(data: any, url: any = "/kb-api/article/update", headers: any = {}, method: any = 'post') {
     return request({ headers, url, method, data })
+  },
+
+  kbColumnAddApi(data: any, url: any = "/kb-api/column/add", headers: any = {}, method: any = 'post') {
+    return requestOrMock(
+      { headers, url, method, data },
+      () => {
+        const db = getKbMockDb()
+        db.columns.push({ ...data, children: [] })
+        return { code: 200, message: 'success' }
+      }
+    )
+  },
+
+  kbColumnUpdateApi(data: any, url: any = "/kb-api/column/update", headers: any = {}, method: any = 'post') {
+    return requestOrMock(
+      { headers, url, method, data },
+      () => {
+        const db = getKbMockDb()
+        const idx = db.columns.findIndex(c => c.code === data.code)
+        if (idx !== -1) {
+          db.columns[idx] = { ...db.columns[idx], ...data }
+        }
+        return { code: 200, message: 'success' }
+      }
+    )
+  },
+
+  kbColumnDeleteApi(data: any, url: any = "/kb-api/column/delete", headers: any = {}, method: any = 'post') {
+    return requestOrMock(
+      { headers, url, method, data },
+      () => {
+        const db = getKbMockDb()
+        db.columns = db.columns.filter(c => c.code !== data.code)
+        db.categories = db.categories.filter(c => c.column_code !== data.code)
+        return { code: 200, message: 'success' }
+      }
+    )
+  },
+
+  kbCategoryUpdateApi(data: any, url: any = "/kb-api/category/update", headers: any = {}, method: any = 'post') {
+    return requestOrMock(
+      { headers, url, method, data },
+      () => {
+        const db = getKbMockDb()
+        const idx = db.categories.findIndex(c => c.id === data.id)
+        if (idx !== -1) {
+          db.categories[idx] = { ...db.categories[idx], ...data }
+          // 同步更新 columns 里的 children
+          db.columns.forEach(col => {
+            if (col.children) {
+              const cIdx = col.children.findIndex(c => c.id === data.id)
+              if (cIdx !== -1) {
+                col.children[cIdx].name = data.name
+              }
+            }
+          })
+        }
+        return { code: 200, message: 'success' }
+      }
+    )
+  },
+
+  kbCategoryDeleteApi(data: any, url: any = "/kb-api/category/delete", headers: any = {}, method: any = 'post') {
+    return requestOrMock(
+      { headers, url, method, data },
+      () => {
+        const db = getKbMockDb()
+        db.categories = db.categories.filter(c => c.id !== data.id)
+        db.columns.forEach(col => {
+          if (col.children) {
+            col.children = col.children.filter(c => c.id !== data.id)
+          }
+        })
+        return { code: 200, message: 'success' }
+      }
+    )
   },
 
   kbArticleDeleteApi(data: any, url: any = "/kb-api/article/delete", headers: any = {}, method: any = 'post') {

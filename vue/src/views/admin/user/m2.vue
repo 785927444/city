@@ -31,11 +31,11 @@
   let addRef = $ref()
   let passwordRef = $ref()
   const locks = [
-    {value: '0', name: '正常', color: 'i11'},
+    {value: '0', name: '正常', color: 'i12'},
     {value: '1', name: '锁定', color: 'i8'},
   ]
   const statuss = [
-    {value: '0', name: '正常', color: 'i11'},
+    {value: '0', name: '正常', color: 'i12'},
     {value: '1', name: '禁用', color: 'i8'},
   ]
   const state = reactive({
@@ -43,12 +43,12 @@
     content: [
       { width: 'w70',   show: true, align: 'center', key: '*', name: '序号' },
       { width: 'w50x3', show: true, align: 'left', key: 'username', name: '用户' },
-      { width: 'w50x3', show: true, align: 'left', key: 'name', name: '名称' }, 
-      { width: 'w50x3', show: true, align: 'left', key: 'role_id', name: '角色', type: 'select', list: [], value: 'id', label: 'name' },
-      { width: 'w50x3', show: true, align: 'left', key: 'phone', name: '电话' },  
-      { width: 'w50x2', show: true, align: 'left', key: 'lock', name: '登录状态', type: 'select', list: locks, value: 'value', label: 'name' },
-      { width: 'w50x2', show: true, align: 'left', key: 'status', name: '账户状态', type: 'select', list: statuss, value: 'value', label: 'name' },
-      { width: 'w50x4', show: true, align: 'left', key: 'expire', name: '过期', type: 'time' },
+      { width: 'w50x5', show: true, align: 'left', key: 'name', name: '名称' }, 
+      { width: 'w50x2', show: true, align: 'left', key: 'role_id', name: '角色', type: 'select', list: [], value: 'id', label: 'name' },
+      { width: 'w50x2', show: true, align: 'left', key: 'phone', name: '电话' },  
+      { width: 'w50x2', show: true, align: 'center', key: 'lock', name: '登录状态', type: 'select', list: locks, value: 'value', label: 'name' },
+      { width: 'w50x2', show: true, align: 'center', key: 'status', name: '账户状态', type: 'select', list: statuss, value: 'value', label: 'name' },
+      { width: 'w50x4', show: true, align: 'center', key: 'expire', name: '过期', type: 'time' },
       { width: 'flex1', show: true, align: 'right', key: {},  name: '操作' },
     ],
     editFrom: [
@@ -70,7 +70,7 @@
 
   onMounted(async() => {
     await publicStore.init({path: '/user'}, state)
-    let query = {model: 't_role', args: `id!=1`, order: `CAST(id AS SIGNED) ASC`}
+    let query = {model: 't_role', args: `id!=1 and id!=5`, order: `CAST(id AS SIGNED) ASC`}
     let res = await publicStore.http({Api: query})
     publicStore._public.roles = proxy.isNull(res)? [] : res
   })
@@ -82,7 +82,7 @@
   }, {immediate: false, deep: true})
 
   const init = async() => {
-    state.query = {model: state.model, args: `station_num='${publicStore.active.id}'`, order: `CAST(id AS SIGNED) ASC`}
+    state.query = {model: state.model, args: `station_num='${publicStore.active.id}' and role_id>1 and role_id < 5`, order: `CAST(id AS SIGNED) ASC`}
     state.params = {Api: state.query}
     let res = await publicStore.http(state.params)
     state.empty = proxy.isNull(res)? true : false
@@ -101,7 +101,8 @@
   }
 
   const setInit = async() => {
-    state.addItem = {station_num: publicStore.active.id, status: '0', parent_id: publicStore.active.parent_id, provide: publicStore.active.provide, provide_name: publicStore.active.provide_name, city: publicStore.active.city, city_name: publicStore.active.city_name, district: publicStore.active.district, district_name: publicStore.active.district_name}
+    let area = `${publicStore.active.province_name}${publicStore.active.city_name?('-'+publicStore.active.city_name):''}${publicStore.active.district_name?('-'+publicStore.active.district_name):''}`
+    state.addItem = {station_num: publicStore.active.id, type: 'department', status: '0', parent_id: publicStore.active.parent_id, area: area, province: publicStore.active.province, province_name: publicStore.active.province_name, city: publicStore.active.city, city_name: publicStore.active.city_name, district: publicStore.active.district, district_name: publicStore.active.district_name}
     state.editFrom.forEach(v => { 
       if(v.key == 'station_num') v.list = [...[{id: '', station_name: '无'}], ...publicStore._public.stations]
       if(v.key == 'role_id') v.list = publicStore._public.roles 

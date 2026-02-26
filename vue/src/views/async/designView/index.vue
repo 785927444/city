@@ -30,7 +30,7 @@
   }
 
   const init = async(key) => {
-    let query = {model: `t_scheme_design`, args: `id='${route.query.id}'`}
+    let query = {model: `t_scheme_plan`, args: `id='${route.query.id}'`}
     let res = await publicStore.http({Api: query})
     let data = proxy.isNull(res)? {} : res[0]
       try {

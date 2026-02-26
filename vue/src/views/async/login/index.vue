@@ -156,7 +156,7 @@
             // if(!proxy.isNull(res.user.username)) res.user.username = proxy.decrypt(res.user.username)
             // if(!proxy.isNull(res.user.name)) res.user.name = proxy.decrypt(res.user.name)
             // if(!proxy.isNull(res.user.phone)) res.user.phone = proxy.decrypt(res.user.phone)
-            configStore.$patch({token: res.token, user: res.user, distributId: res.user.station_num?res.user.station_num:configStore.distributId?configStore.distributId:'', password: 'false'})
+            configStore.$patch({token: res.token, user: res.user, password: 'false'})
             ElNotification({ title: '提示', message: '登录成功', type: 'success' })
             proxy.toPath('/async')
           }else{

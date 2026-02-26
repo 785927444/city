@@ -11,6 +11,7 @@
   import { v6 as uuidv6 } from 'uuid'
   import api from '@/api'
   import router from '@/router'
+import { isNull } from '@/utils/common'
 	const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
@@ -35,7 +36,8 @@
   }
 
   const onStepNext = () => {
-    // console.log("publicStore.form", publicStore.form)
+    console.log("publicStore.form", publicStore.form)
+
     if(props.state.type=='plan' && publicStore.actIndex == 1) {
       if(!publicStore.form.name) return ElNotification({ title: '提示', message: '请输入规划名称', type: 'error' })
       if(!publicStore.form.datetime) return ElNotification({ title: '提示', message: '请选择规划周期', type: 'error' })
@@ -51,32 +53,41 @@
 
   const onSave = async() => {
     ElMessageBox.confirm('保存信息后可进行上报，是否确定继续', '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(() => {
-      // if(props.state.type=='plan' && publicStore.actIndex == 2) {
-      //   if(!publicStore.form.attr) return ElNotification({ title: '提示', message: '规划文本与规划图表为必须', type: 'error' })
-      //   if(!publicStore.form.attr.plan_text1) return ElNotification({ title: '提示', message: '规划文本必须', type: 'error' })
-      //   if(!publicStore.form.attr.plan_text2) return ElNotification({ title: '提示', message: '规划说明必须', type: 'error' })
-      //   if(!publicStore.form.attr.plan_echart1) return ElNotification({ title: '提示', message: '规划图纸必须', type: 'error' })
-      //   if(!publicStore.form.attr.plan_echart2) return ElNotification({ title: '提示', message: '规划图表必须', type: 'error' })
-      // }
+      if(props.state.type=='plan' && publicStore.actIndex == 2) {
+        if(isNull(publicStore.form.attr)) return ElNotification({ title: '提示', message: '规划文本与规划图表为必须', type: 'error' })
+        // if(!publicStore.form.attr.plan_text1) return ElNotification({ title: '提示', message: '规划文本必须', type: 'error' })
+        // if(!publicStore.form.attr.plan_text2) return ElNotification({ title: '提示', message: '规划说明必须', type: 'error' })
+        // if(!publicStore.form.attr.plan_echart1) return ElNotification({ title: '提示', message: '规划图纸必须', type: 'error' })
+        // if(!publicStore.form.attr.plan_echart2) return ElNotification({ title: '提示', message: '规划图表必须', type: 'error' })
+      }
       let form = JSON.parse(JSON.stringify(publicStore.form))
       let apikey = form.id?'updApi':'addApi'
       if(!form.id) form.id=uuidv6()
       // 图片转移
       let changeFile = []
       if(!proxy.isNull(form.attr)){
-        Object.keys(form.attr).forEach((key:any)=>{
-          if(form.attr[key].data && form.attr[key].data.indexOf('/uploads')!=-1){
-            let content = publicStore._public.contents.find(a=>a.type == key)
-            const ext = '.' + publicStore.form.attr[key].data.split('.').pop()
-            const newfile = `${content.parent_type}/${configStore.user.id}_${key}${ext}`
-            form.attr[key].data = newfile
-            changeFile.push({oldfile: publicStore.form.attr[key].data, newfile: newfile})
+        form.attr.forEach(v => {
+          if(v.data.indexOf('/uploads')!=-1){
+            let content = publicStore._public.contents1.find(a=>a.type == v.type)
+            let oldlData = v.data;
+            v.data = `${content.parent_type}/${form.id}_${v.time}_${v.name}`
+            changeFile.push({oldfile: oldlData, newfile: v.data})
           }
         })
-        form.attr = JSON.stringify(form.attr)
-      }else{
-        form.attr = ''
       }
+      // 项目文件
+      let addFile = []
+      let delFile = []
+      let updFile = []
+      if(JSON.stringify(form.attr) != JSON.stringify(publicStore._public.attr)) {
+        addFile = form.attr.filter(a=>!a.id).map(item => ({ ...item, parent_id: form.id }))
+        delFile = publicStore._public.attr.filter(a => !form.attr.some(b => b.id === a.id))
+        updFile = form.attr.filter(a => publicStore._public.attr.some(b => b.id === a.id && b.data !== a.data))
+      }
+      delete form.attr
+      // console.log("addFile---", addFile)
+      // console.log("delFile---", delFile)
+      // console.log("updFile---", updFile)
       // 项目更新
       let addProject = []
       let delProject = []
@@ -114,9 +125,10 @@
         if(res.code == 200){
           ElNotification({ title: '提示', message: '保存成功', type: 'success' })
           setChangeFile(changeFile)
-          if(!proxy.isNull(addProject) || !proxy.isNull(delProject) || !proxy.isNull(addTask) || !proxy.isNull(delTask)) {
-            if(!proxy.isNull(addProject) || !proxy.isNull(addTask)) await setAdd(addProject, addTask, form.id)
-            if(!proxy.isNull(delProject) || !proxy.isNull(delTask)) await setDel(delProject, delTask, form.id)
+          if(!proxy.isNull(updFile) || !proxy.isNull(addFile) || !proxy.isNull(delFile) || !proxy.isNull(addProject) || !proxy.isNull(delProject) || !proxy.isNull(addTask) || !proxy.isNull(delTask)) {
+            if(!proxy.isNull(addFile) || !proxy.isNull(addProject) || !proxy.isNull(addTask)) await setAdd(addFile, addProject, addTask, form.id)
+            if(!proxy.isNull(delFile) || !proxy.isNull(delProject) || !proxy.isNull(delTask)) await setDel(delFile, delProject, delTask, form.id)
+            if(!proxy.isNull(updFile)) await setUpd(updFile, form.id)
             emit('init', form.id)
           } else {
             emit('init', form.id)
@@ -138,7 +150,7 @@
     })
   }
 
-  const setAdd = async(addProject, addTask, scheme_id) => {
+  const setAdd = async(addFile, addProject, addTask, scheme_id) => {
     let query = {model: 't_scheme_plan', args: `id='${scheme_id}'`}
     let scheme = await publicStore.http({Api: query})
     if(proxy.isNull(scheme)) return
@@ -146,25 +158,50 @@
       v.id = ''
       v.scheme_id = scheme[0]['id']
       v.scheme_name = scheme[0]['name']
+      v.user_id = configStore.user.id
+      v.user_name = configStore.user.name
+      v.province = configStore.user.province?configStore.user.province:''
+      v.city = configStore.user.city?configStore.user.city:''
+      v.district = configStore.user.district?configStore.user.district:''
+      v.province_name = configStore.user.province_name?configStore.user.province_name:''
+      v.city_name = configStore.user.city_name?configStore.user.city_name:''
+      v.district_name = configStore.user.district_name?configStore.user.district_name:''
     })
     addTask.forEach(v => {
       v.id = ''
       v.scheme_id = scheme[0]['id']
       v.scheme_name = scheme[0]['name']
+      v.user_id = configStore.user.id
+      v.user_name = configStore.user.name
+      v.province = configStore.user.province?configStore.user.province:''
+      v.city = configStore.user.city?configStore.user.city:''
+      v.district = configStore.user.district?configStore.user.district:''
+      v.province_name = configStore.user.province_name?configStore.user.province_name:''
+      v.city_name = configStore.user.city_name?configStore.user.city_name:''
+      v.district_name = configStore.user.district_name?configStore.user.district_name:''
     })
     let params = {}
     if(!proxy.isNull(addProject)) params.addApi = {model: 't_scheme_project', list: addProject}
     if(!proxy.isNull(addTask)) params.addApi1 = {model: 't_scheme_task', list: addTask}
+    if(!proxy.isNull(addFile)) params.addApi2 = {model: 't_file', list: addFile}
     let res = await publicStore.http(params)
     console.log('新增res---', res)
   } 
 
-  const setDel = async(delProject, delTask, scheme_id) => {
+  const setDel = async(delFile, delProject, delTask, scheme_id) => {
     let params = {}
     if(!proxy.isNull(delProject)) params.delApi = {model: 't_scheme_project', list: delProject}
     if(!proxy.isNull(delTask)) params.delApi1 = {model: 't_scheme_task', list: delTask}
+    if(!proxy.isNull(delFile)) params.delApi2 = {model: 't_file', list: delFile}
     let res = await publicStore.http(params)
     console.log('删除res---', res)
+  } 
+
+  const setUpd = async(updFile, scheme_id) => {
+    let params = {}
+    if(!proxy.isNull(updFile)) params.updApi = {model: 't_file', list: updFile}
+    let res = await publicStore.http(params)
+    console.log('更新res---', res)
   } 
 
 </script>

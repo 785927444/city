@@ -37,6 +37,13 @@
 	        name: '知识库内容管理',
 	        meta: { isroute: 1, icon: '' },
 	        children: []
+	      },
+	      {
+	        id: -9902,
+	        path: '/kb-management/category-management',
+	        name: '分类管理',
+	        meta: { isroute: 1, icon: '' },
+	        children: []
 	      }
 	    ]
 	  }

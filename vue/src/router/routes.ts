@@ -70,6 +70,13 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         children: []
       },
       {
+        path: '/knowledge/category-management',
+        name: '分类管理',
+        meta: { next: false },
+        component: () => import('@/views/async/knowledge/CategoryManagement.vue'),
+        children: []
+      },
+      {
         path: '/knowledge/manage',
         name: '知识库管理后台',
         meta: { next: false },
@@ -94,7 +101,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         path: '/basicProjectOverview',
         name: '项目基础库',
         meta: { next: false },
-        component: () => import('@/views/async/implementation/basicProjectOverview/index.vue'),
+        component: () => import('@/views/async/basicProjectOverview/index.vue'),
         children: []
       },
       {
@@ -133,17 +140,17 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         children: []
       },
       {
-        path: '/project-push/apply',
-        name: '项目推送进度更新',
-        meta: { next: false },
-        component: () => import('@/views/async/actionHome/projectPushApply/index.vue'),
-        children: []
-      },
-      {
         path: '/actionApply',
         name: '项目储备申请',
         meta: { next: false },
         component: () => import('@/views/async/actionApply/index.vue'),
+        children: []
+      },
+      {
+        path: '/actionApply/preview/previewIndex',
+        name: '项目储备预览',
+        meta: { next: false },
+        component: () => import('@/views/async/actionApply/preview/previewIndex.vue'),
         children: []
       },
       {
@@ -205,6 +212,13 @@ export const adminRoutes: Array<RouteRecordRaw> = [
         name: '知识库内容管理',
         meta: { isroute: 1, icon: '' },
         component: () => import('@/views/async/knowledge/UserArticles.vue'),
+        children: []
+      },
+      {
+        path: '/kb-management/category-management',
+        name: '分类管理',
+        meta: { isroute: 1, icon: '' },
+        component: () => import('@/views/async/knowledge/CategoryManagement.vue'),
         children: []
       }
     ]

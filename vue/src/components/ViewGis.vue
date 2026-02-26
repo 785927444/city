@@ -1,6 +1,8 @@
 <template>
+  <!-- 弹窗 -->
   <div class="topclass">
     <el-dialog v-model="state.isFalse" title="绘制" :draggable="true" :fullscreen="true" :destroy-on-close="true" :before-close="onClose" :show-close="false">
+      <!-- 自定义头部 -->
       <template #header="{ close, titleId, titleClass }">
         <div class="ww100 flex-sc">
           <span>绘制区域</span>
@@ -26,18 +28,25 @@
 	  ...publicStore.$state,
   })
 
+  // 打开关闭弹窗
   const onVisable = async (val) => {
     state.isFalse = !state.isFalse
     if(!state.isFalse) return
     state.active = {...val}
   }
 
-  const onClose = () => { publicStore.check=!publicStore.check; state.isFalse = !state.isFalse }
+  const onClose = () => { 
+    state.isFalse = !state.isFalse; 
+     setTimeout(() => {
+      publicStore.check=!publicStore.check;
+    }, 1000);
+  }
   const handleDraw = () => { 
     publicStore.form.mapdata = state.active.mapdata
     onClose()
   }
 
+  // 暴露给父组件
   defineExpose({
     onVisable
   })

@@ -27,9 +27,6 @@
               >
                 <span class="f14 line1">{{ ch.name }}</span>
               </div>
-              <div class="kb-add cursor" @click.stop="openAddDialog(c.code)">
-                <i-ep-plus class="f14 mr5" /><span class="f14">新增</span>
-              </div>
             </div>
           </div>
         </div>
@@ -37,7 +34,7 @@
 
       <div class="flex1 hh100 hidden ml15">
         <div class="layout-col">
-          <div class="bg-white rad8 p15 mb15" v-if="state.activeColumnCode !== 'policy'">
+          <div class="bg-white rad8 p15 mb15" v-if="state.activeColumnCode !== 'policy' && state.activeColumnCode !== 'course'">
             <el-input v-model="state.q" placeholder="请输入关键词" clearable @keyup.enter="search()">
               <template #append>
                 <div class="kb-search-btn flex-cc cursor bgi1 white" @click.stop="search()">
@@ -47,21 +44,21 @@
             </el-input>
           </div>
 
-          <div class="layout-col hh100 hidden" style="background: transparent;" v-if="state.activeColumnCode === 'policy'">
+          <div class="layout-col hh100 hidden" style="background: transparent;" v-if="state.activeColumnCode === 'policy' || state.activeColumnCode === 'course'">
              <div class="flex-sc align-start hh100" style="align-items: stretch; gap: 16px;">
                 <!-- Left Column: Banner + List -->
                 <div class="flex-col hh100 bg-white rad8 overflow-hidden" style="flex: 1299;">
                        <!-- Policy Layout -->
                        <div class="policy-banner flex-col-cc white relative overflow-hidden" style="border-radius: 8px 8px 0 0; height: 140px; min-height: 140px; max-height: 140px; flex: 0 0 140px;">
-                          <div class="f36 fw z10 text-shadow">政策法规</div>
+                          <div class="f36 fw z10 text-shadow">{{ state.activeColumnName }}</div>
                            <div class="absolute ww100 hh100" style="background: linear-gradient(135deg, #66b1ff 0%, #A6D4FE 100%); opacity: 0.9;"></div>
                       </div>
                      
-                     <div class="flex1 overflow-hidden p20 pr0 flex-col">
-                         <div class="flex-sc mb15">
-                             <div class="f18 fw">政策法规列表</div>
-                        </div>
-                            <div class="flex1 overflow-y-auto pr10" v-loading="state.loading">
+                     <div class="flex1 overflow-hidden p20 pr0 flex-col" style="min-height: 0;">
+                        <div class="flex-sc mb15">
+                            <div class="f18 fw">{{ state.activeColumnName }}列表</div>
+                       </div>
+                           <div class="flex1 overflow-y-auto pr10" v-loading="state.loading" style="min-height: 0;">
                             <div v-for="(item, index) in state.items" :key="index" class="policy-item flex-sc p15 bb-e cursor hover-bg" @click="openItem(item.id)">
                                 <div class="date-box mr20 tc">
                                     <div class="f24 fw c-primary">{{ getDayMonth(getItemTime(item)) }}</div>
@@ -183,8 +180,17 @@
                         fit="cover"
                         style="width: 72px; height: 48px; border-radius: 4px; margin-right: 12px"
                       />
-                      <span v-for="(t, idx) in getItemCategories(v)" :key="`${v.id}-${idx}`" class="kb-tag mr15">{{ t }}</span>
-                      <span class="f14 line1">{{ getItemTitle(v) }}</span>
+                      <div class="flex-col flex1 hidden">
+                        <div class="flex-sc mb4">
+                          <span v-for="(t, idx) in getItemCategories(v)" :key="`${v.id}-${idx}`" class="kb-tag mr10">{{ t }}</span>
+                          <span class="f14 line1 fw">{{ getItemTitle(v) }}</span>
+                        </div>
+                        <div class="f12 c9 flex-sc" v-if="state.activeColumnCode === 'standard' || state.activeColumnCode === 'policy'">
+                        <span class="mr15" v-if="v.doc_no">{{ state.activeColumnCode === 'policy' ? '文号' : '编号' }}：{{ v.doc_no }}</span>
+                        <span class="mr15" v-if="v.implementation_time">实行时间：{{ v.implementation_time }}</span>
+                        <span v-if="v.fields_involved || v.tags">领域：{{ v.fields_involved || v.tags }}</span>
+                      </div>
+                      </div>
                     </div>
                     <span class="c9 f14">{{ getItemTime(v) || '-' }}</span>
                   </div>
@@ -206,21 +212,6 @@
         </div>
       </div>
     </div>
-
-    <el-dialog v-model="state.addVisible" title="新增二级分类" width="420px">
-      <div class="flex-sc">
-        <span class="mr10">分类名称</span>
-        <div class="flex1">
-          <el-input v-model="state.addName" placeholder="请输入" maxlength="30" show-word-limit />
-        </div>
-      </div>
-      <template #footer>
-        <div class="flex-ec">
-          <div class="rad4 ptb5 plr12 flex-cc cursor bg-white c8 bo-cc-1" @click.stop="closeAddDialog()">取消</div>
-          <div class="rad4 ptb5 plr12 flex-cc cursor bgi1 white bo-i1-1 ml15" @click.stop="submitAdd()">确定</div>
-        </div>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
@@ -243,9 +234,6 @@
     page: 1,
     limit: 10,
     loading: false,
-    addVisible: false,
-    addColumnCode: '',
-    addName: '',
   })
 
   const showThumb = computed(() => state.activeColumnCode === 'expert' || state.activeColumnCode === 'case')
@@ -457,38 +445,6 @@
     const v = String(single).trim()
     return v ? [v] : ['-']
   }
-
-  const openAddDialog = (code: string) => {
-    state.addColumnCode = code
-    state.addName = ''
-    state.addVisible = true
-  }
-
-  const closeAddDialog = () => {
-    state.addVisible = false
-    state.addName = ''
-    state.addColumnCode = ''
-  }
-
-  const submitAdd = async () => {
-    const name = String(state.addName ?? '').trim()
-    const code = String(state.addColumnCode ?? '').trim()
-    if (!name || !code) return
-    try {
-      const res: any = await api.kbCategoryAddApi({ column_code: code, name })
-      const created = res?.data?.category ?? res?.category ?? null
-      await init()
-      if (created?.id != null) {
-        state.activeColumnCode = code
-        const col = state.columns.find((x) => x.code === code)
-        state.activeColumnName = col?.name ?? ''
-        state.activeCategoryId = created.id
-        await loadItems(1)
-      }
-    } finally {
-      closeAddDialog()
-    }
-  }
 </script>
 
 <style scoped lang="scss">
@@ -518,16 +474,6 @@
   .kb-child-active{
     color: #266fff;
     font-weight: bold;
-  }
-  .kb-add{
-    border: 1px solid #266fff;
-    color: #266fff;
-    border-radius: 4px;
-    padding: 6px 12px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 120px;
   }
   .kb-search-btn{
     width: 56px;

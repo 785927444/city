@@ -30,6 +30,13 @@ const dictStore = defineStore('dict', {
 			{name: '导入', code: 'in', value: "/api/v1/terminal/middle/in"},
 			{name: '导出', code: 'out', value: "/api/v1/terminal/middle/out"},
 		],
+		roles: [
+			{name: '管理员', id: '1'},
+			{name: '省级部门', id: '2'}, 
+			{name: '市级部门', id: '3'},
+			{name: '区级部门', id: '4'}, 
+			{name: '企业单位', id: '5'},
+		],
 		isList: [
 			{name: '是', value: 1}, 
 			{name: '否', value: 0}
@@ -73,9 +80,14 @@ const dictStore = defineStore('dict', {
 		],
 		// 所属等级
 		levels: [
-			{value: 'province', name: '省'},
-			{value: 'city',     name: '市'},
-			{value: 'district', name: '区'},
+			{value: '1', name: '省级'},
+			{value: '2', name: '市级'},
+			{value: '3', name: '区级'},
+		],
+		fileType: [
+			{value: '', name: '无'},
+      {value: 'text/plain', name: '文本文档'},
+			{value: 'application/pdf', name: 'PDF文件'},
 		],
 	})
 })

@@ -34,7 +34,7 @@
     },
     fileSize: {
       type: Number,
-      default: 50
+      default: 2000
     },
     fileType: {
       type: Array,

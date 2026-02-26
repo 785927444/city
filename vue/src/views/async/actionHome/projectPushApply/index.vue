@@ -2,36 +2,49 @@
   <div class="layout-col plr15">
     <div class="layout-col white-rgba50 rad8">
       <div class="ww100 flex-bc f20 p15 mb20 bob-cd-1">
-        <div class="fw">{{ route.query && route.query.id ? '创建项目' : '信息补充' }}</div>
+        <div class="fw">{{ route.query && route.query.id ? '信息补充' : '创建项目' }}</div>
         <div class="flex1 flex-ec">
           <div class="plr14 ptb5 rad4 mr15 cursor c9 bg-white bo-c9-1" @click.stop="onBack()">返 回</div>
         </div>
       </div>
       <div class="layout-col">
-        <step-title />
-        <step1 :state="state" :contents="state.contents1" :active="state.active1" v-show="publicStore.actIndex == 1" />
-        <step2 :state="state" :contents="state.contents2" :active="state.active2" v-show="publicStore.actIndex == 2" />
-        <step3 v-show="publicStore.actIndex == 3" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import stepTitle from './stepTitle'
-  import step3 from './step3'
-  import step2 from './step2'
-  import step1 from '@/views/async/actionApply/step1.vue'
+  import { getAreaDataByCode } from '@/utils/areaData'
   const route = useRoute()
-	const { proxy }:any = getCurrentInstance()
+  const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
+  const configStore = proxy.configStore()
+  const isDemo = proxy.isDemo
   const state = reactive({
 	  ...publicStore.$state,
+    code: ''
+  })
+
+  const isReadonly = computed(() => {
+    return route.query && (route.query.mode === 'view' || route.query.readonly === 'true')
   })
 
   onBeforeMount(async() => {
-    publicStore.actIndex = 1
+    publicStore.actIndex = Number(route.query.steps) || 1
     publicStore.form = {}
+    
+    // 设置区域限制代码
+    if (configStore.user) {
+      // 省级部门
+      if(configStore.user.role_id == '2') state.code = configStore.user.province
+      // 市级部门
+      if(configStore.user.role_id == '3') state.code = configStore.user.city
+      // 区级部门
+      if(configStore.user.role_id == '4') state.code = configStore.user.district
+      
+      // 将受限的区域数据存入 publicStore 供 Step1 使用
+      publicStore._public.areaOptions = getAreaDataByCode(state.code)
+    }
   })
 
   onMounted(async() => {
@@ -40,76 +53,27 @@
 
   const init = async(key) => {
     let data: any = {}
-    const isDemo = route.query && String(route.query.demo) === '1'
-    if (isDemo) {
-      const now = Date.now()
-      data = {
-        code: 'TY-2026-0001',
-        name: route.query?.name ? String(route.query.name) : '龙城片区旧城改造项目',
-        level: '1',
-        area: ['140000', '140100', '140105'],
-        parent_id: '1',
-        parent_area: '1',
-        construct_unit: '太原市城市更新中心',
-        completion_status: '1',
-        construct_main: '太原市住建局',
-        construct_price: '12000',
-        estimate_year: '2026',
-        estimate_price: '2500',
-        total_put_price: '5600',
-        total_completion_price: '3200',
-        estimated_start_time: '2025-12-12',
-        estimated_end_time: '2028-12-30',
-        stage: '1',
-        total_income_price: '8000',
-        task_type: '1',
-        task_class: '1',
-        construct_content: '1',
-        construct_note: '以旧换新示范区改造',
-        response_person: '王伟',
-        contact_person: '张敏',
-        contact_phone: '13800001234',
-        vast_scheme: '新型城镇化',
-        industrial_policy: '城市更新行动',
-        gc_investmentd_irection: '民生改善',
-        qu_stage_objective: '2028年前完成片区更新',
-        mapdata: '龙城片区主干道及周边',
-        plan_name: '龙城片区更新实施方案',
-        plan_unit: '太原市城市更新中心',
-        approval_time: '2026-01-15',
-        plan_abstract: '围绕旧城片区综合更新，完善道路与公共配套',
-        condition: '基础设施老旧，公共服务配套不足',
-        fund_source: {value1: '3000', value2: '1200', value3: '800', value4: '600', value5: '400', value6: '900', value7: '500', value8: '200', value9: '300', value10: '100'},
-        orther_text: {value1: '1', value2: '1', value3: '1', value4: '0', value5: '1', value6: '0', value7: '1', value8: '0', value9: '1', value10: '0', value11: '1', value12: '0', value13: '1', value14: '0', value15: '1'},
-        attr: {
-          value1: { status: 'success', type: '基础资料', time: now, name: '33fa95f0152e4543912b88c636b26f9f.pdf', data: '/static/uploads/33fa95f0152e4543912b88c636b26f9f.pdf' },
-          value2: { status: 'success', type: '区位图', time: now, name: '879d409c37f94ed8bf5ad09fcb0240b7.png', data: '/static/uploads/879d409c37f94ed8bf5ad09fcb0240b7.png' }
-        },
-        plan_attr: {
-          value1: { status: 'success', type: '实施方案正文', time: now, name: '4eaa30b8a7ab40a798cf5b98924fde30.pdf', data: '/static/uploads/4eaa30b8a7ab40a798cf5b98924fde30.pdf' },
-          value2: { status: 'success', type: '实施方案附件', time: now, name: '3fe8234a9a194f0c9da7f477accfe2ec.docx', data: '/static/uploads/3fe8234a9a194f0c9da7f477accfe2ec.docx' }
-        },
-        task: [
-          { id: 'demo-task-1', task_type: '1', task_class: '道路改造', construct_content: '主干道提升', year: '2026', value: '3' },
-          { id: 'demo-task-2', task_type: '2', task_class: '环境整治', construct_content: '雨污分流', year: '2027', value: '2' }
-        ],
-        project_status: '实施中',
-        invested_amount: '3500',
-        constructed_scale: '道路提升8公里、雨污分流12公里',
-        implementation_effect: '已完成主干道拓宽与雨污分流一期建设，居民出行效率显著提升。',
-        progress_tasks: [
-          { id: 'progress-1', task_type: '1', task_name: '城市更新示范片区建设', construction_content: '老旧片区基础设施提升', project_goal: '完善交通与公共配套', completed_goal: '完成主干道拓宽' },
-          { id: 'progress-2', task_type: '1', task_name: '雨污分流改造', construction_content: '管网改造与错接改正', project_goal: '改善排水系统', completed_goal: '完成一期改造' },
-          { id: 'progress-3', task_type: '2', task_name: '体检整改任务A', construction_content: '违建整治与环境提升', project_goal: '改善人居环境', completed_goal: '完成整改方案' }
-        ],
-        process_files: { process_file: { status: 'success', type: '过程材料', time: now, name: 'c9115ee8414a4d1c82f2ca0462ec4e28.pdf', data: '/static/uploads/c9115ee8414a4d1c82f2ca0462ec4e28.pdf' } },
-        effect_files: { effect_file: { status: 'success', type: '实施成效', time: now, name: 'f6931994aa2a4e1194c5192f14aba60b.pdf', data: '/static/uploads/f6931994aa2a4e1194c5192f14aba60b.pdf' } },
-        approval_opinion: '进度更新信息齐全，建议继续推进。'
-      }
-    } else if(route.query && route.query.id){
-      let query = {model: 't_project_report', args: `id='${route.query.id}'`}
+    if(route.query && route.query.id){
+      // 这里的 args 同步 actionDepartment 的逻辑：增加层级区域过滤
+      // 增加 push_status 过滤，只允许已发起推送的项目进入
+      let args = `id='${route.query.id}' and push_status in ('0', '1', '2')`
+      
+      // 省级部门
+      if(configStore.user.role_id == '2') args += ` and construct_main_province='${configStore.user.province}'`
+      // 市级部门
+      if(configStore.user.role_id == '3') args += ` and construct_main_province='${configStore.user.province}' and construct_main_city='${configStore.user.city}'`
+      // 区级部门
+      if(configStore.user.role_id == '4') args += ` and construct_main_province='${configStore.user.province}' and construct_main_city='${configStore.user.city}' and construct_main_district='${configStore.user.district}'`
+      
+      let query = {model: 't_project_report', args: args}
       let res = await publicStore.http({Api: query})
       data = !proxy.isNull(res)? {...res[0]} : {}
+      
+      // 如果没查到数据（可能是因为权限过滤），则跳转回列表
+      if (proxy.isNull(data)) {
+        proxy.toPath('/project-push')
+        return
+      }
     }
     if(data.area) {
       if (typeof data.area === 'string') {

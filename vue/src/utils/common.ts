@@ -230,13 +230,15 @@
   }
   // 解码json
   export function resolveJSON(str:any) {
-    try {
-      const result = JSON.parse(str)
-      return result
-    } catch(e) {
-      console.error(e)
-      return str
-    }
+  if (str === null || str === undefined) return str
+  if (typeof str !== 'string') return str
+  try {
+    const result = JSON.parse(str)
+    return result
+  } catch(e) {
+    console.error(e)
+    return str
+  }
   }
   // 判断json
   export function isJSON(str:any) {
@@ -318,7 +320,21 @@
   // 判断日志
   export async function setLog(response:any) {
     const url:any = response.request.responseURL
-    const data = response.config && response.config.data? typeof response.config.data === 'string'? JSON.parse(response.config.data) : response.config.data : ''
+  const rawData = response.config && response.config.data ? response.config.data : ''
+  let data:any = ''
+  if (rawData) {
+    if (typeof rawData === 'string') {
+      let parsedSource:any = rawData
+      const shouldDecrypt = !!configStore().secret_key && !configStore().debugapi && configStore().config && !configStore().config.secret && rawData.includes(':')
+      if (shouldDecrypt) {
+        const decrypted = decryptData(rawData)
+        parsedSource = decrypted ?? rawData
+      }
+      data = resolveJSON(parsedSource)
+    } else {
+      data = rawData
+    }
+  }
     const keys = ['add', 'upd', 'del', 'login']
     const key = keys.find(a => url.includes(a))
     if(key) {
@@ -341,8 +357,16 @@
           msg += `${mark}` 
           msg += resmsg
         }else{
-          let request = configStore().config && configStore().config.secret?decryptData(response.config.data) : JSON.parse(response.config.data)
-          const usernameMatch = request?.args?request.args.match(/username=['"]([^'"]+)['"]/) : ''
+        let requestSource:any = response.config && response.config.data ? response.config.data : ''
+        if (typeof requestSource === 'string') {
+          const shouldDecrypt = !!configStore().secret_key && !configStore().debugapi && configStore().config && !configStore().config.secret && requestSource.includes(':')
+          if (shouldDecrypt) {
+            const decrypted = decryptData(requestSource)
+            requestSource = decrypted ?? requestSource
+          }
+        }
+        const request = resolveJSON(requestSource)
+        const usernameMatch = request?.args?request.args.match(/username=['"]([^'"]+)['"]/) : ''
           username = usernameMatch ? usernameMatch[1] : null
           msg = `${response.data.msg}`
         }

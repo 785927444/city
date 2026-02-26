@@ -18,6 +18,16 @@
           <span v-else-if="v.type == 'switch'">
             <el-switch v-model="item[v.key]" :active-text="v.value[1].name" :inactive-text="v.value[0].name" :active-value="v.value[1].value" :inactive-value="v.value[0].value" inline-prompt @change="handleClick('switch', item)"></el-switch>
           </span>
+          <span v-else-if="v.type == 'editSelect'" class="i12 fw">
+            <el-select v-model="item[v.key]" placeholder="请选择" style="width: 90%;" @change="emit('handleClick', 'change', item)">
+              <el-option 
+                v-for="(opt, oi) in (typeof v.options === 'function' ? v.options(item) : v.options)" 
+                :key="oi" 
+                :label="opt[v.label || 'name']" 
+                :value="opt[v.value || 'id']" 
+              />
+            </el-select>
+          </span>
           <span v-else-if="v.type == 'input'" class="i12 fw">
             <span v-if="item.mode==1&&v.key=='value'" :class="item[v.key]?'':'c9'">{{item[v.key]?item[v.key]:'/'}}</span>
             <el-input v-else v-model="item[v.key]" placeholder="暂无" style="width: 90%;" @focus="state.tempKey = v.key; state.tempValue = item[v.key]" @blur="handleChange(item)" />

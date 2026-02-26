@@ -261,16 +261,20 @@ const setOption = {
 						b:{fontSize: newSize(12), padding: [0, 0, 8, 0], color: '#FF4D4F'},
 						c:{fontSize: newSize(12), padding: [0, 0, 8, 0], color: '#DC1185'},
 						d:{fontSize: newSize(12), padding: [0, 0, 8, 0], color: '#FEC746'},
+					},
+					formatter: function(p:any) {
+						if (p.value[0] == 0) return ''
+						return Math.floor((p.value[0] * 100)) / 100
 					}
 				},
 				itemStyle: {
 					borderRadius: [0, 2, 2, 0],
 					color: i == 0? new echarts.graphic.LinearGradient(1, 0, 0, 0, [
+						{ offset: 0, color: '#266fff' },
+						{ offset: 1, color: '#6693e6' }
+					]) : i == 1? new echarts.graphic.LinearGradient(1, 0, 0, 0, [
 						{ offset: 0, color: '#de868f' },
 						{ offset: 1, color: '#deb1bb' }
-					]) : i == 1? new echarts.graphic.LinearGradient(1, 0, 0, 0, [
-						{ offset: 0, color: '#3362f6' },
-						{ offset: 1, color: '#4a7bea' }
 					]) : new echarts.graphic.LinearGradient(1, 0, 0, 0, [
 						{ offset: 0, color: '#76fafe' },
 						{ offset: 1, color: '#93b6fe' }
@@ -279,11 +283,11 @@ const setOption = {
 				emphasis: {
 					itemStyle: {
 						color: i == 0? new echarts.graphic.LinearGradient(1, 0, 0, 0, [
+							{ offset: 0, color: '#266fff' },
+							{ offset: 1, color: '#6693e6' }
+						]) : i == 1? new echarts.graphic.LinearGradient(1, 0, 0, 0, [
 							{ offset: 0, color: '#de868f' },
 							{ offset: 1, color: '#dec1b5' }
-						]) : i == 1? new echarts.graphic.LinearGradient(1, 0, 0, 0, [
-							{ offset: 0, color: '#3362f6' },
-							{ offset: 1, color: '#4a82eb' }
 						]) : new echarts.graphic.LinearGradient(1, 0, 0, 0, [
 							{ offset: 0, color: '#76fafe' },
 							{ offset: 1, color: '#94b7ff' }
@@ -298,7 +302,7 @@ const setOption = {
 		for (var i = 0; i <= attr.legendArr.length-1; i++) {
 			let seriesTop = {
 				name: '',type: 'pictorialBar',symbol: 'circle',animation: false,symbolSize: [newSize(10), newSize(10)],symbolOffset: [attr.legendArr.length==1?0:i==0?newSize(-6):newSize(6), 0],
-				symbolPosition: 'end', z: 3,color: i == 0? '#de868f' : i == 1? '#3362f6' : '#76fafe',silent: false,barMinHeight: 5,data: [], itemStyle: {
+				symbolPosition: 'end', z: 3,color: i == 0? '#266fff' : i == 1? '#de868f' : '#76fafe',silent: false,barMinHeight: 5,data: [], itemStyle: {
 					shadowBlur: 4,
 					shadowColor: i == 0? 'rgba(222, 134, 143, 0.3)' : i == 1? 'rgba(51, 98, 246, 0.3)' : 'rgba(118, 250, 254, 0.3)',
 				}

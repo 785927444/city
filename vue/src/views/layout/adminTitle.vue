@@ -9,12 +9,12 @@
       <div class="hh100 flex1 flex-ec i2">
         <div class="flex-sc cursor relative ml20" @click.stop="">
           <div class="w12 h12 absolute t0 r0 rad50 bo-white-1 bgi3"></div>
-          <i-ep-bellFilled class="f20 c8" />
+          <i-ep-bellFilled class="f20 c6" />
         </div>
         <el-popover placement="bottom" width="12%" trigger="click" :visible="state.isFalse">
           <template #reference>
             <div class="flex-ec cursor ml20" @click="state.isFalse=!state.isFalse">
-              <div class="cursor w30 h30 tc bg8 rad50 flex-cc mlr5">
+              <div class="cursor w30 h30 tc bg6 rad50 flex-cc mlr5">
                 <i-ep-avatar class="white" />
               </div>
               <span class="cursor flex-cc">
@@ -25,7 +25,7 @@
           </template>
           <div class="ww100 lh26">
             <div class="mb5">名称：{{configStore.user.name?decrypt(configStore.user.name):'暂无'}}</div>
-            <!-- <div>角色：{{find(configStore.roleList, ['id', configStore.user.function_role], 'role_name')}}</div> -->
+            <div class="mb5">角色：{{configStore.user.role_id?find(dictStore.roles, ['id', configStore.user.role_id], 'name'):'暂无'}}</div>
             <div class="mb5">电话：{{configStore.user.phone?encryptPhone(decrypt(configStore.user.phone)) : '暂无'}}</div>
             <div class="mb5 tr">
               <el-button type="primary" plain size="small" @click="toPath('/async')">前台</el-button>
@@ -46,6 +46,7 @@
   const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
+  const dictStore = proxy.dictStore()
   let setRef = $ref()
   let passwordRef = $ref()
   const state = reactive({

@@ -141,6 +141,10 @@
           let model = {}
           state.form.content.forEach((vvv:any)=> {
             model[vvv.key] = vv[vvv.name] != null ? vv[vvv.name] + '' : null
+            if(vvv.label && vvv.value && vv[vvv.name]){
+              let data = vvv.list.find(a=>a[vvv.label].indexOf(vv[vvv.name]) != -1 )
+              model[vvv.key] = data? data[vvv.value] : ''
+            }
           })
           // Object.keys(vv).forEach((key:any)=> {
           //   let exist = state.form.content.find(a=>a.name == key)

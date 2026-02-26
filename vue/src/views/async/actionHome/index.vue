@@ -1,16 +1,16 @@
 <template>
   <div class="layout-col plr20">
     <div class="layout-col bg-white rad8">
-      <div class="ww100 flex-ec p15">
-          <div class="rad4 ptb6 plr12 flex-cc cursor ml15 bg-white c8 bo-cc-1" @click.stop="router.back">返回</div>
-      </div>
+      <!-- <div class="ww100 flex-ec p15">
+          <div class="rad4 ptb6 plr12 flex-cc cursor ml15 bg-white c8 bo-cc-1" @click.stop="toPath('/actionRelease')">切换企业版</div>
+      </div> -->
       <div class="ww100 hh100 flex-cc relative pplr12 mb50">
         <div class="background-shapes absolute ww100 hh100">
           <div class="shape shape-1"></div>
           <div class="shape shape-2"></div>
         </div>
         
-        <div class="card flex-col-ss cursor w100 h50x5" @click.stop="toPath('/basicProjectOverview')">
+        <div class="card flex-col-ss cursor w100 h50x5" @click.stop="toPath('/actionEnterprise')">
           <h2 class="fw f28 mb16">项目基础库</h2>
           <p class="c6 f16">所有上报的城市更新项目</p>
         </div>

@@ -1,11 +1,11 @@
 <template>
   <div class="layout-col overlay">
     <div class="hh100 ww100 flex-sc warp">
-      <el-form class="ww100 pplr15" ref="formRef" :model="publicStore.form" :rules="ruleList" label-width="120">
+      <el-form class="ww100 pplr15" ref="formRef" :model="publicStore.form" :rules="ruleList" label-width="120" :disabled="props.isReadonly">
         <div class="flex-sc warp ww100">
           <!-- 项目信息 -->
-          <el-form-item label="项目信息" prop="" class="ww100 flex-sc">
-            <div class="w50x3 tc rad3 ptb6 bgi1 white cursor" @click.stop="projectRef.onVisable(publicStore.form)">专项与片区项目库</div>
+          <el-form-item label="项目信息" prop="" class="ww100 flex-sc" v-if="!props.isReadonly">
+            <div class="w50x3 tc rad3 ptb4 bgi1 white cursor" @click.stop="projectRef.onVisable(publicStore.form)">专项与片区项目库</div>
           </el-form-item>
           <!-- <el-form-item label="项目编号" prop="num" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
             <el-input size="large" v-model="publicStore.form.num" placeholder="请输入" />
@@ -16,13 +16,13 @@
           <el-form-item label="项目名称" prop="name" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
             <el-input size="large" v-model="publicStore.form.name" placeholder="请输入" />
           </el-form-item>
-          <el-form-item label="所属等级" prop="level" class="ww50 flex-sc" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
+          <el-form-item v-if="(route.query&&route.query.key&&route.query.key=='department') || (!isNull(publicStore.form)&&!isNull(publicStore.form.level))" label="项目类别" prop="level" class="ww50 flex-sc" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
             <el-select v-model="publicStore.form.level" placeholder="请选择" size="large" style="width:100%" filterable clearable>
               <el-option v-for="(v, i) in dictStore.levels||[]" :key="v.value" :value="String(v.value)" :label="v.name" />
             </el-select> 
           </el-form-item>  
           <el-form-item label="所属区域" prop="area" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
-            <el-cascader v-model="publicStore.form.area" size="large" :options="setAreaLevel(publicStore.form.level?publicStore.form.level:'') " :props="cascaderProps" placeholder="请选择" clearable style="width: 100%" />
+            <el-cascader v-model="publicStore.form.area" size="large" :options="publicStore._public.areaOptions || setAreaLevel('district')" :props="cascaderProps" separator="/" placeholder="请选择" clearable style="width: 100%" />
           </el-form-item>
           <el-form-item label="所属专项规划" prop="parent_id" class="ww50 flex-sc">
             <el-select v-model="publicStore.form.parent_id" placeholder="请选择" size="large" style="width:100%" filterable clearable>
@@ -42,11 +42,17 @@
               <el-option v-for="(v, i) in dictStore.project_completion_statuss||[]" :key="v.value" :value="String(v.value)" :label="v.name" />
             </el-select> 
           </el-form-item> 
-          <el-form-item label="主管单位" prop="construct_main" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
-            <el-input size="large" v-model="publicStore.form.construct_main" placeholder="请输入" />
+          <el-form-item label="主管单位" prop="construct_main" class="ww50 flex-sc" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
+            <el-select v-model="publicStore.form.construct_main" placeholder="请选择" size="large" style="width:100%" filterable clearable>
+              <el-option v-for="(v, i) in publicStore._public.construct_mains||[]" :key="v.id" :value="String(v.id)" :label="v.name" />
+            </el-select> 
           </el-form-item>
           <el-form-item label="总投资" prop="construct_price" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
-            <el-input size="large" v-model="publicStore.form.construct_price" placeholder="请输入" />
+            <el-input size="large" v-model="publicStore.form.construct_price" placeholder="请输入">
+              <template #suffix>
+                <span class="unit-text">万元</span>
+              </template>
+            </el-input>
           </el-form-item> 
           <el-form-item label="本年度计划投资" prop="estimate_year" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
             <div class="flex-sc ww100">
@@ -58,14 +64,14 @@
               </el-input>   
             </div>
           </el-form-item>   
-          <el-form-item label="累计下达投资" prop="total_put_price" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
+          <el-form-item label="累计下达投资" prop="total_put_price" class="ww50 flex-sc">
             <el-input size="large" v-model="publicStore.form.total_put_price" placeholder="请输入">
               <template #suffix>
                 <span class="unit-text">万元</span>
               </template>
             </el-input>    
           </el-form-item>  
-          <el-form-item label="累计完成投资" prop="total_completion_price" class="ww50 flex-sc" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
+          <el-form-item label="累计完成投资" prop="total_completion_price" class="ww50 flex-sc">
             <el-input size="large" v-model="publicStore.form.total_completion_price" placeholder="请输入">
               <template #suffix>
                 <span class="unit-text">万元</span>
@@ -90,22 +96,28 @@
               </template>
             </el-input> 
           </el-form-item> 
-          <el-form-item label="" prop="" class="ww50 flex-ss">
-          </el-form-item>
-          <el-form-item label="任务类型" prop="task_type" class="ww33 flex-sc" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
-            <el-select size="large" v-model="publicStore.form.task_type" placeholder="请选择" style="width:100%" clearable filterable @change="publicStore.form.task_class='';publicStore.form.construct_content=''">
+          <div class="ww100 flex-sc">
+          <el-form-item label="任务类型" prop="task_type" class="ww50 flex-sc" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
+            <el-select size="large" v-model="publicStore.form.task_type" placeholder="请选择" style="width:100%" clearable filterable @change="onTaskTypeChange">
+              <el-option label="暂无" value="暂无" />
               <el-option v-for="(v, i) in publicStore._public.task_types" :key="i" :label="v.name" :value="v.id.toString()" />
             </el-select>
           </el-form-item>
-          <el-form-item label="类型中类" prop="task_class" class="ww33 flex-sc" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
-            <el-select size="large" v-model="publicStore.form.task_class" placeholder="请选择" style="width:100%" clearable filterable @change="publicStore.form.construct_content=''">
+          <el-form-item label="类型中类" prop="task_class" class="ww50 flex-sc" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
+            <el-select size="large" v-model="publicStore.form.task_class" placeholder="请选择" style="width:100%" clearable filterable @change="onTaskClassChange">
+              <el-option label="暂无" value="暂无" />
               <el-option v-for="(v, i) in publicStore.form.task_type&&publicStore._public.task_classs?publicStore._public.task_classs.filter(a=>a.parent_id == publicStore.form.task_type):[]" :key="i" :label="v.name" :value="v.id.toString()" />
             </el-select>
           </el-form-item>
-          <el-form-item label="建设内容" prop="construct_content" class="ww33 flex-sc" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
-            <el-select size="large" v-model="publicStore.form.construct_content" placeholder="请选择" style="width:100%" clearable filterable>
+          </div>
+          <el-form-item label="内容类型" prop="task_content" class="ww100 flex-sc" :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
+            <el-select size="large" v-model="publicStore.form.task_content" placeholder="请选择" multiple style="width:100%" clearable filterable>
+              <el-option label="暂无" value="暂无" />
               <el-option v-for="(v, i) in publicStore.form.task_type&&publicStore.form.task_class&&publicStore._public.construct_contents?publicStore._public.construct_contents.filter(a=>a.parent_id == publicStore.form.task_class):[]" :key="i" :label="v.name" :value="v.id.toString()" />
             </el-select>
+          </el-form-item>
+          <el-form-item label="建设内容" prop="construct_content" class="ww100 flex-ss" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
+            <el-input size="large" v-model="publicStore.form.construct_content" style="width: 100%;" type="textarea" :rows="4" placeholder="请输入" />
           </el-form-item>
           <el-form-item label="备注" prop="construct_note" class="ww100 flex-ss">
             <el-input size="large" v-model="publicStore.form.construct_note" style="width: 100%;" type="textarea" :rows="4" placeholder="请输入" />
@@ -168,7 +180,7 @@
               </div>
               <div class="ww100 h50x6 flex-sc rad5 hidden relative mt20">
                 <!-- <img class="ww100" src="@/assets/images/mapdata.png" /> -->
-                <GisShow class="ww100 hh100" v-if="!publicStore.check" v-model:mapdata="publicStore.form.mapdata"  />
+                <GisShow class="ww100 hh100" v-if="publicStore.form.init && !publicStore.check" v-model:mapdata="publicStore.form.mapdata"  />
                 <!-- <div class="ww100 flex-ec absolute b10 r10">
                   <div class="plr10 ptb4 rad5 cursor bgi1 white ml15">完成绘制</div>
                 </div> -->
@@ -177,13 +189,13 @@
           </el-form-item>
           <el-form-item label="文件上传" prop="files" class="ww100 flex-ss">
             <div class="ww100 plr30 ptb22 bo-i16-1 rad8 bg-white">
-              <FileList v-if="publicStore.form?.attr" v-model:files="publicStore.form.attr" :plans="props.plans" :contents="props.contents" :active="props.active"  />
+              <FileList v-if="publicStore.form?.attr" v-model:files="publicStore.form.attr" parent-field="attr" :plans="props.plans" :contents="props.contents" :active="props.active"  />
             </div>
           </el-form-item>
         </div>
       </el-form>
       <div class="ww100 flex-cc f18 p40 bot-i16-1 mt20">
-        <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="onStepNext(formRef)">下一步</div>
+        <div class="plr14 ptb5 rad4 ml15 cursor white bgi1 bo-i1-1" @click.stop="onStepNext(formRef)">{{ props.isReadonly ? '下一步' : '下一步' }}</div>
       </div>
     </div>
     <projects :state="state" ref="projectRef" />
@@ -195,14 +207,39 @@
 	import { setAreaLevel } from '@/utils/areaData'
   import api from '@/api'
   import projects from './projects'
+  import { storage } from '@/utils/storage'
+  import router from '@/router'
 	const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
   const dictStore = proxy.dictStore()
+  const route = useRoute()
   let projectRef = $ref()
   let gisRef = $ref()
   let formRef = ref()
   let ruleList= $ref({})
+  const props = defineProps({
+    isReadonly: {
+      type: Boolean,
+      default: false
+    },
+    state: {
+      type: [Object, Array],
+      default: ()=>{return {}}
+    },
+    contents: {
+      type: Array,
+      default: []
+    },
+    plans: {
+      type: Array,
+      default: []
+    },
+    active: {
+      type: [Object, Array],
+      default: ()=>{return {}}
+    },
+  })
   const areaList = computed(() => {
     // 在这里传入你想限制的层级：'province' | 'city' | 'district'
     return setAreaLevel('city') 
@@ -212,6 +249,7 @@
     label: 'name',    // 指定选项的标签为节点对象中的 name 属性
     children: 'children', // 指定子选项的字段名
     expandTrigger: 'hover', // 次级菜单的展开方式 (可选: click/hover)
+    checkStrictly: true, // 允许选择任意一级选项（如只选省、只选市）
   }
   const fund_sources = [
     {name: '中央预算内投资' , key: 'value1'},
@@ -245,35 +283,89 @@
   const state = reactive({
 	  ...publicStore.$state,
   })
-  const props = defineProps({
-    state: {
-      type: [Object, Array],
-      default: ()=>{return {}}
-    },
-    contents: {
-      type: Array,
-      default: []
-    },
-    plans: {
-      type: Array,
-      default: []
-    },
-    active: {
-      type: [Object, Array],
-      default: ()=>{return {}}
-    },
-  })
+
+  const cacheKey = 'actionApply:inspectionProblems'
+
+  const clearInspectionCache = () => {
+    storage.remove(cacheKey)
+  }
+
+  const saveInspectionCache = (taskClassId, list) => {
+    storage.set(cacheKey, { taskClassId: String(taskClassId || ''), list })
+    console.log('[inspection-cache] saved', { taskClassId: String(taskClassId || ''), count: Array.isArray(list) ? list.length : 0 })
+  }
+
+  const fetchInspectionProblems = async (taskClassId) => {
+    if (!taskClassId || taskClassId === '暂无') {
+      clearInspectionCache()
+      return []
+    }
+    console.log('[inspection-fetch] start', { taskClassId: String(taskClassId) })
+    let relQuery = {
+      model: 't_task_type_scheme_problem',
+      args: `task_type_id='${taskClassId}'`,
+      limit: 1000
+    }
+    const relRes = await publicStore.http({ Api: relQuery })
+    const relList = Array.isArray(relRes) ? relRes : []
+    console.log('[inspection-fetch] relation', { count: relList.length, sample: relList.slice(0, 3) })
+    const ids = relList.map(r => r.task_problem_id).filter(Boolean)
+    if (ids.length === 0) {
+      console.log('[inspection-fetch] no task_problem_id found')
+      saveInspectionCache(taskClassId, [])
+      return []
+    }
+    let problemQuery = {
+      model: 't_scheme_problem',
+      args: `parent_id in (${ids.map(id => `'${id}'`).join(',')})`,
+      limit: 1000
+    }
+    const problemRes = await publicStore.http({ Api: problemQuery })
+    const list = Array.isArray(problemRes) ? problemRes : []
+    console.log('[inspection-fetch] problems', { count: list.length, sample: list.slice(0, 3) })
+    saveInspectionCache(taskClassId, list)
+    return list
+  }
+
+  const onTaskTypeChange = () => {
+    publicStore.form.task_class = ''
+    publicStore.form.task_content = []
+    clearInspectionCache()
+  }
+
+  const onTaskClassChange = (val) => {
+    publicStore.form.task_content = []
+    if (val && val !== '暂无') {
+      fetchInspectionProblems(val)
+    } else {
+      clearInspectionCache()
+    }
+  }
+
+  const ensureInspectionCache = async () => {
+    const taskClassId = publicStore.form.task_class
+    if (!taskClassId || taskClassId === '暂无') return
+    const cached = storage.get(cacheKey)
+    if (cached && String(cached.taskClassId) === String(taskClassId)) {
+      console.log('[inspection-cache] hit on step-next')
+      return
+    }
+    console.log('[inspection-cache] miss/stale on step-next, fetching...')
+    await fetchInspectionProblems(taskClassId)
+  }
 
   const onStepNext = (formEl) => {
     formEl.validate (async valid => {
       if (valid) {
         console.log("publicStore.form.---", publicStore.form)
+        await ensureInspectionCache()
         publicStore.actIndex++
       }else{
         ElNotification({ title: '提示', message: '任务信息不完整，请继续补充', type: 'error' })
       }
     })
   }
+
 </script>
   
 <style scoped lang="scss">

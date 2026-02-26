@@ -18,7 +18,7 @@
     </div>
     <!-- 上报提醒 -->
     <el-dialog v-model="state.isFalse" title="提示" :draggable="true" width="30%">
-      <div class="f20 ww100 tc ptb30">你有专项规划需要上报，完成上报后可新增</div>
+      <div class="f20 ww100 tc ptb30">你有片区策划需要上报，完成上报后可新增</div>
       <template #footer>
         <div class="dialog-footer">
           <el-button size="large" class="bgi1 white" @click.stop="state.isFalse = !state.isFalse">确 定</el-button>

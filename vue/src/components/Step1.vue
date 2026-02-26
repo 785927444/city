@@ -71,7 +71,7 @@
       </div>
 
       <!-- 切换 -->
-      <div class="ww100 flex-sc pt40 pb15 plr15">
+      <!-- <div class="ww100 flex-sc pt40 pb15 plr15">
         <div class="mr40 ptb10 f18 relative cursor actfont" :class="state.active.name == v.name?'i1 bob-i1-2':'bob-tt-2'" v-for="(v, i) in state.plans?state.plans:[]" :key="i" @click.stop="state.active = {...v}" >
         <el-popover :content="v.describe" placement="top-start">
             <template #reference>
@@ -82,9 +82,14 @@
           </el-popover>
           <span>{{ v.name }}</span>
         </div>
-      </div>
+      </div> -->
       <!-- 列表 -->
-      <div class="table flex-sc warp">
+
+      <div class="ww100 plr30 ptb22 bo-i16-1 rad8 bg-white mt30">
+        <FileList v-if="publicStore.form?.attr" v-model:files="publicStore.form.attr" parent-field="attr" :plans="props.plans" :contents="props.contents" :active="props.active"  />
+      </div>
+
+      <!-- <div class="table flex-sc warp">
         <div class="ww25 cursor p8" v-if="state.active&&publicStore.form.attr" v-for="(v, i) in state.contents?state.contents.filter(a=>a.parent_id==state.active.id):[]" :key="i">
           <div class="ww100 bs bo-i16-1 relative rad8">
             <div class="ww100 flex-sc p12 bob-ce-1">
@@ -115,7 +120,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <ViewFiles ref="viewRef" />
   </div>
@@ -138,11 +143,23 @@
       type: [Object, Array],
       default: ()=>{return {}}
     },
+    contents: {
+      type: Array,
+      default: []
+    },
+    plans: {
+      type: Array,
+      default: []
+    },
+    active: {
+      type: [Object, Array],
+      default: ()=>{return {}}
+    },
   })
 
   onMounted(async() => {
     getPlan()
-    init()
+    // init()
   })
 
   const getPlan = async() => {
@@ -153,32 +170,32 @@
     })
   }
 
-  const init = async() => {
-    let query1 = {model: 't_file_type'}
-    let query2 = {model: 't_file_content'}
-    let res = await publicStore.http({Api1: query1, Api2: query2})
-    let list1 = proxy.isNull(res.Api1)? [] : res.Api1.sort((a, b) => a.orderd - b.orderd)
-    let list2 = proxy.isNull(res.Api2)? [] : res.Api2.sort((a, b) => a.orderd - b.orderd)
-    let id = props.state.type=='plan'? "019be0b6-a467-7a5e-8ad9-6ba600813fa5" : "019be0b6-e9f9-7081-b4a3-d808e0bc96ca"
-    let plan = list1.find(a=>a.id==id)
-    if(plan){
-      let contents = []
-      state.plans = list1.filter(a=>a.parent_id == id)
-      state.plans.forEach(v => { 
-        v.parent_type = `${plan.type}/${v.type}`
-        let content = list2.filter(a=>a.parent_id == v.id)
-        if(!proxy.isNull(content)){
-          content.forEach(vv => {
-            vv.parent_type = `${v.parent_type }/${vv.type}`
-            contents.push(vv)
-          })
-        }
-      })
-      state.contents = contents
-      publicStore._public.contents = contents
-      state.active = proxy.isNull(state.plans)? {} : {...state.plans[0]}
-    }
-  }
+  // const init = async() => {
+  //   let query1 = {model: 't_file_type'}
+  //   let query2 = {model: 't_file_content'}
+  //   let res = await publicStore.http({Api1: query1, Api2: query2})
+  //   let list1 = proxy.isNull(res.Api1)? [] : res.Api1.sort((a, b) => a.orderd - b.orderd)
+  //   let list2 = proxy.isNull(res.Api2)? [] : res.Api2.sort((a, b) => a.orderd - b.orderd)
+  //   let id = props.state.type=='plan'? "019be0b6-a467-7a5e-8ad9-6ba600813fa5" : "019be0b6-e9f9-7081-b4a3-d808e0bc96ca"
+  //   let plan = list1.find(a=>a.id==id)
+  //   if(plan){
+  //     let contents = []
+  //     state.plans = list1.filter(a=>a.parent_id == id)
+  //     state.plans.forEach(v => { 
+  //       v.parent_type = `${plan.type}/${v.type}`
+  //       let content = list2.filter(a=>a.parent_id == v.id)
+  //       if(!proxy.isNull(content)){
+  //         content.forEach(vv => {
+  //           vv.parent_type = `${v.parent_type }/${vv.type}`
+  //           contents.push(vv)
+  //         })
+  //       }
+  //     })
+  //     state.contents = contents
+  //     publicStore._public.contents = contents
+  //     state.active = proxy.isNull(state.plans)? {} : {...state.plans[0]}
+  //   }
+  // }
 
   // 下载
   const downLoadFile = async(v) => {

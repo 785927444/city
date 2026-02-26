@@ -56,7 +56,7 @@
         }
       }
     }
-    setLog(res)
+    // setLog(res)
     let code = res.data.code
     let errcode = res.data.errcode
     if (code === 200 || code === '200' || code === 400 || code === '400' || errcode === 0 || errcode === '0') {

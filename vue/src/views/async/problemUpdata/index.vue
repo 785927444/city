@@ -59,7 +59,7 @@
           <template #default="scope, $index">
             <el-popover title="" width="800" placement="top-start">
               <template #default>
-                <div class="problem-content f18 h50x8">
+                <div class="problem-content f18">
                   <div class="hh100 overlay flex-col">{{scope.row.problem_content}}</div>
                 </div>
               </template>
@@ -69,11 +69,11 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column label="整治类型" align="center" width="80">
+        <!-- <el-table-column label="整治类型" align="center" width="80">
           <template #default="scope, $index">
             <span>{{scope.row.action_type?find(action_types, ['value', scope.row.action_type], 'name'):''}}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="problem_num" label="问题数量" width="80" align="center" />
         <el-table-column label="整改进度" width="100" align="center" >
             <template #default="scope, $index">

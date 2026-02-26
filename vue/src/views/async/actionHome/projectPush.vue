@@ -8,16 +8,7 @@
               <el-date-picker v-model="filters.period" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" style="width: 240px" />
             </el-form-item>
             <el-form-item label="所属地区">
-              <el-select v-model="filters.city" placeholder="太原市" style="width: 140px">
-                <el-option label="太原市" value="太原市" />
-                <el-option label="大同市" value="大同市" />
-                <el-option label="晋中市" value="晋中市" />
-              </el-select>
-              <el-select v-model="filters.district" placeholder="小店区" style="width: 140px; margin-left: 10px">
-                <el-option label="小店区" value="小店区" />
-                <el-option label="迎泽区" value="迎泽区" />
-                <el-option label="杏花岭区" value="杏花岭区" />
-              </el-select>
+              <el-cascader v-model="filters.area" :options="getAreaDataByCode(state.code)" :props="state.cascaderProps" separator="/" placeholder="请选择" clearable style="width: 300px" />
             </el-form-item>
             <el-form-item label="项目阶段">
               <el-select v-model="filters.stage" placeholder="储备阶段" style="width: 140px">
@@ -44,7 +35,7 @@
               <el-input v-model="filters.keyword" placeholder="请输入" style="width: 180px" />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" class="search-btn">搜索</el-button>
+              <el-button type="primary" class="search-btn" @click="init">搜索</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -57,7 +48,7 @@
                 <span class="ww100 h3 rad10" :class="activeTab === 'pending' ? 'bgi2' : 'black-rgba0'"></span>
               </div>
               <div class="mr40 cursor flex-col-cc relative" @click="activeTab = 'recommended'">
-                <span class="mb5">推送库</span>
+                <span class="mb5">{{ recommendedTabTitle }}</span>
                 <span class="ww100 h3 rad10" :class="activeTab === 'recommended' ? 'bgi2' : 'black-rgba0'"></span>
               </div>
               <div class="mr40 cursor flex-col-cc relative" @click="activeTab = 'rejected'">
@@ -73,10 +64,10 @@
 
           <div class="table flex-sc warp">
             <div class="ww25 cursor p8" v-for="item in pagedList" :key="item.id">
-              <div class="ww100 bs bo-i16-1 relative rad8 project-card" @click.stop="toggleCard(item)">
+              <div class="ww100 bs bo-i16-1 relative rad8 project-card" @click.stop="onViewDetail(item)">
                 <div class="ww100 flex-sc p12 bob-ce-1">
                   <span class="f15 line1">{{ item.name }}</span>
-                  <span class="flex1 flex-ec">
+                  <span class="flex1 flex-ec" @click.stop="toggleCard(item)">
                     <span class="w28 h28 tc lh28 rad6 ml10 white f14" :class="item.checked ? 'bgi1 bo-i1-1' : 'bo-cc-1 bg-white c8'">
                       <i-ep-check v-if="item.checked" />
                     </span>
@@ -105,9 +96,27 @@
                       <span class="flex1 line1">{{ item.updateTime }}</span>
                     </div>
                   </div>
+
+                  <div v-if="activeTab === 'recommended' && (configStore.user.role_id == '3' || configStore.user.role_id == '4')" class="mt10 pt10" style="border-top: 1px solid #eee;">
+                    <div class="flex-sc tc">
+                      <div class="flex1 flex-col">
+                        <span class="f14 c9 mb5">区级</span>
+                        <span class="f14" :class="getAuditStatusColor(item, 'district')">{{ getAuditStatusText(item, 'district') }}</span>
+                      </div>
+                      <div class="flex1 flex-col">
+                        <span class="f14 c9 mb5">市级</span>
+                        <span class="f14" :class="getAuditStatusColor(item, 'city')">{{ getAuditStatusText(item, 'city') }}</span>
+                      </div>
+                      <div class="flex1 flex-col">
+                        <span class="f14 c9 mb5">省级</span>
+                        <span class="f14" :class="getAuditStatusColor(item, 'province')">{{ getAuditStatusText(item, 'province') }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
                 </div>
-                <div class="project-card-actions">
-                  <div class="rad5 ptb5 plr12 cursor bgi1 white" @click.stop="onApprove(item)">审批</div>
+                <div class="project-card-actions" v-if="activeTab === 'pending'">
+                  <div class="rad5 ptb5 plr12 cursor bgi1 white" @click.stop="handleAudit(item)">审核</div>
                 </div>
               </div>
             </div>
@@ -126,7 +135,7 @@
         </div>
       </div>
 
-      <div class="right-panel ml15">
+      <!-- <div class="right-panel ml15">
         <div class="quick-actions">
           <div class="quick-card" @click.stop="toPath('/project-push/ledger')">项目台账</div>
           <div class="quick-card" @click.stop="toPath('/project-push/tracking')">项目实施跟踪</div>
@@ -134,13 +143,13 @@
 
         <div class="bg-white rad8 p15 mb15 right-card">
           <div class="chart-title">项目实施情况</div>
-          <div class="ring-wrap">
-            <div class="ring">
-              <span>50%</span>
+            <div class="ring-wrap">
+              <div class="ring" :style="{ background: `conic-gradient(#2b5cff 0% ${implementationRate}%, #e6ebf5 ${implementationRate}% 100%)` }">
+                <span>{{ implementationRate }}%</span>
+              </div>
             </div>
-          </div>
           <div class="ring-info">
-            <div>共<span class="highlight">51</span>个上报项目</div>
+            <div>共<span class="highlight">{{ list.length }}</span>个上报项目</div>
             <div>处于推进中状态</div>
           </div>
         </div>
@@ -153,53 +162,258 @@
           </div>
           <div ref="barChartRef" class="bar-chart"></div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
+  <el-dialog v-model="auditDialogVisible" title="项目审核" width="500px">
+    <el-form :model="auditForm">
+      <el-form-item label="审核结果说明">
+        <el-input v-model="auditForm.result" type="textarea" :rows="3" placeholder="请输入审核意见" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="submitAudit(2)" type="danger">驳回</el-button>
+        <el-button @click="submitAudit(1)" type="primary">通过</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
+import { reactive, ref, computed, onMounted, onBeforeUnmount, watch, nextTick, getCurrentInstance } from 'vue'
 import * as echarts from 'echarts'
 import { toPath } from '@/utils/common'
+import { getAreaDataByCode } from '@/utils/areaData'
+
+const { proxy }: any = getCurrentInstance()
+const publicStore = proxy.publicStore()
+const configStore = proxy.configStore()
 
 const filters = reactive({
   period: [],
-  city: '太原市',
-  district: '小店区',
-  stage: '储备阶段',
-  investment: '5千万以上',
-  type: '加强既有建筑改造',
+  area: [],
+  stage: '',
+  investment: '',
+  type: '',
   keyword: ''
 })
 
 const activeTab = ref<'pending' | 'recommended' | 'rejected'>('pending')
 const selectAll = ref(false)
-const pageSize = ref(9)
+const pageSize = ref(1000) // 设置一个足够大的值以取消数量限制，或者通过分页控制
 const currentPage = ref(1)
 
-const list = ref([
-  { id: 1, name: '龙城片区旧城改造项目', region: '太原市-小店区', period: '2026-2028', investment: '12000万元', nature: '新建', updateTime: '2025-12-12', status: 'pending', checked: false },
-  { id: 2, name: '迎泽区老旧小区提升项目', region: '太原市-迎泽区', period: '2026-2028', investment: '12000万元', nature: '新建', updateTime: '2025-12-12', status: 'pending', checked: false },
-  { id: 3, name: '杏花岭区片区更新项目', region: '太原市-杏花岭区', period: '2026-2028', investment: '12000万元', nature: '新建', updateTime: '2025-12-12', status: 'pending', checked: false },
-  { id: 4, name: '万柏林区综合整治项目', region: '太原市-万柏林区', period: '2026-2028', investment: '12000万元', nature: '新建', updateTime: '2025-12-12', status: 'pending', checked: false },
-  { id: 5, name: '晋源区道路提升项目', region: '太原市-晋源区', period: '2026-2028', investment: '12000万元', nature: '新建', updateTime: '2025-12-12', status: 'recommended', checked: false },
-  { id: 6, name: '尖草坪区街区改造项目', region: '太原市-尖草坪区', period: '2026-2028', investment: '12000万元', nature: '新建', updateTime: '2025-12-12', status: 'recommended', checked: false },
-  { id: 7, name: '清徐县城中村改造项目', region: '太原市-清徐县', period: '2026-2028', investment: '12000万元', nature: '新建', updateTime: '2025-12-12', status: 'pending', checked: false },
-  { id: 8, name: '阳曲县片区更新项目', region: '太原市-阳曲县', period: '2026-2028', investment: '12000万元', nature: '新建', updateTime: '2025-12-12', status: 'pending', checked: false },
-  { id: 9, name: '娄烦县旧城改造项目', region: '太原市-娄烦县', period: '2026-2028', investment: '12000万元', nature: '新建', updateTime: '2025-12-12', status: 'rejected', checked: false },
-  { id: 10, name: '古交市片区更新项目', region: '太原市-古交市', period: '2026-2028', investment: '12000万元', nature: '新建', updateTime: '2025-12-12', status: 'pending', checked: false },
-  { id: 11, name: '龙城片区配套完善项目', region: '太原市-小店区', period: '2026-2028', investment: '12000万元', nature: '新建', updateTime: '2025-12-12', status: 'recommended', checked: false },
-  { id: 12, name: '迎泽区基础设施提升项目', region: '太原市-迎泽区', period: '2026-2028', investment: '12000万元', nature: '新建', updateTime: '2025-12-12', status: 'pending', checked: false }
-])
+const list = ref([])
 
-const barData = ref([
-  { name: '太原-大营区', blue: 190, cyan: 171 },
-  { name: '古交市', blue: 100, cyan: 185 },
-  { name: '娄烦县', blue: 200, cyan: 148 },
-  { name: '阳曲县', blue: 100, cyan: 219 },
-  { name: '清徐县', blue: 150, cyan: 141 }
-])
+const implementationRate = computed(() => {
+  if (list.value.length === 0) return 0
+  const inProgress = list.value.filter(item => item.completion_status == '2').length
+  return Math.round((inProgress / list.value.length) * 100)
+})
+
+const recommendedTabTitle = computed(() => {
+  const roleId = configStore.user.role_id
+  if (roleId == '3' || roleId == '4') {
+    return '审核进展'
+  }
+  return '推送库'
+})
+
+const state = reactive({
+  code: '',
+  cascaderProps: {
+    value: 'code',
+    label: 'name',
+    children: 'children',
+    expandTrigger: 'hover',
+    checkStrictly: false,
+  }
+})
+
+const getInit = async() => {
+  if(configStore.user.role_id == '2') {
+    state.code = configStore.user.province
+    state.cascaderProps.checkStrictly = true
+  }
+  if(configStore.user.role_id == '3') state.code = configStore.user.city
+  if(configStore.user.role_id == '4') state.code = configStore.user.district
+}
+
+const buildRoleArgs = () => {
+  const { role_id, province, city, district } = configStore.user
+  
+  if(role_id == '2') {
+    // 省级：看 construct_main_province 或 province
+    // 且 (下级(市级)项目必须市级已通过 OR 是省级自建项目)
+    return `(construct_main_province='${province}' or province='${province}') AND ((construct_main_city IS NOT NULL AND construct_main_city != '' AND push_status2='1') OR (construct_main_city IS NULL OR construct_main_city = ''))`
+  }
+  if(role_id == '3') {
+    // 市级：看 construct_main_city 或 city
+    // 且 (下级(区级)项目必须区级已通过 OR 是市级自建项目)
+    return `(construct_main_city='${city}' or city='${city}') AND ((construct_main_district IS NOT NULL AND construct_main_district != '' AND push_status='1') OR (construct_main_district IS NULL OR construct_main_district = ''))`
+  }
+  if(role_id == '4') {
+    // 区级：只要 construct_main_district 或 district 匹配即可
+    return `(construct_main_district='${district}' or district='${district}')`
+  }
+  return "1=1"
+}
+
+const buildFilterArgs = () => {
+  let args = buildRoleArgs()
+  // 暂时屏蔽搜索栏功能，仅保留基础的角色过滤，确保能查到数据
+  /*
+  if(filters.area && filters.area.length > 0) {
+    if(filters.area[0]) args += ` and (construct_main_province='${filters.area[0]}' or province='${filters.area[0]}')`
+    if(filters.area[1]) args += ` and (construct_main_city='${filters.area[1]}' or city='${filters.area[1]}')`
+    if(filters.area[2]) args += ` and (construct_main_district='${filters.area[2]}' or district='${filters.area[2]}')`
+  }
+  if (filters.keyword) {
+    args += ` and name like '%${filters.keyword}%'`
+  }
+  if (filters.period && filters.period.length === 2) {
+    args += ` and construct_datetime_start >= '${filters.period[0]}' and construct_datetime_end <= '${filters.period[1]}'`
+  }
+  if (filters.stage) {
+    if (filters.stage === '储备阶段') args += ` and completion_status='1'`
+    if (filters.stage === '实施阶段') args += ` and completion_status='2'`
+    if (filters.stage === '完工阶段') args += ` and completion_status='3'`
+  }
+  if (filters.investment) {
+    if (filters.investment === '5千万以上') args += ` and construct_price >= 5000`
+    if (filters.investment === '1亿以上') args += ` and construct_price >= 10000`
+    if (filters.investment === '2亿以上') args += ` and construct_price >= 20000`
+  }
+  if (filters.type) {
+    args += ` and (construct_nature like '%${filters.type}%' or project_type like '%${filters.type}%')`
+  }
+  */
+  return args
+}
+
+const init = async () => {
+  let model = 't_project_report'
+  // 增加 limit 确保能拿到足够的数据
+  let query = { model: model, args: buildFilterArgs(), limit: 5000 }
+  let res = await publicStore.http({ Api: query })
+  if (!proxy.isNull(res)) {
+    // 按更新时间降序排列，确保最新的排在前面
+    res.sort((a: any, b: any) => {
+      const t1 = a.update_time || 0
+      const t2 = b.update_time || 0
+      return Number(t2) - Number(t1)
+    })
+    list.value = res.map(item => {
+      
+      // 根据角色判断"待审核"状态
+      // 这里逻辑比较复杂，需要结合改造方案 7
+      // 区用户：push_status=0
+      // 市用户：push_status=1 AND push_status2=0
+      // 省用户：push_status2=1 AND push_status3=0
+      
+      // 但为了兼容原来的 tab 逻辑 (pending/recommended/rejected)，我们需要映射一下
+      // 方案说：
+      // 待审核 (pending)：符合上述“待我审核”条件的
+      // 推送库 (recommended)：我这级已通过，且上级没驳回
+      // 已退回 (rejected)：被上级驳回
+      
+      const roleId = String(configStore.user.role_id)
+      let status = 'pending'
+
+      // 规范化状态值，处理 null/undefined 为 '0'，并转为字符串
+      const s1 = String(item.push_status || '0')
+      const s2 = String(item.push_status2 || '0')
+      const s3 = String(item.push_status3 || '0')
+
+      // 1. 判断是否已退回 (Highest priority)
+      let isRejected = false
+      if (roleId == '4') {
+        // 区级用户：被市级(2)或省级(3)驳回，或自己驳回(2)
+        isRejected = s1 == '2' || s2 == '2' || s3 == '2'
+      } else if (roleId == '3') {
+        // 市级用户：被省级(3)驳回，或自己驳回(2)
+        // 注意：如果是区级驳回(push_status=2)，市级是看不到的(buildRoleArgs过滤了)
+        isRejected = s2 == '2' || s3 == '2'
+      } else if (roleId == '2') {
+        // 省级用户：自己驳回(3)
+        isRejected = s3 == '2'
+      }
+
+      if (isRejected) {
+        status = 'rejected'
+      } else {
+        // 2. 判断是否待审核
+        let isPending = false
+        if (roleId == '4') {
+          // 区级待审：push_status=0
+          isPending = s1 == '0'
+        } else if (roleId == '3') {
+          // 市级待审：区级已过(1) 且 市级未审(0/null)
+          isPending = s1 == '1' && s2 == '0'
+        } else if (roleId == '2') {
+          // 省级待审：市级已过(1) 且 省级未审(0/null)
+          isPending = s2 == '1' && s3 == '0'
+        }
+
+        if (isPending) {
+          status = 'pending'
+        } else {
+          // 3. 判断是否推送库 (已通过)
+          let isRecommended = false
+          if (roleId == '4') {
+            // 区级推送库：区级已过(1)
+            isRecommended = s1 == '1'
+          } else if (roleId == '3') {
+            // 市级推送库：市级已过(1)
+            isRecommended = s2 == '1'
+          } else if (roleId == '2') {
+            // 省级推送库：省级已过(1)
+            isRecommended = s3 == '1'
+          }
+
+          if (isRecommended) {
+            status = 'recommended'
+          } else {
+             // 兜底
+             status = 'pending'
+          }
+        }
+      }
+      
+      return {
+        ...item,
+        status: status,
+        reserve_status: item.reserve_status ? Number(item.reserve_status) : 0,
+        region: `${item.city_name || ''}-${item.district_name || ''}`,
+        period: `${item.construct_datetime_start || ''}-${item.construct_datetime_end || ''}`,
+        investment: item.construct_price ? `${item.construct_price}万元` : '-',
+        nature: item.construct_nature || '-',
+        updateTime: item.rate_time || item.update_time || '-',
+        checked: false
+      }
+    })
+
+    // 动态生成图表数据
+    const districtMap = new Map()
+    list.value.forEach(item => {
+      const dName = item.district_name || '其他'
+      if (!districtMap.has(dName)) {
+        districtMap.set(dName, { blue: 0, cyan: 0 })
+      }
+      const data = districtMap.get(dName)
+      if (item.completion_status == '2') data.blue++ // 实施中
+      if (item.completion_status == '1') data.cyan++ // 谋划中
+    })
+    
+    barData.value = Array.from(districtMap.entries()).map(([name, data]) => ({
+      name,
+      ...data
+    })).slice(0, 5) // 只取前5个展示
+  }
+}
+
+const barData = ref([])
 
 const barChartRef = ref()
 let barChart: any = null
@@ -228,8 +442,74 @@ const toggleCard = (item: { checked: boolean }) => {
   item.checked = !item.checked
 }
 
-const onApprove = (item: { id: number; name: string }) => {
-  toPath('/project-push/apply', { demo: 1, name: item.name, id: item.id })
+const auditDialogVisible = ref(false)
+const auditForm = reactive({
+  result: ''
+})
+const currentAuditItem = ref<any>(null)
+
+const getStatusText = (status: string) => {
+  if (status == '1') return '通过'
+  if (status == '2') return '驳回'
+  return '待审核'
+}
+
+const getStatusColor = (status: string) => {
+  if (status == '1') return 'c-green'
+  if (status == '2') return 'c-red'
+  return 'c-orange'
+}
+
+const getAuditStatusText = (item: any, level: string) => {
+  const isProvincial = !item.city && !item.construct_main_city
+  const isCity = !item.district && !item.construct_main_district
+
+  if (level === 'district') {
+    if (isProvincial || isCity) return '-'
+    return getStatusText(item.push_status)
+  }
+  if (level === 'city') {
+    if (isProvincial) return '-'
+    return getStatusText(item.push_status2)
+  }
+  if (level === 'province') {
+    return getStatusText(item.push_status3)
+  }
+  return '-'
+}
+
+const getAuditStatusColor = (item: any, level: string) => {
+  const isProvincial = !item.city && !item.construct_main_city
+  const isCity = !item.district && !item.construct_main_district
+
+  if (level === 'district') {
+    if (isProvincial || isCity) return 'c9'
+    return getStatusColor(item.push_status)
+  }
+  if (level === 'city') {
+    if (isProvincial) return 'c9'
+    return getStatusColor(item.push_status2)
+  }
+  if (level === 'province') {
+    return getStatusColor(item.push_status3)
+  }
+  return ''
+}
+
+const handleAudit = (item: any) => {
+  proxy.toPath('/actionApply', { 
+    id: item.id, 
+    action: '019c03f8-971e-72a5-8dc3-82f1a1fc2758',
+    key: 'department' 
+  })
+}
+
+const submitAudit = async (status: number) => {
+  // Deprecated: logic moved to PushAuditSidebar
+}
+
+const onViewDetail = (item: any) => {
+  proxy.toPath('/actionApply/preview/previewIndex', { id: item.id, key: item.type })
 }
 
 const renderBarChart = async () => {
@@ -257,10 +537,16 @@ const renderBarChart = async () => {
   })
 }
 
-onMounted(() => {
+onMounted(async() => {
+  await getInit()
+  init()
   renderBarChart()
   window.addEventListener('resize', renderBarChart)
 })
+
+watch(() => filters.area, () => {
+  init()
+}, { deep: true })
 
 watch(barData, () => {
   renderBarChart()
@@ -307,6 +593,13 @@ onBeforeUnmount(() => {
   font-size: 14px;
   font-family: -regular;
   padding-bottom: 44px;
+  transition: all 0.3s;
+  cursor: pointer;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: var(--el-color-primary);
+  }
 }
 
 .project-reserve-btn {
@@ -418,4 +711,8 @@ onBeforeUnmount(() => {
   height: 300px;
   width: 100%;
 }
+
+.c-green { color: #67c23a; }
+.c-red { color: #f56c6c; }
+.c-orange { color: #e6a23c; }
 </style>

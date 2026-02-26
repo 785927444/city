@@ -3,14 +3,14 @@
     <!-- 标题 -->
     <aa-title title="">
       <template #left-content>
-        <div class="flex-sc mr30">
+        <!-- <div class="flex-sc mr30">
           <span class="mr10">整治类型</span>
           <span class="w50x3">
             <el-select v-model="state.action_type" placeholder="请选择" style="width:100%" filterable clearable>
               <el-option v-for="(v, i) in action_types" :key="v.value" :value="String(v.value)" :label="v.name" />
             </el-select>
           </span>
-        </div>
+        </div> -->
         <div class="flex-sc mr15">
           <span class="mr10">体检年度</span>
           <span class="w50x6 flex-sc">
@@ -55,9 +55,7 @@
         <template #default="scope, $index">
           <el-popover title="" width="800" placement="top-start">
             <template #default>
-              <div class="problem-content f18 h50x8">
-                <div class="hh100 overlay flex-col">{{scope.row.problem_content}}</div>
-              </div>
+              <div class="problem-content f18"><div class="hh100 overlay flex-col">{{scope.row.problem_content}}</div></div>
             </template>
             <template #reference>
               <span class="line2">{{scope.row.problem_content}}</span>
@@ -65,11 +63,11 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="整治类型" align="center" width="80">
+      <!-- <el-table-column label="整治类型" align="center" width="80">
         <template #default="scope, $index">
           <span>{{scope.row.action_type?find(action_types, ['value', scope.row.action_type], 'name'):''}}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="action_unit" label="责任单位" width="100" align="center" />
       <el-table-column prop="problem_num" label="问题数量" width="70" align="center" />
       <el-table-column prop="action_rate" label="整改进度" width="70" align="center" />
@@ -194,8 +192,5 @@
 
 </script>
   
-<style scoped lang="scss">
-/* 修改弹窗内容的样式 */
-.maxheight { max-height: 100px}
-</style>
+<style scoped lang="scss"></style>
   

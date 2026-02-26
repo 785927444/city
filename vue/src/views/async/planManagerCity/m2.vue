@@ -2,14 +2,14 @@
   <div class="layout-col">
     <!-- 切换 -->
     <div class="ww100 flex-bc h60 mb15">
-      <div class="hh100 ww48 rad8 f18 fw flex-cc cursor white relative hidden" @click.stop="toPath('/schemePlanReport')">
+      <div class="hh100 ww100 rad8 f18 fw flex-cc cursor white relative hidden" @click.stop="toPath('/schemePlanReport')">
         <img class="ww100 hh100" src="@/assets/images/a_scheme1.png" />
         <span class="absolute-cc z1 ww100 tc">专项规划上报</span>
       </div>
-      <div class="hh100 ww48 rad8 f18 fw flex-cc cursor white relative hidden" @click.stop="toPath('/schemePlanTrack')">
+      <!-- <div class="hh100 ww48 rad8 f18 fw flex-cc cursor white relative hidden" @click.stop="toPath('/schemePlanTrack')">
         <img class="ww100 hh100" src="@/assets/images/a_scheme2.png" />
         <span class="absolute-cc z1 ww100 tc">专项规划跟踪</span>
-      </div>
+      </div> -->
     </div>
     <div class="layout-col">
       <!-- 专属规划上报情况 -->
@@ -27,7 +27,7 @@
       </div>
       <!-- 规划内容 -->
       <div class="layout-col bg-white rad8 p15">
-        <div class="c9 f16 fw mb10">规划内容</div>
+        <div class="c9 f16 fw mb10">项目统计</div>
         <div class="hh100 ww100" id="Bar_responses"></div>
       </div>
     </div>

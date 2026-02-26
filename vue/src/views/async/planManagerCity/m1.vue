@@ -1,41 +1,39 @@
 <template>
   <div class="layout-col">
     <!-- 标题 -->
-    <aa-title title="">
+    <aa-title title="" class="title-small">
       <template #left-content>
-        <div class="flex-sc mr30">
+        <div class="flex-sc mr30" v-if="state.code&&configStore.user.role_id < 4">
           <span class="mr10">上报地区</span>
-          <span class="w50x3">
-            <el-select v-model="state.province" placeholder="请选择" style="width:100%" filterable>
-              <el-option v-for="(v, i) in state.provinces" :key="v.value" :value="String(v.value)" :label="v.name" />
-            </el-select>
+          <span class="w50x6 flex-sc">
+            <el-cascader v-model="state.area" size="large" :options="getAreaDataByCode(state.code)" :props="state.cascaderProps" separator="/" placeholder="请选择" clearable style="width: 100%" />
           </span>
         </div>
-        <div class="flex-sc mr30">
+        <!-- <div class="flex-sc mr30">
           <span class="mr10">编制单位</span>
           <span class="w50x3">
             <el-select v-model="state.city" placeholder="请选择" style="width:100%" filterable :clearable="configStore.user.parent_id == '0'">
               <el-option v-for="(v, i) in state.citys" :key="v.value" :value="String(v.value)" :label="v.name" />
             </el-select>
           </span>
-        </div>
+        </div> -->
         <div class="flex-sc mr30">
           <span class="mr10">上报时间</span>
-          <span class="w50x8">
-            <el-date-picker style="width:100%" v-model="state.datetime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss"
+          <span class="w50x8 flex-sc">
+            <el-date-picker style="width:100%" size="large" v-model="state.datetime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss"
             type="datetimerange" range-separator="-" start-placeholder="开始时间" end-placeholder="结束时间" clearable />
           </span>
         </div>
         <div class="flex-sc mr15">
           <span class="mr10">审核状态</span>
-          <span class="w50x3">
-            <el-select v-model="state.examine_status" placeholder="请选择" style="width:100%" filterable clearable>
+          <span class="w50x3 flex-sc">
+            <el-select v-model="state.examine_status" placeholder="请选择" style="width:100%" size="large" filterable clearable>
               <el-option v-for="(v, i) in examine_statuss" :key="v.value" :value="String(v.value)" :label="v.name" />
             </el-select>
           </span>
         </div>
-        <div class="rad4 ptb6 plr12 flex-cc cursor bgi1 white" @click.stop="init()">
-          <i-ep-filter class="f12 fw" /><span class="f14 ml5">搜索</span>
+        <div class="rad4 ptb10 plr12 flex-cc cursor bgi1 white" @click.stop="init()">
+          <i-ep-search class="f12 fw" /><span class="f14 ml5">搜索</span>
         </div>
       </template>
       <template #right-content></template>
@@ -110,11 +108,13 @@
           </div>
         </div>
       </div>
+      <Pagination class="" style="padding-bottom: 0;" v-show="state.total>0" :total="state.total" v-model:page.sync="state.page" v-model:limit.sync="state.limit" @pagination="init" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+  import { setAreaLevel, getAreaDataByCode } from '@/utils/areaData'
 	const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
@@ -130,8 +130,8 @@
     {value: '2', name: '已完成'},
   ]
   const examine_statuss = [
-    {value: '0', name: '待审核'},
-    {value: '1', name: '审核中'},
+    // {value: '0', name: '待审核'},
+    // {value: '1', name: '审核中'},
     {value: '2', name: '已通过'},
     {value: '3', name: '不通过'},
   ]
@@ -145,47 +145,69 @@
     clickArr: [],
     status: '1',
     tabtype: 'special',
-    provinces: [],
-    province: '',
+    area: [],
     citys: [],
     city: '',
     type: 'plan',
+    cascaderProps: {
+      value: 'code',    // 指定选项的值为节点对象中的 code 属性
+      label: 'name',    // 指定选项的标签为节点对象中的 name 属性
+      children: 'children', // 指定子选项的字段名
+      expandTrigger: 'hover', // 次级菜单的展开方式 (可选: click/hover)
+      checkStrictly: false, // 允许选择任意一级选项（如只选省、只选市）
+    }
+  })
+
+  const areaList = computed(() => {
+    return setAreaLevel('district')
   })
 
   onMounted(async() => {
-    console.log("route", route.query)
     await getInit()
     init()
   })
 
   const getInit = async() => {
-    // 获取地区
-    state.provinces = [{name: configStore.user.province_name, value: configStore.user.province}]
-    state.province = state.provinces[0]['value']
-    // 获取单位
-    let query = configStore.user.parent_id == '0'? {model: 't_station', args: `parent_id='${configStore.user.station_num}'`} : {model: 't_station', args: `id='${configStore.user.station_num}'`}
-    let res = await publicStore.http({Api: query})
-    let list = proxy.isNull(res)? [] : res.sort((a, b) => a.order - b.order)
-    state.citys = list.map(v => {
-      return {name: v.station_name, value: v.city}
-    })
-    if(!proxy.isNull(state.citys) && configStore.user.parent_id != '0') state.city = state.citys[0]['value']
+    // 省级部门
+    if(configStore.user.role_id == '2') {
+      state.code = configStore.user.province
+      state.cascaderProps.checkStrictly = true
+    }
+    // 市级部门
+    if(configStore.user.role_id == '3') state.code = configStore.user.city
+    // 区级部门
+    if(configStore.user.role_id == '4') state.code = configStore.user.district
   }
 
   const init = async(key) => {
     let query = {model: `t_scheme_plan`, args: `type='${state.type}'`}
-    if(state.province) {
-      query.args += `and province='${state.province}'`
-      if(state.city) query.args += ` and city='${state.city}'`
-      if(!proxy.isNull(state.datetime)) {
-        let start = Date.parse(state.datetime[0]) + ''
-        let end = Date.parse(state.datetime[1]) + ''
-        query.args += ` and release_time>='${start}' and release_time<='${end}'`
-      }
-      if(state.examine_status) query.args += ` and examine_status='${state.examine_status}'`
+    if(!proxy.isNull(state.area)) {
+      if(state.area[0]) query.args += `and province='${state.area[0]}'`
+      if(state.area[1]) query.args += ` and city='${state.area[1]}'`
+      if(state.area[2]) query.args += ` and district='${state.area[2]}'`
+    }else{
+      // 省级部门
+      if(configStore.user.role_id == '2') query.args += `and province='${configStore.user.province}'`
+      // 市级部门
+      if(configStore.user.role_id == '3') query.args += `and province='${configStore.user.province}' and city='${configStore.user.city}'`
+      // 区级部门
+      if(configStore.user.role_id == '4') query.args += `and province='${configStore.user.province}' and city='${configStore.user.city}' and district='${configStore.user.district}'`
     }
-    let res = await publicStore.http({Api: query})
-    let list = proxy.isNull(res)? [] : res
+    if(!proxy.isNull(state.datetime)) {
+      let start = Date.parse(state.datetime[0]) + ''
+      let end = Date.parse(state.datetime[1]) + ''
+      query.args += ` and release_time>='${start}' and release_time<='${end}'`
+    }
+    if(state.examine_status) query.args += ` and examine_status='${state.examine_status}'`
+    let q1 = {limit: state.limit, page: state.page}
+    let q2 = {field: `COUNT(*)`}
+    let query1 = {}
+    let query2 = {}
+    Object.assign(query1, query, q1)
+    Object.assign(query2, query, q2)
+    let res = await publicStore.http({Api1: query1, Api2: query2})
+    state.total = proxy.isNull(res.Api2)? 0 : res.Api2[0]['COUNT(*)']
+    let list = proxy.isNull(res.Api1)? [] : res.Api1
     state.list = list.map(v => {
       try {
         if(v.datetime){
@@ -234,40 +256,39 @@
 	}
 
 	const getData2 = async() => {
-	  // 1. 获取并转换 designs 数据为 Map，方便 O(1) 查找
-	  const ids = state.list.map(item => `'${item.id}'`).join(', ')
-	  let res = await publicStore.http({Api: {
-	    model: `t_scheme_design`, 
-	    field: `parent_id, COUNT(*) AS design_num`, 
-	    args: `parent_id IN (${ids})`, 
-	    group: `parent_id`
-	  }})
-	  const designMap = Object.fromEntries((proxy.isNull(res)?[]:res).map(d => [d.parent_id, d.design_num]))
-	  // 2. 按 user_id 合并数量
-	  const stats = {}
-	  state.list.forEach(v => {
-	    const uid = v.user_id
-	    if (!stats[uid]) {
-	      stats[uid] = { 
-	        name: proxy.decrypt(v.user_name), 
-	        area: 0, 
-	        impl: 0, 
-	        proj: 0 
-	      }
-	    }
-	    // 累加片区数量 (从Map取)
-	    stats[uid].area += Number(designMap[v.id] || 0)
-	    // 累加实施中项目 (JSON中有 task_num，源代码虽写死0，这里取真实值)
-	    stats[uid].impl += Number(v.task_num || 0)
-	    // 累加项目数量
-	    stats[uid].proj += Number(v.project_num || 0)
-	  })
-	  // 3. 生成最终结果
-	  publicStore._public.responses = [
-	    { name: '片区数量',   data: Object.values(stats).map(i => [i.name, String(i.area)]) },
-	    { name: '实施中项目', data: Object.values(stats).map(i => [i.name, String(i.impl)]) },
-	    { name: '项目数量',   data: Object.values(stats).map(i => [i.name, String(i.proj)]) }
-	  ]
+    let datas = []
+    // 如果是省级用户（省市）
+    if(configStore.user.role_id == '2'){
+      let areas = getAreaDataByCode(configStore.user.province)
+      let children = areas[0].children
+      let conditions = children.map(item => `city = '${item.code}'`).join(' OR ')
+      let query1 = { model: 't_scheme_project', field: 'city AS code, city_name AS name, COUNT(*) AS count', args: conditions, group: 'city, city_name'}
+      let query2 = {model: `t_scheme_project`, args: `type='${state.type}' and user_id='${configStore.user.id}'`, field: `COUNT(*)`}
+      let res = await publicStore.http({Api1: query1, Api2: query2})
+      let user = [{code: configStore.user.province, name: configStore.user.province_name, count: res.Api2[0]['COUNT(*)']}]
+      datas = [...res.Api1, ...user]
+    }
+    // 如果是市级用户（市区）
+    if(configStore.user.role_id == '3'){
+      let areas = getAreaDataByCode(configStore.user.city)
+      let children = areas[0].children[0].children
+      let conditions = children.map(item => `district = '${item.code}'`).join(' OR ')
+      let query1 = { model: 't_scheme_project', field: 'district AS code, district_name AS name, COUNT(*) AS count', args: conditions, group: 'district, district_name'}
+      let query2 = {model: `t_scheme_project`, args: `type='${state.type}' and user_id='${configStore.user.id}'`, field: `COUNT(*)`}
+      let res = await publicStore.http({Api1: query1, Api2: query2})
+      let user = [{code: configStore.user.city, name: configStore.user.city_name, count: res.Api2[0]['COUNT(*)']}]
+      datas = [...res.Api1, ...user]
+    }
+    // 如果是区级用户（区）
+    if(configStore.user.role_id == '4'){
+      let query2 = {model: `t_scheme_project`, args: `type='${state.type}' and user_id='${configStore.user.id}'`, field: `COUNT(*)`}
+      let res = await publicStore.http({Api2: query2})
+      let user = [{code: configStore.user.district, name: configStore.user.district_name, count: res[0]['COUNT(*)']}]
+      datas = [...user]
+    }
+    publicStore._public.responses = [
+      { name: '项目数量分布', data: datas.map(item => [item.name, String(item.count || 0)])}
+    ]
 	}
 
   const handleClick = (remark, val) => {
@@ -297,5 +318,13 @@
   
 <style scoped lang="scss">
 .w110 { width: 110px; }
+.title-small { 
+  font-size: 12px; 
+  --el-font-size-base: 12px;
+}
+.title-small .f14,
+.title-small .f15,
+.title-small .f16,
+.title-small .f18 { font-size: 12px; }
 </style>
   

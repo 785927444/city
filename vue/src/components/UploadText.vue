@@ -10,7 +10,7 @@
     :on-error="onError"
     :on-remove="onRemove"
     :on-preview="handlePictureCardPreview">
-    <span v-if="model">{{ model.name?model.name:'未知' }}</span>
+    <span class="line1" v-if="model&&model.name">{{ model.name?model.name:'未知' }}</span>
     <span v-else>点击上传</span>
   </el-upload>
   <!-- <el-dialog title="图片" :width="810" v-model="state.dialogVisible" :destory-on-close="true">
@@ -34,7 +34,7 @@
     },
     fileSize: {
       type: Number,
-      default: 50
+      default: 2000
     },
     fileType: {
       type: Array,
@@ -57,23 +57,26 @@
   }  
 
   const onBeforeUpload = (file) => {
-    // 限制类型
-    // const isType = props.fileType.indexOf(file.type) == -1? false : true
-    // if (!isType) ElMessage({ type: 'error', message: "文件类型不合法，请上传" + props.fileType })
     // 限制大小
-    // const isSize = file.size / 1024 / 1024 < props.fileSize;
-    // if (!isSize) ElMessage({ type: 'error', message: '上传图片大小不能超过 '+props.fileSize+'MB!' })
-    // return isType && isSize;
     const isSize = file.size / 1024 / 1024 < props.fileSize;
     if (!isSize) ElMessage({ type: 'error', message: '上传图片大小不能超过 '+props.fileSize+'MB!' })
-    return isSize;
+    // 限制类型
+    if(props.fileType && props.fileType.length != 0){
+      console.log("file.type", file.type)
+      const isType = props.fileType.indexOf(file.type) == -1? false : true
+      if (!isType) ElMessage({ type: 'error', message: "文件类型不合法，请上传" + props.fileType })
+      return isType && isSize;
+    }else{
+      return isSize;
+    }
   }
 
   const onSuccess = (res, file, fileList) => {
     let data = file.response.data
     if(!data) return
     if (Object.prototype.hasOwnProperty.call(file,'response') && file.response.data){
-      model.value = {data: data, name: file.name, time: file.uid, status: file.status, type: file.raw.type}
+      let value = {data: data, name: file.name, time: file.uid, status: file.status, filetype: file.raw.type}
+      model.value = {...model.value, ...value}
       ElNotification({ title: '提示', message: file.status=='success'?'上传成功':'上传失败', type: file.status=='success'?'success':'error' })
     }
   }

@@ -1,16 +1,9 @@
 <template>
   <el-dialog v-model="state.isFalse" title="所属地区" :before-close="onVisable" :draggable="true" width="40%">
     <div class="layout-col">
-      <el-form ref="formRef" :model="state.area" :rules="state.ruleList" label-width="85px">
-        <el-form-item v-for="(v, i) in state.area" :key="i"
-        :label="i==0?'省':i==1?'市':i==2?'区':''" 
-        :prop="i + ''">
-          <el-select size="large" v-model="state.area[i]" placeholder="请选择" style="width:100%" clearable filterable @change="init(i)">
-            <el-option v-for="(vv, ii) in i==0?state.provinceList:i==1?state.cityList:i==2?state.districtList:[]" 
-            :key="vv.properties.adcode.toString()" 
-            :label="vv.properties.name" 
-            :value="vv.properties.adcode.toString()" />
-          </el-select>
+      <el-form ref="formRef" :model="state.form" :rules="state.ruleList" label-width="85px">
+        <el-form-item label="区域选择" prop="area" class="ww100 flex-sc">
+          <el-cascader v-model="state.form.area" size="large" :options="setAreaLevel('district')" :props="cascaderProps" separator="/" placeholder="请选择" clearable style="width: 100%" />
         </el-form-item>
       </el-form>
     </div>
@@ -26,6 +19,7 @@
 <script lang="ts" setup>
   import axios from 'axios'
   import api from '../api'
+  import { setAreaLevel, areaOptions } from '@/utils/areaData'
   const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
@@ -39,10 +33,19 @@
       // '2': [{ required: true, message: '请选择', trigger:['blur','change'] }],
     },
     area: [],
-    provinceList: [],
-    cityList: [],
-    districtList: [],
   })
+  const areaList = computed(() => {
+    // 在这里传入你想限制的层级：'province' | 'city' | 'district'
+    return setAreaLevel('city') 
+  })
+  const cascaderProps = {
+    value: 'code',    // 指定选项的值为节点对象中的 code 属性
+    label: 'name',    // 指定选项的标签为节点对象中的 name 属性
+    children: 'children', // 指定子选项的字段名
+    expandTrigger: 'hover', // 次级菜单的展开方式 (可选: click/hover)
+    checkStrictly: true, // 允许选择任意一级选项（如只选省、只选市）
+  }
+
   const props = defineProps({
     state: {
       type: [Object, Array],
@@ -53,80 +56,53 @@
   const onVisable = async (val?: any) => {
     state.isFalse = !state.isFalse
     if(!state.isFalse) return
-    state.form = Object.assign({}, val)
-    state.area = [
-      state.form.province?state.form.province:'',
-      state.form.city?state.form.city:'',
-      state.form.district?state.form.district:'',
-      // state.form.province_name?state.form.province_name:'',
-      // state.form.city_name?state.form.city_name:'',
-      // state.form.district_name?state.form.district_name:'',
-    ]
-    init()
-  }
-
-  const init = async(i?: any) => {
-    console.log('state.area', state.area)
-    if(i == 0) state.area[1] = ''
-    if(i == 1) state.area[2] = ''
-    getList('100000', 'provinceList')
-    if(proxy.isNull(state.area[0])){
-      state.cityList = []
-      state.districtList = []
-      state.area[0] = ''
-      state.area[1] = ''
-      state.area[2] = ''
-      return
+    state.form = {...val}
+    state.form.area = []
+    if(state.form.province) {
+      state.form.area[0] = state.form.province
+      if(state.form.city) {
+        state.form.area[1] = state.form.city
+        if(state.form.district) {
+          state.form.area[2] = state.form.district
+        }
+      }
     }
-    getList(state.area[0], 'cityList')
-    if(proxy.isNull(state.area[1])){
-      state.districtList = []
-      state.area[1] = ''
-      state.area[2] = ''
-      return
-    }
-    getList(state.area[1], 'districtList')
-    if(proxy.isNull(state.area[2])){
-      state.area[2] = ''
-      return
-    }
-  }
-
-  const getList = async(adcode, remark) => {
-    axios.get(`./china/${adcode}.json`).then(temp => {
-      state[remark] = temp.data.features
-      // console.log('list', state[remark])
-    })
-  }
-
-  const getAreaName = (list, code) => {
-    if (!list || !code) return ''
-    const item = list.find(v => v.properties.adcode.toString() === code)
-    return item ? item.properties.name : ''
   }
 
   const handleSubmit = (formEl) => {
     formEl.validate(async valid =>{
-      // if(proxy.isNull(state.area[0]) || proxy.isNull(state.area[1]) || proxy.isNull(state.area[2])) return ElNotification({ title: '提示', message: '请选择', type: 'error' })
-      const province_name = getAreaName(state.provinceList, state.area[0])
-      const city_name = getAreaName(state.cityList, state.area[1])
-      const district_name = getAreaName(state.districtList, state.area[2])
-      let form = {
-        "model": "t_station", 
-        list:[
-          {
-            id: state.form.id, 
-            province: state.area[0], 
-            city: state.area[1], 
-            district: state.area[2],
-            province_name: province_name,
-            city_name: city_name,
-            district_name: district_name
-          }
-        ]
+      // 所属地区 省市区
+      if(!proxy.isNull(state.form.area)){
+        if(state.form.area.length>0){
+          state.form.province = state.form.area.length>0? state.form.area[0] : ''
+          let province = proxy.findNode(areaOptions, (node) => { return node.code == state.form.province })
+          if(province) state.form.province_name = province.name
+        }else{
+          state.form.province = ''
+          state.form.province_name = ''
+        }
+        if(state.form.area.length>1){
+          state.form.city = state.form.area.length>1? state.form.area[1] : ''
+          let city = proxy.findNode(areaOptions, (node) => { return node.code == state.form.city })
+          if(city) state.form.city_name = city.name
+        }else{
+          state.form.city = ''
+          state.form.city_name = ''
+        }
+        if(state.form.area.length>2){
+          state.form.district = state.form.area.length>2? state.form.area[2] : ''
+          let district = proxy.findNode(areaOptions, (node) => { return node.code == state.form.district })
+          if(district) state.form.district_name = district.name
+        }else{
+          state.form.district = ''
+          state.form.district_name = ''
+        }
+        state.form.area = JSON.stringify(state.form.area)
       }
-      console.log('form----', form)
-      api.updApi(form).then((res:any) => {
+      let form = {...state.form}
+      let params = {"model": "t_station", list:[form]}
+      console.log('params----', params)
+      api.updApi(params).then((res:any) => {
         if(res.code == 200){
           ElNotification({ title: '提示', message: '操作成功', type: 'success' })
           emit('init')

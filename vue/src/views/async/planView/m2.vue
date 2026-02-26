@@ -24,7 +24,7 @@
   const actives = [
     {value: '1', name: '规划成果'},
     {value: '2', name: '项目库'},
-    {value: '3', name: '规划目标'},
+    // {value: '3', name: '规划目标'},
   ]
   const state = reactive({
 	  ...publicStore.$state,

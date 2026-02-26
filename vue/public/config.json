@@ -2,7 +2,7 @@
     "main": "",
     "title": "",
     "identifyCode": false,
-    "secret": false,
+    "secret": true,
     "checkLogin": false,
-    "level": ["", "", "", "76d49f60-30f0-4578-a7d7-f20ff1b89345"]
+    "level": []
 }

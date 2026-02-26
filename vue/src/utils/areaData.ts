@@ -199,9 +199,9 @@ export const areaOptions = [
   // 1. 定义不同类型对应的深度
   // 1 = 只到省, 2 = 只到市, 3 = 只到区
   let maxDepth = 3
-  if (type === 'province') maxDepth = 1
-  else if (type === 'city') maxDepth = 2
-  else if (type === 'district') maxDepth = 3
+  // if (type === 'province') maxDepth = 1
+  // else if (type === 'city') maxDepth = 2
+  // else if (type === 'district') maxDepth = 3
  
   // 2. 递归修剪数据的函数
   const trimData = (list, currentLevel) => {
@@ -224,3 +224,57 @@ export const areaOptions = [
   // 原来的 originalAreaData 是未定义的，所以返回了 undefined 导致组件无数据
   return trimData(areaOptions, 1)
 }
+
+	/**
+	 * 根据区域代码获取受限的区域数据（逻辑优化版）
+	 * @param {String} code 区域代码
+	 * @returns {Array}
+	 */
+	export const getAreaDataByCode = (code) => {
+	  if (!code) return []
+	  const province = areaOptions[0]
+	  // --- 场景 1：如果是省 ---
+	  // 需求：可以随便选择省、市、区。
+	  // 实现：直接返回完整数据（深拷贝）。
+	  // 说明：无论市下面有没有区，都会原样保留，满足“市可以没有区也可以没有”。
+	  if (province.code === code) {
+	    return JSON.parse(JSON.stringify(areaOptions))
+	  }
+	  // --- 场景 2：如果是市 ---
+	  // 需求：省是固定的，市也是固定的，区可以任选所属市的区。
+	  // 实现：保留省的结构，但只包含该市；该市保留其所有区列表。
+	  const targetCity = province.children.find(city => city.code === code)
+	  if (targetCity) {
+	    // 深拷贝省和市
+	    const newProvince = JSON.parse(JSON.stringify(province))
+	    const newCity = JSON.parse(JSON.stringify(targetCity))
+	    // 省的 children 只挂载该市 -> 省固定、市固定
+	    newProvince.children = [newCity]
+	    // newCity 保留原始的 children (区列表) -> 区任选
+	    // 如果该市数据中没有 children (没有区)，newCity.children 会是 undefined，
+	    // 级联选择器会自动处理，允许直接选择该市。
+	    return [newProvince]
+	  }
+	  // --- 场景 3：如果是区 ---
+	  // 需求：省市区都是固定的（只能选自己）。
+	  // 实现：构建完整路径，但在区级节点切断后续连接。
+	  for (const city of province.children) {
+	    // 兼容性判断：防止市数据不完整导致报错
+	    if (!city.children) continue
+	    const targetDistrict = city.children.find(district => district.code === code)
+	    if (targetDistrict) {
+	      // 深拷贝省、市、区
+	      const newProvince = JSON.parse(JSON.stringify(province))
+	      const newCity = JSON.parse(JSON.stringify(city))
+	      const newDistrict = JSON.parse(JSON.stringify(targetDistrict))
+	      // 核心：区级节点强制没有子级，确保“只能选自己”
+	      newDistrict.children = []
+	      // 核心：市只包含该区 -> 市固定
+	      newCity.children = [newDistrict]
+	      // 核心：省只包含该市 -> 省固定
+	      newProvince.children = [newCity]
+	      return [newProvince]
+	    }
+	  }
+	  return []
+	}

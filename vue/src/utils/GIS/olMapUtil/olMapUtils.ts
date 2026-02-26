@@ -8,6 +8,8 @@ import { Draw } from 'ol/interaction'
 import type { Extent } from 'ol/extent'
 import type { ProjectionLike } from 'ol/proj'
 
+//#region 接口定义
+/** 地图初始化配置项 */
 interface OlMapOptions {
 	mapDiv: string
 	center: [number, number]
@@ -17,6 +19,7 @@ interface OlMapOptions {
 	projection?: ProjectionLike
 }
 
+/** 地图内部状态管理 */
 interface OlMapState {
 	map: Map | null
 	tdtImgLayer: TileLayer<XYZ> | null
@@ -24,10 +27,17 @@ interface OlMapState {
 	tdtVecLayer: TileLayer<XYZ> | null
 	tdtVecAnoLyr: TileLayer<XYZ> | null
 }
+//#endregion
 
+/**
+ * 地图核心类 - 仅保留初始化和绘制辅助功能
+ */
 export class OlMap {
+	// 配置项
 	private readonly options: OlMapOptions
+	// 地图状态
 	public state: OlMapState
+	// 地图投影
 	private readonly projection: ProjectionLike
 
 	constructor(options: OlMapOptions) {
@@ -38,9 +48,11 @@ export class OlMap {
 			projection: 'EPSG:4326' as ProjectionLike
 		}
 
+		// 合并配置
 		this.options = { ...DEFAULT_CONFIG, ...options }
 		this.projection = this.options.projection || DEFAULT_CONFIG.projection
 
+		// 初始化状态
 		this.state = {
 			map: null,
 			tdtImgLayer: null,
@@ -50,6 +62,9 @@ export class OlMap {
 		}
 	}
 
+	/**
+	 * 初始化地图（仅加载天地图底图）
+	 */
 	public initMap(): void {
 		if (this.state.map) {
 			console.warn('地图已初始化，无需重复初始化')
@@ -58,6 +73,7 @@ export class OlMap {
 
 		const TDT_TOKEN = 'b87243f128237807fd23bf559c54cf91'
 
+		// EPSG:4326 影像底图 + 注记
 		const tdtImgSource = new XYZ({
 			url: `http://t0.tianditu.gov.cn/DataServer?T=img_c&x={x}&y={y}&l={z}&tk=${TDT_TOKEN}`,
 			projection: this.projection
@@ -76,6 +92,7 @@ export class OlMap {
 			visible: true
 		})
 
+		// EPSG:4326 矢量底图 + 注记
 		const tdtVecSource = new XYZ({
 			url: `http://t0.tianditu.gov.cn/DataServer?T=vec_c&x={x}&y={y}&l={z}&tk=${TDT_TOKEN}`,
 			projection: this.projection
@@ -94,6 +111,7 @@ export class OlMap {
 			visible: false
 		})
 
+		// 创建地图实例
 		this.state.map = new Map({
 			target: this.options.mapDiv,
 			layers: [this.state.tdtVecLayer, this.state.tdtVecAnoLyr, this.state.tdtImgLayer, this.state.tdtImgAnoLyr],
@@ -110,6 +128,9 @@ export class OlMap {
 		console.log(`✅ 地图初始化完成，投影：${this.projection}`)
 	}
 
+	/**
+	 * 移除绘制交互
+	 */
 	public removeDrawInteraction(): void {
 		if (this.state.map) {
 			const interactions = this.state.map.getInteractions().getArray()
@@ -121,10 +142,15 @@ export class OlMap {
 		}
 	}
 
+	/**
+	 * 清除所有临时图层和交互（仅保留底图）
+	 */
 	public clearAllTools(): void {
 		if (this.state.map) {
+			// 移除绘制交互
 			this.removeDrawInteraction()
 
+			// 移除所有临时图层
 			const layers = this.state.map.getLayers().getArray()
 			for (let i = layers.length - 1; i >= 0; i--) {
 				const layer = layers[i]
@@ -136,9 +162,13 @@ export class OlMap {
 		}
 	}
 
+	/**
+	 * 销毁地图实例
+	 */
 	public destroyMap(): void {
 		if (this.state.map) {
 			this.state.map.dispose()
+			// 重置状态
 			this.state = {
 				map: null,
 				tdtImgLayer: null,
@@ -151,6 +181,7 @@ export class OlMap {
 	}
 }
 
+/** 默认地图实例 */
 export const defaultOlMap = new OlMap({
 	mapDiv: 'mapContainer',
 	center: [112.5497, 37.8706]

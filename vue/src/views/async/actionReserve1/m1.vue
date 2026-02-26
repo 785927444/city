@@ -4,60 +4,50 @@
     <aa-title title="">
       <template #left-content>
         <div class="flex-sc flex4 hidden warp">
-          <div class="flex-sc ww25 pr30">
+          <div class="flex-sc mr30" v-if="state.code&&configStore.user.role_id < 4">
+            <span class="mr10">上报地区</span>
+            <span class="w50x6 flex-sc">
+              <el-cascader v-model="state.area" size="large" :options="getAreaDataByCode(state.code)" :props="state.cascaderProps" separator="/" placeholder="请选择" clearable style="width: 100%" />
+            </span>
+          </div>
+          <div class="flex-sc mr30">
             <span class="mr10">项目周期</span>
-            <span class="flex1 flex-sc hidden">
-              <el-date-picker style="width: 100%;" v-model="state.construct_datetime" start-placeholder="开始周期" end-placeholder="结束周期" type="yearrange" value-format="YYYY" format="YYYY" />
+            <span class="w50x4 flex-sc">
+              <el-date-picker size="large" style="width: 100%;" v-model="state.construct_datetime" start-placeholder="开始周期" end-placeholder="结束周期" type="yearrange" value-format="YYYY" format="YYYY" />
             </span>
-          </div>        
-          <div class="flex-sc ww25 pr30">
-            <span class="mr10">所属行政</span>
-            <span class="flex1 flex-sc hidden">
-              <el-select v-model="state.province" placeholder="请选择" style="width:100%" filterable>
-                <el-option v-for="(v, i) in state.provinces" :key="v.value" :value="String(v.value)" :label="v.name" />
-              </el-select>
-            </span>
-          </div>
-          <div class="flex-sc ww25 pr30">
-            <span class="mr10">所属地市</span>
-            <span class="flex1 flex-sc hidden">
-              <el-select v-model="state.city" placeholder="请选择" style="width:100%" filterable :clearable="configStore.user.parent_id == '0'">
-                <el-option v-for="(v, i) in state.citys" :key="v.value" :value="String(v.value)" :label="v.name" />
-              </el-select>
-            </span>
-          </div>
-          <div class="flex-sc ww25 pr30">
+          </div>      
+          <div class="flex-sc pr30">
             <span class="mr10">项目阶段</span>
-            <span class="flex1 flex-sc hidden">
-              <el-select v-model="state.stage" placeholder="请选择" style="width:100%" filterable clearable>
+            <span class="w50x4 flex-sc hidden">
+              <el-select size="large"  v-model="state.stage" placeholder="请选择" style="width:100%" filterable clearable>
                 <el-option v-for="(v, i) in dictStore.project_stages" :key="v.value" :value="String(v.value)" :label="v.name" />
               </el-select>
             </span>
           </div>
-          <div class="flex-sc ww25 pr30 mt10">
+          <div class="flex-sc pr30">
             <span class="mr10">项目类型</span>
-            <span class="flex1 flex-sc hidden">
-              <el-select v-model="state.task_type" placeholder="请选择" style="width:100%" filterable clearable>
+            <span class="w50x4 flex-sc hidden">
+              <el-select size="large"  v-model="state.task_type" placeholder="请选择" style="width:100%" filterable clearable>
                 <el-option v-for="(v, i) in state.task_typess?state.task_typess:[]" :key="v.id" :value="String(v.id)" :label="v.name" />
               </el-select>
             </span>
           </div>
-          <div class="flex-sc ww25 pr30 mt10">
+          <div class="flex-sc pr30 mt10">
             <span class="mr10">投资金额</span>
-            <span class="flex1 flex-sc hidden">
-              <el-select v-model="state.construct_price" placeholder="请选择" style="width:100%" filterable clearable>
+            <span class="w50x6 flex-sc hidden">
+              <el-select size="large" v-model="state.construct_price" placeholder="请选择" style="width:100%" filterable clearable>
                 <el-option v-for="(v, i) in construct_prices?construct_prices:[]" :key="v.value" :value="String(v.value)" :label="v.name" />
               </el-select>
             </span>
           </div>
-          <div class="flex-sc ww25 pr30 mt10">
+          <div class="flex-sc pr30 mt10">
             <span class="mr10">项目名称</span>
-            <span class="flex1 flex-sc hidden">
-              <el-input v-model="state.search" style="width: 100%;" placeholder="请输入" />
+            <span class="w50x4 flex-sc hidden">
+              <el-input size="large" v-model="state.search" style="width: 100%;" placeholder="请输入" />
             </span>
           </div>
-          <div class="rad4 ptb6 plr12 flex-cc cursor bgi1 white mt10" @click.stop="init()">
-            <i-ep-filter class="f12 fw" /><span class="f14 ml5">搜索</span>
+          <div class="rad4 ptb10 plr12 flex-cc cursor bgi1 white" @click.stop="init()">
+            <i-ep-search class="f12 fw" /><span class="f14 ml5">搜索</span>
           </div>
         </div>
       </template>
@@ -74,24 +64,32 @@
       <div class="ww100 flex-sc p8">
         <div class="flex-sc fw f16 tc">
           <div class="mr40 cursor flex-col-cc relative" v-for="(v, i) in state.types" :key="i" @click.stop="toPath(v.path)">
-            <span v-if="v.total" class="w20 h20 rad2 lh20 tc bgi13 i15 b20 l50 absolute">{{ v.total }}</span>
+            <span v-if="v.total" class="w20 h20 rad2 Perk lh20 tc bgi13 i15 b20 l50 absolute">{{ v.total }}</span>
             <span class="mb5">{{ v.name }}</span>
             <span class="ww100 h3 rad10" :class="v.type == state.type?'bgi2':'black-rgba0'"></span>
           </div>
         </div>
         <div class="flex-ec flex1">
           <div class="rad4 ptb5 plr12 flex-cc cursor bg-white c8 bo-cc-1 ml15" @click.stop="handleClick('selectAll')">全选</div>
+          <div class="rad4 ptb5 plr12 flex-cc cursor bgi1 white bo-i1-1 ml15" @click.stop="handleClick('push')">发起推送</div>
           <div class="rad4 ptb5 plr12 flex-cc cursor bgi1 white bo-i1-1 ml15" @click.stop="handleClick('remind')">提醒</div>
         </div>
       </div>
       <!-- 主体 -->
       <div class="table flex-sc warp">
         <div class="ww25 cursor p8" v-for="(v, i) in state.list" :key="i">
-          <div class="ww100 bs bo-i16-1 relative rad8">
+          <div class="ww100 bs bo-i16-1 relative rad8 project-card" @click.stop="onViewDetail(v)">
             <div class="ww100 flex-sc p12 bob-ce-1">
-              <span class="f15">{{ v.name }}</span>
-              <span class="flex1 flex-ec">
-                <span v-if="v.completion_status" class="rad3 ptb3 plr6" :class="v.completion_status=='1'?'bgi10 bo-i11-1 i12':'bgi13 bo-i14-1 i15'">
+              <el-popover title="" width="300" placement="bottom-start">
+                <template #default>
+                  <div class="problem-content f16"><div class="hh100 flex-col">{{v.name}}</div></div>
+                </template>
+                <template #reference>
+                  <span class="flex1 f15 line1">{{ v.name }}</span>
+                </template>
+              </el-popover>
+              <span class="flex-ec">
+                <span v-if="v.completion_status" class="rad3 ptb3 plr6 f12" :class="v.completion_status=='1'?'bgi10 bo-i11-1 i12':'bgi13 bo-i14-1 i15'">
                 {{ find(dictStore.completion_statuss, ['value', v.completion_status], 'name') }}
                 </span>
                 <span class="w18 h18 tc lh18 rad3 ml10 white f12" :class="v.click?'bgi1 bo-i1-1':'bo-cc-1'" @click.stop="v.click = !v.click"><i-ep-check v-if="v.click"  /></span>
@@ -103,10 +101,11 @@
                 <span>{{ v.province_name?v.province_name:'' }}{{ v.city_name?`-${v.city_name}`:'' }}{{ v.district_name?`-${v.district_name}`:'' }}</span>
               </div>
               <div class="ww100 flex-sc mt10">
-                <span class="w110">征资条件</span>
-                <span class="flex-sc i12">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="success-icon svg-icon-path-icon fill" viewBox="0 0 32 32" width="13" height="13"><defs></defs><g><path d="M29.333 26.667h-26.667v-2.667h1.333v-9.292c0-6.651 5.373-12.041 12-12.041s12 5.391 12 12.041v9.292h1.333v2.667zM12.667 28h6.667c0 1.841-1.492 3.333-3.333 3.333s-3.333-1.492-3.333-3.333v0z"></path></g></svg>
-                  <span class="ml5">符合</span> 
+                <span class="w110">推送情况</span>
+                <span class="flex-sc" :class="v.push_status == '2' ? 'i15' : 'i12'">
+                  <svg v-if="v.push_status == '0' || v.push_status == '1'" xmlns="http://www.w3.org/2000/svg" class="success-icon svg-icon-path-icon fill" viewBox="0 0 32 32" width="13" height="13"><defs></defs><g><path d="M29.333 26.667h-26.667v-2.667h1.333v-9.292c0-6.651 5.373-12.041 12-12.041s12 5.391 12 12.041v9.292h1.333v2.667zM12.667 28h6.667c0 1.841-1.492 3.333-3.333 3.333s-3.333-1.492-3.333-3.333v0z"></path></g></svg>
+                  <i-ep-warning v-else-if="v.push_status == '2'" class="f13" />
+                  <span class="ml5">{{ v.push_status == '2' ? '已退回' : (v.push_status == '0' || v.push_status == '1' ? '已推送' : '-') }}</span> 
                 </span>
               </div>
               <div class="ww100 flex-sc mt10">
@@ -130,7 +129,7 @@
                   <span class="w110">更新进度时间</span>
                   <span>{{ v.update_time?parseTime(v.update_time):'-' }}</span>
                 </div>
-                <div class="rad5 ptb5 plr12 cursor bgi1 white" @click.stop="toPath('/actionApply', {id: v.id})">进度更新</div>
+                <div class="rad5 ptb5 plr12 cursor bgi1 white" v-if="configStore.user.id == v.user_id" @click.stop="toPath('/actionApply', {key: v.type, action: '1f10502a-e388-6850-8aa3-265c92863865', id: v.id})">更新进度</div>
               </div>
             </div>
           </div>
@@ -155,6 +154,8 @@
 </template>
 
 <script lang="ts" setup>
+  import api from '@/api'
+  import { setAreaLevel, getAreaDataByCode } from '@/utils/areaData'
 	const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
@@ -171,11 +172,21 @@
     types: [
       {type: 'actionReserve', name: '待审核', path: '/actionReserve'},
       {type: 'actionReserve1', name: '已储备', path: '/actionReserve1'},
+      // {type: 'actionReserve2', name: '已退回', path: '/actionReserve2'},
+      {type: 'actionReserve3', name: '部门储备', path: '/actionReserve3'},
     ],
     type: 'actionReserve1',
     stage: '',
     task_type: '',
     search: '',
+    area: [],
+    cascaderProps: {
+      value: 'code',    // 指定选项的值为节点对象中的 code 属性
+      label: 'name',    // 指定选项的标签为节点对象中的 name 属性
+      children: 'children', // 指定子选项的字段名
+      expandTrigger: 'hover', // 次级菜单的展开方式 (可选: click/hover)
+      checkStrictly: false, // 允许选择任意一级选项（如只选省、只选市）
+    }
   })
 
   const construct_prices = [
@@ -193,49 +204,29 @@
   ]
 
   onMounted(async() => {
-    await getInit()
+    if(configStore.user.role_id > '3') state.types = state.types.filter(a=>a.type != 'actionReserve3')
+    state.code = '140000'
     getTaskType()
     init()
   })
-
-  const getInit = async() => {
-    // 获取地区
-    state.provinces = [{name: configStore.user.province_name, value: configStore.user.province}]
-    state.province = state.provinces[0]['value']
-    // 获取单位
-    let query = configStore.user.parent_id == '0'? {model: 't_station', args: `parent_id='${configStore.user.station_num}'`} : {model: 't_station', args: `id='${configStore.user.station_num}'`}
-    let res = await publicStore.http({Api: query})
-    let list = proxy.isNull(res)? [] : res.sort((a, b) => a.order - b.order)
-    state.citys = list.map(v => {
-      return {name: v.station_name, value: v.city}
-    })
-    if(!proxy.isNull(state.citys) && configStore.user.parent_id != '0') state.city = state.citys[0]['value']
-  }
 
   // 已申请储备
   const init = async(key) => {
     let model = 't_project_report'
     let field = ``
-    let args = `apply_status = '1' and reserve_status ='1'`
-    let args1 = `apply_status = '1' and reserve_status ='0'`
+    let args = `apply_status='2' and reserve_status='1' and construct_main='${configStore.user.id}'`
     let query = {model: model, args: args}
-    let queryapi1 = {model: model, field: `COUNT(*)`, args: args1}
-    getApply1(queryapi1)
-    if(state.province) {
-      query.args += ` and province='${state.province}'`
-      if(state.city) query.args += ` and city='${state.city}'`
-      if(!proxy.isNull(state.construct_datetime)) {
-        const [start, end] = state.construct_datetime
-        query.args += ` and construct_datetime_start>='${start}' and construct_datetime_end<='${end}'`
-      }
-      if(state.construct_price) {
-        let price = construct_prices.find(a=>a.value == state.construct_price)
-        query.args += ` and construct_price>='${price.value1}' and construct_price<='${price.value}'`
-      }
-      if(state.stage) query.args += ` and stage='${state.stage}'`
-      if(state.task_type) query.args += ` and task_type='${state.task_type}'`
-      if(state.search) query.args += ` and name LIKE '%${state.search}%'`
+    if(!proxy.isNull(state.area)) {
+      if(state.area[0]) query.args += `and uprovince='${state.area[0]}'`
+      if(state.area[1]) query.args += ` and city='${state.area[1]}'`
+      if(state.area[2]) query.args += ` and district='${state.area[2]}'`
     }
+    if(!proxy.isNull(state.construct_datetime)) {
+      const [start, end] = state.construct_datetime
+      query.args += ` and construct_datetime_start>='${start}' and construct_datetime_end<='${end}'`
+    }
+    if(state.completion_status) query.args += ` and completion_status='${state.completion_status}'`
+    if(state.search) query.args += ` and name LIKE '%${state.search}%'`
     let q1 = {limit: state.limit, page: state.page}
     let q2 = {field: `COUNT(*)`}
     let query1 = {}
@@ -244,15 +235,10 @@
     Object.assign(query2, query, q2)
     let res = await publicStore.http({Api1: query1, Api2: query2})
     state.total = proxy.isNull(res.Api2)? 0 : res.Api2[0]['COUNT(*)']
-    let type = state.types.find(a=>a.type==state.type)
-    type.total = state.total
     state.empty = proxy.isNull(res.Api1)? true : false
     state.list = proxy.isNull(res.Api1)? [] : res.Api1
-    state.list.forEach(v => {
-      v.area = (v.province_name||'') + (v.city_name?`-${v.city_name}`:'') + (v.district_name?`-${v.district_name}`:'')
-    })
-    getData1()
-    getData2()
+    // getData1()
+    // getData2()
   }
 
   const getApply1 = (query) => {
@@ -316,6 +302,33 @@
 
 
   const handleClick = (remark, val) => {
+    if(remark == 'push') {
+      let clickList = state.list.filter(a => a['click'])
+      if(clickList.length == 0) return ElNotification({ title: '提示', message: '请选择至少一个', type: 'error' })
+      
+      let pushed = clickList.filter(a => a.push_status == '0' || a.push_status == '1')
+      if(pushed.length > 0) {
+        return ElNotification({ title: '提示', message: `项目【${pushed[0].name}】已推送，无法再次推送`, type: 'error' })
+      }
+      
+      ElMessageBox.confirm('是否确定推送所选项目?', '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(() => { 
+        let list = clickList.map(v => {
+          return {
+            id: v.id,
+            push_status: '0'
+          }
+        })
+        let params = {model: 't_project_report', list: list}
+        api.updApi(params).then((res:any) => {
+          if(res.code == 200){
+            ElNotification({ title: '提示', message: '推送成功', type: 'success' })
+            init()
+          }else{
+            ElNotification({ title: '提示', message: res.msg?res.msg:'推送失败', type: 'error' })
+          }
+        })
+      })
+    }
     if(remark == 'remind') {
       ElMessageBox.confirm('是否确定提醒?', '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(() => { 
         let clickIndex = state.list.findIndex(a=>{ return a['click'] })
@@ -338,10 +351,21 @@
       }
     }
   }
+
+  const onViewDetail = (row: any) => {
+    proxy.toPath('/actionApply/preview/previewIndex', { id: row.id, key: row.type })
+  }
 </script>
   
 <style scoped lang="scss">
 .w110 { width: 110px; }
 .success-icon { fill: #00b259; }
+.project-card {
+  transition: all 0.3s;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: var(--el-color-primary);
+  }
+}
 </style>
-  

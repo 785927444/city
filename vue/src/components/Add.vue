@@ -81,6 +81,7 @@
   import api from '../api'
   import CryptoJS from 'crypto-js'
   import router from '@/router'
+  import { pinyin } from 'pinyin-pro'
   const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
@@ -251,6 +252,10 @@
         value = now
       }else if(item.type == 'input' && item.class == 'update_key' && !form[props.state.key]) {
         value = now
+      }else if(item.type == 'input' && item.value == 'pinyin' && copyFrom[item.label] && title == '创建') {
+        const result = pinyin(copyFrom[item.label], { pattern: 'first', toneType: 'none', type: 'array' })
+        const pyStr = result.join('')
+        value = copyFrom.parent_id && copyFrom.parent_id == '0'? `static/${pyStr}` : pyStr
       }else{
         value = data
       }

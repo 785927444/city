@@ -33,6 +33,18 @@
               <span class="kb-meta-k">文档名称</span>
               <span class="kb-meta-v line1">{{ state.item.title || '-' }}</span>
             </div>
+            <div v-if="state.item.doc_no" class="kb-meta-row flex-sc">
+              <span class="kb-meta-k">编号</span>
+              <span class="kb-meta-v">{{ state.item.doc_no || '-' }}</span>
+            </div>
+            <div v-if="state.item.implementation_time" class="kb-meta-row flex-sc">
+              <span class="kb-meta-k">实行时间</span>
+              <span class="kb-meta-v">{{ state.item.implementation_time || '-' }}</span>
+            </div>
+            <div v-if="state.item.fields_involved || state.item.tags" class="kb-meta-row flex-sc">
+              <span class="kb-meta-k">涉及领域</span>
+              <span class="kb-meta-v">{{ state.item.fields_involved || state.item.tags || '-' }}</span>
+            </div>
             <div class="kb-meta-row flex-sc">
               <span class="kb-meta-k">创建时间</span>
               <span class="kb-meta-v">{{ state.item.created_at || '-' }}</span>
@@ -64,7 +76,9 @@
               <div v-for="(a, idx) in attachments" :key="a.id" class="kb-att-row flex-bc">
                 <div class="flex-sc flex1 hidden">
                   <span class="kb-att-no">{{ idx + 1 }}.</span>
-                  <span class="kb-att-name line1">{{ a.file_name }}</span>
+                  <el-tooltip :content="a.file_name" placement="top">
+                    <span class="kb-att-name line1 cursor" @click="downloadSingle(a)">{{ a.file_name }}</span>
+                  </el-tooltip>
                 </div>
                 <div class="kb-att-info">
                   <span class="mr10">{{ (a.file_type || '').toUpperCase() || '-' }}</span>
@@ -87,7 +101,8 @@
             <div class="kb-title tc fw mb10" style="color:#d84a4a">{{ state.item.title || '-' }}</div>
             <div class="kb-top-meta flex-cc i2 mb15">
               <span class="mr25">时间：{{ state.item.publish_time || '-' }}</span>
-              <span>来源：{{ state.item.publish_org || '-' }}</span>
+              <span :class="state.item.doc_no ? 'mr25' : ''">来源：{{ state.item.publish_org || '-' }}</span>
+              <span v-if="state.item.doc_no">文号：{{ state.item.doc_no }}</span>
             </div>
 
             <div class="content" v-html="state.item.content || ''"></div>
@@ -106,7 +121,7 @@
 
             <div v-if="attachments.length" class="kb-related mt15">
               <span class="i2">相关附件：</span>
-              <span class="kb-related-link">{{ attachments[0]?.file_name }}</span>
+              <span class="kb-related-link cursor" @click="downloadSingle(attachments[0])">{{ attachments[0]?.file_name }}</span>
             </div>
           </div>
         </div>
@@ -209,6 +224,19 @@
       })
       const blob = new Blob([lines.join('\n') || 'no attachments'], { type: 'text/plain;charset=utf-8' })
       saveAs(blob, `attachments-${state.id}.txt`)
+    } catch (e) {
+      ElMessage({ type: 'error', message: '下载失败' })
+    }
+  }
+
+  const downloadSingle = async (file: any) => {
+    if (!file?.url) return
+    try {
+      const url = resolveKbUrl(file.url)
+      const resp = await fetch(url)
+      if (!resp.ok) throw new Error(`download failed: ${resp.status}`)
+      const blob = await resp.blob()
+      saveAs(blob, file.file_name || 'attachment')
     } catch (e) {
       ElMessage({ type: 'error', message: '下载失败' })
     }

@@ -608,7 +608,7 @@ export function draw3DPicture(dom, data, unit='dB'){
  * @param {*} seriesData 统计数据 
  * @returns 返回 piechart
  */
-export function drawPies(dom, {title = '', seriesData = []}) {
+export function drawPies(dom, {title = '', seriesData = [], roseType = false}) {
   return new Promise(resolve=>{
     if(echarts.getInstanceByDom(dom)) echarts.getInstanceByDom(dom).dispose()
     var piechart = echarts.init(dom, 'light')
@@ -628,7 +628,7 @@ export function drawPies(dom, {title = '', seriesData = []}) {
         {
           name: '详情',
           type: 'pie',
-          roseType: 'area',
+          roseType: roseType,
           startAngle:10, // 起始角度
           radius: [40, 90],
           itemStyle: {

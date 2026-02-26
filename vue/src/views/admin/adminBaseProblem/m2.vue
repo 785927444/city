@@ -22,6 +22,7 @@
       <Pagination class="" style="padding-bottom: 0;" v-show="state.total>0" :total="state.total" v-model:page.sync="state.page" v-model:limit.sync="state.limit" @pagination="init" />
     </div>
     <Add @init="init" :state="state" ref="addRef" />
+    <SetTaskProble @init="init" :state="state" ref="setRef" />
   </div>
 </template>
 
@@ -31,6 +32,7 @@
   const configStore = proxy.configStore()
   const dictStore = proxy.dictStore()
   let addRef = $ref()
+  let setRef = $ref()
   const state = reactive({
 	  ...publicStore.$state,
     content: [
@@ -82,6 +84,9 @@
     }
     if(remark == 'del'){
       addRef.del(val)
+    }
+    if(remark == 'set'){
+      setRef.onVisable(val)
     }
   }
 

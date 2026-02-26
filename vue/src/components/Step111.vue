@@ -16,8 +16,12 @@
         <el-form-item label="建设性质" prop="construct_nature" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
           <el-input v-model="state.form.construct_nature" size="large" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="投资预估(万元)" prop="construct_price" :rules="[{ required: true, message: '请输入', trigger: 'blur' }, { pattern: new RegExp('^(1000000000|[1-9]\\d{0,4}|0)$'), message: '请输入0~100000', trigger: ['blur', 'change'] }]">
-          <el-input v-model="state.form.construct_price" size="large" placeholder="请输入" type="number" />
+        <el-form-item label="投资预估" prop="construct_price" :rules="[{ required: true, message: '请输入', trigger: 'blur' }, { pattern: new RegExp('^(0|[1-9]\\d{0,9})$'), message: '请输入10位以内数字', trigger: ['blur', 'change'] }]">
+          <el-input v-model="state.form.construct_price" size="large" placeholder="请输入" type="text" inputmode="numeric" maxlength="10" @input="state.form.construct_price = String(state.form.construct_price || '').replace(/\\D/g, '').slice(0, 10)">
+            <template #suffix>
+              <span class="unit-text">万元</span>
+            </template>
+          </el-input>
         </el-form-item>
         <el-form-item label="开始时间" prop="construct_datetime_start" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
           <el-date-picker style="width: 100%;" v-model="state.form.construct_datetime_start" size="large" type="year" placeholder="请选择" value-format="YYYY" format="YYYY" />

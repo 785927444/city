@@ -21,7 +21,7 @@
     </div>
     <!-- 规划内容 -->
     <div class="layout-col bg-white rad8 p15">
-      <div class="c9 f16 fw mb10">体检诊断情况情况</div>
+      <div class="c9 f16 fw mb10">体检诊断情况</div>
       <div class="hh100 ww100" id="Bar_responses"></div>
     </div>
   </div>

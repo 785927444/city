@@ -20,21 +20,22 @@
       <div class="ww33 flex-sc p10">
         <span class="w110">策划状态</span>
         <span class="flex1 line1 flex-sc ptb2 rad3 hidden">
+          <span class="plr12 ptb6 rad3 bgi10 i12">已通过</span>
           <!-- 待上报 -->
-          <span class="plr12 ptb6 rad3 bgc c6" v-if="publicStore.active.release_status == '0'">{{ find(release_statuss, ['value', publicStore.active.release_status], 'name') }}</span>
+          <!-- <span class="plr12 ptb6 rad3 bgc c6" v-if="publicStore.active.release_status == '0'">{{ find(release_statuss, ['value', publicStore.active.release_status], 'name') }}</span> -->
           <!-- 已上报，待审核 -->
-          <span class="plr12 ptb6 rad3 bgi13 i15" v-else-if="publicStore.active.release_status == '1'&&publicStore.active.examine_status=='0'">{{ find(examine_statuss, ['value', publicStore.active.examine_status], 'name') }}</span>
+          <!-- <span class="plr12 ptb6 rad3 bgi13 i15" v-else-if="publicStore.active.release_status == '1'&&publicStore.active.examine_status=='0'">{{ find(examine_statuss, ['value', publicStore.active.examine_status], 'name') }}</span> -->
           <!-- 已上报，审核中 -->
-          <span class="plr12 ptb6 rad3 bgi13 i15" v-else-if="publicStore.active.release_status == '1'&&publicStore.active.examine_status=='1'">{{ find(examine_statuss, ['value', publicStore.active.examine_status], 'name') }}</span>
+          <!-- <span class="plr12 ptb6 rad3 bgi13 i15" v-else-if="publicStore.active.release_status == '1'&&publicStore.active.examine_status=='1'">{{ find(examine_statuss, ['value', publicStore.active.examine_status], 'name') }}</span> -->
           <!-- 已上报，审核不通过 -->
-          <span class="plr12 ptb6 rad3 bgi7 i9" v-else-if="publicStore.active.release_status == '1'&&publicStore.active.examine_status=='3'">{{ find(examine_statuss, ['value', publicStore.active.examine_status], 'name') }}</span>
+          <!-- <span class="plr12 ptb6 rad3 bgi7 i9" v-else-if="publicStore.active.release_status == '1'&&publicStore.active.examine_status=='3'">{{ find(examine_statuss, ['value', publicStore.active.examine_status], 'name') }}</span> -->
           <!-- 审核通过，待开始 -->
-          <span class="plr12 ptb6 rad3 bgc c6" v-else-if="publicStore.active.examine_status=='2'&&publicStore.active.completion_status=='0'">{{ find(completion_statuss, ['value', publicStore.active.completion_status], 'name') }}</span>
+          <!-- <span class="plr12 ptb6 rad3 bgc c6" v-else-if="publicStore.active.examine_status=='2'&&publicStore.active.completion_status=='0'">{{ find(completion_statuss, ['value', publicStore.active.completion_status], 'name') }}</span> -->
           <!-- 审核通过，进行中 -->
-          <span class="plr12 ptb6 rad3 bgi10 i12" v-else-if="publicStore.active.examine_status=='2'&&publicStore.active.completion_status=='1'">{{ find(completion_statuss, ['value', publicStore.active.completion_status], 'name') }}</span>
+          <!-- <span class="plr12 ptb6 rad3 bgi10 i12" v-else-if="publicStore.active.examine_status=='2'&&publicStore.active.completion_status=='1'">{{ find(completion_statuss, ['value', publicStore.active.completion_status], 'name') }}</span> -->
           <!-- 审核通过，已完成 -->
-          <span class="plr12 ptb6 rad3 bgi10 i12" v-else-if="publicStore.active.examine_status=='2'&&publicStore.active.completion_status=='2'">{{ find(completion_statuss, ['value', publicStore.active.completion_status], 'name') }}</span>
-          <span class="plr12 ptb6 rad3 bgc c6" v-else>状态补充</span>
+          <!-- <span class="plr12 ptb6 rad3 bgi10 i12" v-else-if="publicStore.active.examine_status=='2'&&publicStore.active.completion_status=='2'">{{ find(completion_statuss, ['value', publicStore.active.completion_status], 'name') }}</span> -->
+          <!-- <span class="plr12 ptb6 rad3 bgc c6" v-else>状态补充</span> -->
         </span>
       </div>
       <div class="ww33 flex-sc p10">

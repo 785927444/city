@@ -185,7 +185,7 @@
     publicStore._public.data1 = data1
   }
 
-   const getData2 = async() => {
+  const getData2 = async() => {
     // state.responses = [
     //   {name: '片区数量',   data: [['太原六城区','10'],['太原','2'],['六城区','3']]}, 
     //   {name: '实施中项目', data: [['太原六城区','20'],['太原','2'],['六城区','3']]},
@@ -199,26 +199,49 @@
       group: `parent_id`
     }
     let res = await publicStore.http({Api: query})
-    let designs = proxy.isNull(res)? [] : res
-    let responses = [
-      {name: '第三方体检', data: []}, 
-      {name: '城市体检', data: []},
+    let designs = proxy.isNull(res) ? [] : res
+    
+    // 1. 使用 reduce 按 user_id 进行分组和数值累加
+    const userMap = state.list.reduce((acc, item) => {
+      // 查找当前项对应的 design
+      const design = designs.find(d => d.parent_id == item.id)
+      // 确保 design_num 是数字，如果没有则默认为 0
+      const dNum = design ? (Number(design.design_num) || 0) : 0
+      // 计算项目数量
+      const pCount = item.project ? item.project.length : 0
+      // 解密用户名
+      const uName = proxy.decrypt(item.user_name)
+    
+      // 如果该用户ID第一次出现，初始化对象
+      if (!acc[item.user_id]) {
+        acc[item.user_id] = {
+          name: uName,
+          sumDesign: 0,
+          sumProject: 0
+        }
+      }
+    
+      // 累加数值
+      acc[item.user_id].sumDesign += dNum
+      acc[item.user_id].sumProject += pCount
+    
+      return acc
+    }, {})
+  
+    // 2. 将聚合后的对象转换为数组，并映射为最终格式
+    const aggregatedList = Object.values(userMap)
+    
+    const responses = [
+      {
+        name: '第三方体检', 
+        data: aggregatedList.map(u => [u.name, String(u.sumDesign)])
+      }, 
+      {
+        name: '城市体检', 
+        data: aggregatedList.map(u => [u.name, String(u.sumProject)])
+      }
     ]
-    state.list.forEach(v => {
-      let design_num = '0'
-      let design = designs.find(a=>a.parent_id == v.id)
-      if(design) design_num = design.design_num
-      responses.forEach(vv => {
-        // 第三方体检
-        if(vv.name=='第三方体检'){
-          vv.data = [...vv.data, [proxy.decrypt(v.user_name), design_num]]
-        }
-        // 城市体检
-        if(vv.name=='城市体检'){
-          vv.data = [...vv.data, [proxy.decrypt(v.user_name), v.project?v.project.length:'0']]
-        }
-      })
-    })
+    console.log("responses---", responses)
     publicStore._public.responses = responses
   }
 

@@ -9,19 +9,19 @@
       </div>
       <div class="hh100 flex1 flex-ec i2 f16">
         <div class="hh100 flex1 flex-sc">
-          <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/scheme')!=-1?'bob-i1-1':''" @click.stop="toPath('/scheme')">
+          <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/scheme')!=-1?'bob-i1-1':''" @click.stop="toPath('/scheme')" v-if="configStore.user.role_id<5">
             <span class="actfont" :class="route.path.indexOf('/scheme')!=-1?'i1':''">更新规划策划</span>
           </div>
-          <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/action')!=-1?'bob-i1-1':''" @click.stop="toPath('/actionHome')">
+          <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/action')!=-1?'bob-i1-1':''" @click.stop="configStore.user.role_id == '5'?toPath('/actionRelease'):toPath('/action')">
             <span class="actfont" :class="route.path.indexOf('/action')!=-1?'i1':''">实施与调度管理</span>
           </div> 
-          <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/problem')!=-1?'bob-i1-1':''" @click.stop="toPath('/problem')">
+          <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/problem')!=-1?'bob-i1-1':''" @click.stop="toPath('/problem')" v-if="configStore.user.role_id<5">
             <span class="actfont" :class="route.path.indexOf('/problem')!=-1?'i1':''">体检整改跟踪</span>
           </div>
-          <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/knowledge')!=-1?'bob-i1-1':''" @click.stop="toPath('/knowledge')">
+          <div class="hh100 flex-col-cc relative mlr15 cursor" :class="route.path.indexOf('/knowledge')!=-1?'bob-i1-1':''" @click.stop="toPath('/knowledge')" v-if="configStore.user.role_id<5">
             <span class="actfont" :class="route.path.indexOf('/knowledge')!=-1?'i1':''">知识库</span>
           </div>
-          <el-popover placement="bottom" width="4%">
+          <!-- <el-popover placement="bottom" width="4%">
            <div class="flex-col tc" v-if="!isNull(configStore.routes)">
              <div class="ww100 flex-sc p5 cursor actfont" v-for="(v, i) in findNode(configStore.routes, node => node.path=='/base', 'children')" :key="i" 
               :class="route.path == v.path?'i1':''" @click.stop="toPath(v.path)">{{ v.name }}</div>
@@ -31,7 +31,7 @@
                 <span class="actfont" :class="route.path.indexOf('/base')!=-1?'i1':''">基础数据管理</span>
               </div>
             </template>
-          </el-popover>
+          </el-popover> -->
         </div>
         <div class="flex-sc cursor relative ml20" @click.stop="">
           <div class="w12 h12 absolute t0 r0 rad50 bo-white-1 bgi3"></div>
@@ -51,7 +51,7 @@
           </template>
           <div class="ww100 lh26">
             <div class="mb5">名称：{{configStore.user.name?decrypt(configStore.user.name):'暂无'}}</div>
-            <!-- <div>角色：{{find(configStore.roleList, ['id', configStore.user.function_role], 'role_name')}}</div> -->
+            <div class="mb5">角色：{{configStore.user.role_id?find(dictStore.roles, ['id', configStore.user.role_id], 'name'):'暂无'}}</div>
             <div class="mb5">电话：{{configStore.user.phone?encryptPhone(decrypt(configStore.user.phone)) : '暂无'}}</div>
             <div class="mb5 tr">
               <el-button type="primary" plain size="small" @click="toPath('/admin')">后台</el-button>
@@ -72,6 +72,7 @@
   const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
+  const dictStore = proxy.dictStore()
   let setRef = $ref()
   let passwordRef = $ref()
   const route = useRoute()

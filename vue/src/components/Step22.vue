@@ -34,9 +34,9 @@
     ],
     export: [
       {key: 'id', name: 'ID'}, 
-      { key: 'task_type', name: '任务类型' }, 
-      { key: 'task_class', name: '类型中类' }, 
-      { key: 'construct_content', name: '建设内容' }, 
+      { key: 'task_type', name: '任务类型', list: [], label: 'name', value: 'id' }, 
+      { key: 'task_class', name: '类型中类', list: [], label: 'name', value: 'id' }, 
+      { key: 'construct_content', name: '建设内容', list: [], label: 'name', value: 'id' }, 
       { key: 'unit_target', name: '量化目标' }, 
       // { key: 'user_id', name: '用户ID' },
       // { key: 'user_name', name: '用户名称' },
@@ -77,6 +77,11 @@
       if(v.key == 'task_class') v.list = [...thirdLayer]
       if(v.key == 'construct_content') v.list = [...list2]
     })
+    state.export.forEach(v => {
+      if(v.key == 'task_type') v.list = [...secondLayer]
+      if(v.key == 'task_class') v.list = [...thirdLayer]
+      if(v.key == 'construct_content') v.list = [...list2]
+    })
   }
 
   const handleClick = async(remark, val) => {
@@ -101,7 +106,30 @@
     if(remark == 'out'){
       let list = [...publicStore.form.task]
       let name = state.export_name
-      proxy.handleExport(state.export, list, name)
+      proxy.handleExport(
+        state.export, 
+        list, 
+        name,
+        (filterVal, list) => {
+          return list.map(item => {
+            return filterVal.map(key => {
+              if (key === 'task_type') {
+                let data = state.task_types.find(a=>a.id == item[key])
+                if(data) return data.name
+              }
+              if (key === 'task_class') {
+                let data = state.task_classs.find(a=>a.id == item[key])
+                if(data) return data.name
+              }
+              if (key === 'construct_content') {
+                let data = state.construct_contents.find(a=>a.id == item[key])
+                if(data) return data.name
+              }
+              return item[key] || ''
+            })
+          })
+        }
+      )
     } 
     if(remark == 'in'){
       let query = {}

@@ -11,7 +11,7 @@
       </div>
       <div class="layout-col">
         <step-title />
-        <Step1 :state="state" v-show="publicStore.actIndex == 1" />
+        <Step1 :state="state" :contents="state.contents1" :active="state.active1" :plans="state.plans1" v-show="publicStore.actIndex == 1" />
         <Step2 :state="state" v-show="publicStore.actIndex == 2" />
         <StepFoot :state="state" @init="init" />
       </div>
@@ -46,7 +46,8 @@
 
   onMounted(async() => {
     publicStore.actIndex = 1
-    publicStore.form = {attr:{}, project: [], task: []}
+    publicStore.form = {attr:[], project: [], task: []}
+    publicStore._public.attr = []
     publicStore._public.project = []
     publicStore._public.task = []
     let query = {model: 't_scheme_plan', args: `user_id='${configStore.user.id}' and release_status='0' and type='${state.type}'`}
@@ -56,6 +57,7 @@
       state.name = res[0]['name']
       state.isFalse = !state.isFalse
     }
+    getFile()
     // init()
   })
 
@@ -64,23 +66,64 @@
     let res = await publicStore.http({Api: query})
     if(!proxy.isNull(res)){
       let data = res[0]
+      // 获取文件数据
+      getFileData(data)
       // 获取关联项目
       getProject(data)
       // 获取关联任务
       getTask(data)
       try {
         data.datetime = data.datetime? JSON.parse(data.datetime) : ''
-        data.attr = data.attr? JSON.parse(data.attr) : {}
       } catch (error) {
         console.error("解析失败:", error.message)
       }
       publicStore.form = {...data}
     }else{
-      publicStore.form = {attr:{}, project: [], task: []}
+      publicStore.form = {attr:[], project: [], task: []}
+      publicStore._public.attr = []
       publicStore._public.project = []
       publicStore._public.task = []
     }
     console.log("publicStore.form", publicStore.form)
+  }
+
+  const getFile = async(data) => {
+    let query1 = {model: 't_file_type'}
+    let query2 = {model: 't_file_content'}
+    let res = await publicStore.http({Api1: query1, Api2: query2})
+    let list1 = proxy.isNull(res.Api1)? [] : res.Api1.sort((a, b) => a.orderd - b.orderd)
+    let list2 = proxy.isNull(res.Api2)? [] : res.Api2.sort((a, b) => a.orderd - b.orderd)
+    let id = state.type=='plan'? "019be0b6-a467-7a5e-8ad9-6ba600813fa5" : "019be0b6-e9f9-7081-b4a3-d808e0bc96ca"
+    getFileAttr1(list1, list2, id)
+  }
+
+  const getFileAttr1 = (list1, list2, id) => {
+    let plan = list1.find(a=>a.id==id)
+    if(plan){
+      let contents = []
+      state.plans1 = list1.filter(a=>a.parent_id == id)
+      state.plans1.forEach(v => { 
+        v.parent_type = `${plan.type}/${v.type}`
+        let content = list2.filter(a=>a.parent_id == v.id)
+        if(!proxy.isNull(content)){
+          content.forEach(vv => {
+            vv.parent_type = `${v.parent_type }/${vv.type}`
+            contents.push(vv)
+          })
+        }
+      })
+      state.contents1 = contents
+      publicStore._public.contents1 = contents
+      state.active1 = proxy.isNull(state.plans1)? {} : {...state.plans1[0]}
+    }
+  }
+
+  const getFileData = (data) => {
+    let query = {model: 't_file', args: `parent_id='${data.id}' and parent_field='attr'`}
+    publicStore.http({Api: query}).then(res=>{
+      publicStore.form.attr = [...res]
+      publicStore._public.attr = [...res]
+    })
   }
 
   const getProject = (data) => {

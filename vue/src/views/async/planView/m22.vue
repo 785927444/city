@@ -34,6 +34,7 @@
 	const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
+  const route = useRoute()
   const state = reactive({
 	  ...publicStore.$state,
     content: [
@@ -44,7 +45,7 @@
       { width: 'w50x5', show: true, align: 'left', key: 'task_type', name: '任务类型', type: 'select', list: [], value: 'id', label: 'name' },
       { width: 'w50x5', show: true, align: 'left', key: 'construct_scale', name: '建设规模' }, 
       { width: 'w50x5', show: true, align: 'left', key: 'construct_nature', name: '建设性质' }, 
-      { width: 'w50x5', show: true, align: 'left', key: 'construct_price', name: '投资预估' },
+      { width: 'w50x5', show: true, align: 'left', key: 'construct_price', name: '投资预估（万元）' },
       { width: 'w50x5', show: true, align: 'left', key: 'construct_datetime', name: '建设周期' },
     ],
   })
@@ -74,19 +75,43 @@
   }
 
   const init = async(key) => {
-    let query = {model: 't_scheme_project', args: `user_id='${publicStore.active.user_id}' and type='plan'`}
+    let query = {model: 't_scheme_project', args: `scheme_id='${route.query.id}' and type='plan'`}
     if(state.task_type) query.args += ` and task_type='${state.task_type}'`
     if(state.name) query.args += ` and name LIKE '%${state.name}%'`
-    let q1 = {limit: state.limit, page: state.page}
-    let q2 = {field: `COUNT(*)`}
+    let q1 = {limit: 1000, page: 1} // 先取多一点或者不分页过滤后再分页，但这里简单处理，直接取全部过滤
     let query1 = {}
-    let query2 = {}
     Object.assign(query1, query, q1)
-    Object.assign(query2, query, q2)
-    let res = await publicStore.http({Api1: query1, Api2: query2})
-    state.empty = proxy.isNull(res.Api1)? true : false
-    state.list = proxy.isNull(res.Api1)? [] : res.Api1
-    state.total = proxy.isNull(res.Api2)? 0 : res.Api2[0]['COUNT(*)']
+    let res = await publicStore.http({Api1: query1})
+    let list = proxy.isNull(res.Api1)? [] : res.Api1
+    
+    // 过滤项目
+    const userLevel = configStore.user.level || 1
+    const checkLevel = (item) => {
+      if (!item) return 1
+      const p = item.province || item.province_name
+      const c = item.city || item.city_name
+      const d = item.district || item.district_name
+      if (p && c && d) return 3
+      if (p && c) return 2
+      if (p) return 1
+      return 1
+    }
+
+    state.list = list.filter(item => {
+      const itemLevel = checkLevel(item)
+      if (userLevel == 2 && itemLevel == 1) return false
+      if (userLevel == 3 && (itemLevel == 1 || itemLevel == 2)) return false
+      return true
+    })
+
+    state.total = state.list.length
+    state.empty = state.total == 0
+    
+    // 手动分页
+    const start = (state.page - 1) * state.limit
+    const end = start + state.limit
+    state.list = state.list.slice(start, end)
+
     if(!proxy.isNull(publicStore.form.project)) {
       publicStore.form.project.forEach(v => {
         let exist = state.list.find(a=>a.id == v)

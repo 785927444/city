@@ -15,6 +15,12 @@
 	  ...publicStore.$state,
   })
 
+  onBeforeMount(() => {
+    if(configStore.user.role_id == '5'){
+      proxy.toPath('/actionRelease')
+    }
+  })
+
 </script>
   
 <style scoped lang="scss">

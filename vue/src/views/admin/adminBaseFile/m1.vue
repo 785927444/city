@@ -36,7 +36,7 @@
     editFrom: [
       { required: true,  editshow: true, key: 'parent_id', name: '上级', type: 'tree', list: [], node_key: 'id', parent_key: 'parent_id', top_name: '顶级' },
       { required: true,  editshow: true, name: '名称', key: 'name', type: 'input' },
-      { required: false, editshow: true, name: '类型', key: 'type', type: 'input' },
+      { required: false, editshow: true, name: '类型', key: 'type', type: 'input', value: 'pinyin', label: 'name' },
       { required: false, editshow: true, name: '描述', key: 'describe', type: 'input' },
       { required: false, editshow: true, name: '排序', key: 'orderd', type: 'input' },
     ],

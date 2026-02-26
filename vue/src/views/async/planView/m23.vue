@@ -99,16 +99,40 @@
   
   const init = async(key) => {
     let query = {model: 't_scheme_task', args: `user_id='${configStore.user.id}' and type='plan'`}
-    let q1 = {limit: state.limit, page: state.page}
-    let q2 = {field: `COUNT(*)`}
+    let q1 = {limit: 1000, page: 1}
     let query1 = {}
-    let query2 = {}
     Object.assign(query1, query, q1)
-    Object.assign(query2, query, q2)
-    let res = await publicStore.http({Api1: query1, Api2: query2})
-    state.empty = proxy.isNull(res.Api1)? true : false
-    state.list = proxy.isNull(res.Api1)? [] : res.Api1
-    state.total = proxy.isNull(res.Api2)? 0 : res.Api2[0]['COUNT(*)']
+    let res = await publicStore.http({Api1: query1})
+    let list = proxy.isNull(res.Api1)? [] : res.Api1
+
+    // 过滤目标
+    const userLevel = configStore.user.level || 1
+    const checkLevel = (item) => {
+      if (!item) return 1
+      const p = item.province || item.province_name
+      const c = item.city || item.city_name
+      const d = item.district || item.district_name
+      if (p && c && d) return 3
+      if (p && c) return 2
+      if (p) return 1
+      return 1
+    }
+
+    state.list = list.filter(item => {
+      const itemLevel = checkLevel(item)
+      if (userLevel == 2 && itemLevel == 1) return false
+      if (userLevel == 3 && (itemLevel == 1 || itemLevel == 2)) return false
+      return true
+    })
+
+    state.total = state.list.length
+    state.empty = state.total == 0
+    
+    // 手动分页
+    const start = (state.page - 1) * state.limit
+    const end = start + state.limit
+    state.list = state.list.slice(start, end)
+
     if(!proxy.isNull(publicStore.form.task)) {
       publicStore.form.task.forEach(v => {
         let exist = state.list.find(a=>a.id == v)

@@ -17,8 +17,8 @@
             <el-option v-for="(v, i) in state.form.task_type&&state.form.task_class?props.state.construct_contents.filter(a=>a.parent_id == state.form.task_class):[]" :key="i" :label="v.name" :value="v.id.toString()" />
           </el-select>
         </el-form-item>
-        <el-form-item label="量化目标" prop="construct_content" :rules="[{ required: true, message: '请输入', trigger: 'blur' }, { pattern: new RegExp('^(100000|[1-9]\\d{0,4}|0)$'), message: '请输入0~1000000000', trigger: ['blur', 'change'] }]">
-          <el-input v-model="state.form.unit_target" size="large" type="number" placeholder="请输入" />
+        <el-form-item label="量化目标" prop="unit_target" :rules="[{ required: true, message: '请输入', trigger: 'blur' }, { pattern: new RegExp('^(0|[1-9]\\d{0,9})$'), message: '请输入10位以内数字', trigger: ['blur', 'change'] }]">
+          <el-input v-model="state.form.unit_target" size="large" type="text" inputmode="numeric" maxlength="10" placeholder="请输入" @input="state.form.unit_target = String(state.form.unit_target || '').replace(/\\D/g, '').slice(0, 10)" />
         </el-form-item>
       </el-form>
     </div>

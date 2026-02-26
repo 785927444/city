@@ -70,7 +70,7 @@ const renderChart = async () => {
     name: String(s?.name ?? ''),
     value: Number(s?.value ?? 0),
   }))
-  chartInst = await drawPies(chartRef.value, { title: '分类统计', seriesData })
+  chartInst = await drawPies(chartRef.value, { title: '分类统计', seriesData, roseType: 'area' })
 }
 
 const fetchData = async () => {

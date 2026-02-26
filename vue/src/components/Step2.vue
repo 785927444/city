@@ -31,7 +31,7 @@
   const configStore = proxy.configStore()
   const activeTab = [
     {value: '1', name: '项目清单'},
-    {value: '2', name: '重点落实项目'},
+    {value: '2', name: '重点落实任务'},
   ]
   const state = reactive({
 	  ...publicStore.$state,

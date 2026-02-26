@@ -34,6 +34,7 @@
 	const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
+  const route = useRoute()
   const state = reactive({
 	  ...publicStore.$state,
     content: [
@@ -74,7 +75,7 @@
   }
 
   const init = async(key) => {
-    let query = {model: 't_scheme_project', args: `user_id='${publicStore.active.user_id}' and type='design'`}
+    let query = {model: 't_scheme_project', args: `scheme_id='${route.query.id}' and type='design'`}
     if(state.task_type) query.args += ` and task_type='${state.task_type}'`
     if(state.name) query.args += ` and name LIKE '%${state.name}%'`
     let q1 = {limit: state.limit, page: state.page}

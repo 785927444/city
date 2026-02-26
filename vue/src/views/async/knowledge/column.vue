@@ -8,7 +8,10 @@
         </div>
       </template>
       <template #right-content>
-        <div class="rad4 ptb5 plr8 flex-cc cursor bgi1 white ml10" @click.stop="toHome()">首页</div>
+        <div class="flex-sc">
+          <div class="rad4 ptb5 plr8 flex-cc cursor bg-white c1 bo-cc-1 ml10" @click.stop="toManage()">分类管理</div>
+          <div class="rad4 ptb5 plr8 flex-cc cursor bgi1 white ml10" @click.stop="toHome()">首页</div>
+        </div>
       </template>
     </aa-title>
 
@@ -34,7 +37,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="publish_org" label="发布单位" width="160" />
-        <el-table-column prop="doc_no" label="文号/编号" width="180" />
+        <el-table-column prop="doc_no" :label="state.code === 'policy' ? '文件文号' : '文号/编号'" width="180" />
+        <el-table-column v-if="state.code === 'standard'" prop="implementation_time" label="开始实行时间" width="140" />
+        <el-table-column v-if="state.code === 'standard'" prop="fields_involved" label="涉及的领域" width="160" />
         <el-table-column prop="publish_time" label="发布时间" width="140" />
         <el-table-column prop="views" label="浏览" width="100" />
       </el-table>
@@ -137,6 +142,10 @@
 
   const toHome = () => {
     proxy.toPath('/knowledge')
+  }
+
+  const toManage = () => {
+    proxy.toPath('/knowledge/category-management')
   }
 
   const getImageUrls = (row: any) => {

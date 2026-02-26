@@ -24,10 +24,10 @@
         </div>
         <!-- 内容 -->
         <div class="layout-col white-rgba50 rady8 bo-i16-1">
-          <div class="ww100 hh100 flex-col-sc f24 cc hidden bg-white" v-if="!isNull(publicStore.active.attr) && !isNull(state.active)">
-             <div v-if="!state.active.file" class="ww100 hh100 flex-cc f24 cc">未找到资源</div>
-             <!-- <div>{{ state.active.file }}</div> -->
-             <iframe v-else class="ww100 hh100" :src="I(state.active.file)"></iframe>
+          <div class="ww100 hh100 flex-col-sc f24 cc hidden bg-white" v-if="!isNull(state.active)">
+            <div v-if="!state.active.data" class="ww100 hh100 flex-cc f24 cc">未找到资源</div>
+            <!-- <div>{{ state.active.file }}</div> -->
+            <iframe v-else class="ww100 hh100" :src="I(state.active.data)"></iframe>
             </div>
         </div>
       </div>
@@ -40,6 +40,7 @@
 	const { proxy }:any = getCurrentInstance()
   const publicStore = proxy.publicStore()
   const configStore = proxy.configStore()
+  const route = useRoute()
   let listTreeRef = $ref()
   let viewRef = $ref()
   const state = reactive({
@@ -60,9 +61,11 @@
   const init = async(key) => {
     let query1 = {model: 't_file_type'}
     let query2 = {model: 't_file_content'}
-    let res = await publicStore.http({Api1: query1, Api2: query2})
+    let query3 = {model: 't_file', args: `parent_id='${route.query.id}'`}
+    let res = await publicStore.http({Api1: query1, Api2: query2, Api3: query3})
     let list1 = proxy.isNull(res.Api1)? [] : res.Api1.sort((a, b) => a.orderd - b.orderd)
     let list2 = proxy.isNull(res.Api2)? [] : res.Api2.sort((a, b) => a.orderd - b.orderd)
+    let list3 = proxy.isNull(res.Api3)? [] : res.Api3
     let id = "019be0b6-e9f9-7081-b4a3-d808e0bc96ca"
     let plan = list1.find(a=>a.id==id)
     if(plan){
@@ -80,7 +83,13 @@
         }
       })
       publicStore._public.contents = contents
-      state.list = [...state.plans, ...contents]
+      if(!proxy.isNull(list3)){
+        list3.forEach(v => {
+          let data = contents.find(a=>a.type == v.type)
+          if(data) v.parent_id = data.id
+        })
+      }
+      state.list = [...state.plans, ...contents, ...list3]
       setTree(key)
     }
   }
@@ -95,7 +104,7 @@
   }
 
   const handleNodeClick = (val) => { 
-    val.file = publicStore.active.attr[val.type]?publicStore.active.attr[val.type]['data'] : ''
+    val.file = val.data?val.data : ''
     state.active = {...val}
    }
 
