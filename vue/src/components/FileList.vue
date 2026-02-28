@@ -19,7 +19,8 @@
             <span class="f15">{{ v.name }}</span> 
             <span class="flex1 flex-ec c8">格式：{{ v.filetype?find(dictStore.fileType, ['value', v.filetype], 'name'):'暂无' }}</span> 
           </div> 
-          <div class="ww100 flex-col ptb12 plr12 h50x3 overlay"> 
+          <div class="ww100 flex-col ptb12 plr12 h50x3 overlay">
+            <!-- <Uploads :fileInfo="v" :fileList="file(files[v.type])" v-model:model="files[v.type]" /> -->
             <div class="ww100 flex-sc ptb5" v-for="(vv, ii) in v.files?v.files:[]" :key="ii"> 
               <div class="flex1 flex-sc hidden"> 
                 <div class="i1">{{ ii+1 }}.</div> 
@@ -52,6 +53,7 @@
   const configStore = proxy.configStore() 
   const dictStore = proxy.dictStore()
   let viewRef = $ref() 
+  let dataForm = $ref([])
   const files = defineModel('files') 
   const props = defineProps({ 
     contents: { 

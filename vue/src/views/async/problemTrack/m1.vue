@@ -155,7 +155,8 @@
     }
     let res = await publicStore.http({Api: query})
     let list = proxy.isNull(res)? [] : res
-    state.list = list.map(v => {
+    state.list = list.slice(0, 1).map((v, i) => {
+      if(i==0) v.name = '太原市城市体检问题'
       try {
         if(v.datetime){
           v.datetime = JSON.parse(v.datetime)

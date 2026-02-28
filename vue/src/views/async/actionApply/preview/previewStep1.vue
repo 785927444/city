@@ -84,8 +84,8 @@
           <!-- 内容类型 -->
           <el-form-item label="内容类型" class="ww100 flex-sc">
             <div class="display-value">
-              <span v-for="(id, index) in publicStore.form.task_content" :key="id">
-                {{ getDictName(publicStore._public.construct_contents, id, 'id') }}{{ index < publicStore.form.task_content.length - 1 ? '、' : '' }}
+              <span v-for="(id, index) in (Array.isArray(publicStore.form.task_content) ? publicStore.form.task_content : [])" :key="id">
+                {{ id === '暂无' ? '暂无' : getDictName(publicStore._public.construct_contents, id, 'id') }}{{ index < publicStore.form.task_content.length - 1 ? '、' : '' }}
               </span>
               <span v-if="!publicStore.form.task_content || publicStore.form.task_content.length === 0">-</span>
             </div>
@@ -218,6 +218,10 @@
   ]
 
   const getDictName = (list, value, key = 'value') => {
+    // 增加对 isList 的本地 fallback
+    if (!list && (value === '0' || value === '1')) {
+       list = [{value: '1', name: '是'}, {value: '0', name: '否'}]
+    }
     if (!list || !value) return '-'
     const item = list.find(a => String(a[key]) === String(value))
     return item ? item.name : '-'

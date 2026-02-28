@@ -63,9 +63,10 @@
             <span class="w50x2">所属专项片区</span>
           </div>
           <div class="flex1">
-            <el-select v-model="publicStore.form.parent_area" placeholder="请选择" size="large" style="width:100%" filterable clearable>
+            <el-input class="ww100" v-model="publicStore.form.parent_area" placeholder="请输入" size="large" />
+            <!-- <el-select v-model="publicStore.form.parent_area" placeholder="请选择" size="large" style="width:100%" filterable clearable>
               <el-option v-for="(v, i) in state.schemeAreas?state.schemeAreas:[]" :key="v.value" :value="String(v.value)" :label="v.name" />
-            </el-select> 
+            </el-select>  -->
           </div>
         </div>
       </div>

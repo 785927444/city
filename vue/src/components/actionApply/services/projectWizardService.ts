@@ -52,14 +52,14 @@ const ensureInspectionCache = async (form: any, publicStore: any) => {
 const fetchDetailData = async (projectId: string, publicStore: any) => {
   if (!projectId) return { keyTasks: [], checkTasks: [], timelineRows: [] }
   const query = {
-    keyApi: { model: 't_project_task_key', args: `project_id='${projectId}'`, limit: 1000 },
-    checkApi: { model: 't_project_task_check', args: `project_id='${projectId}'`, limit: 1000 },
-    timeApi: { model: 't_project_task_timeline', args: `project_id='${projectId}'`, limit: 1000 }
+    Api1: { model: 't_project_task_key', args: `project_id='${projectId}'`, limit: 1000 },
+    Api2: { model: 't_project_task_check', args: `project_id='${projectId}'`, limit: 1000 },
+    Api3: { model: 't_project_task_timeline', args: `project_id='${projectId}'`, limit: 1000 }
   }
   const res = await publicStore.http(query)
-  const keyTasks = Array.isArray(res?.keyApi) ? res.keyApi : []
-  const checkTasks = Array.isArray(res?.checkApi)
-    ? res.checkApi.map((item: any) => ({
+  const keyTasks = Array.isArray(res?.Api1) ? res.Api1 : []
+  const checkTasks = Array.isArray(res?.Api2)
+    ? res.Api2.map((item: any) => ({
         ...item,
         type: item.dimension,
         range: item.rectify_range,
@@ -68,8 +68,8 @@ const fetchDetailData = async (projectId: string, publicStore: any) => {
         problemOptions: []
       }))
     : []
-  const timelineRows = Array.isArray(res?.timeApi)
-    ? [...res.timeApi].sort((a: any, b: any) => Number(a.year) - Number(b.year)).map((item: any) => ({
+  const timelineRows = Array.isArray(res?.Api3)
+    ? [...res.Api3].sort((a: any, b: any) => Number(a.year) - Number(b.year)).map((item: any) => ({
         ...item,
         desc: item.construct_content
       }))

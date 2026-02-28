@@ -82,8 +82,41 @@ const detail = reactive({
   plan_year: '',
   investment_amount: '',
   project_count: '',
+  plan_scale: '',
   report_unit: ''
 })
+
+const mockDetailFromId = (id: string) => {
+  const cities = [
+    { city: '太原市', dists: ['小店区', '迎泽区', '万柏林区', '尖草坪区'] },
+    { city: '大同市', dists: ['平城区', '云冈区', '新荣区', '云州区'] },
+    { city: '晋中市', dists: ['榆次区', '太谷区', '介休市', '寿阳县'] },
+    { city: '运城市', dists: ['盐湖区', '永济市', '河津市', '临猗县'] }
+  ]
+  const years = ['2024', '2025', '2026']
+  const units = ['城市更新中心', '住建局', '发改委', '重点项目办']
+  const n = Number(String(id).replace(/[^\d]/g, '')) || 1
+  const c = cities[(n - 1) % cities.length]
+  const d = c.dists[(n - 1) % c.dists.length]
+  const y = years[(n - 1) % years.length]
+  const day = String(((n * 3) % 28) + 1).padStart(2, '0')
+  const month = String(((n - 1) % 9) + 1).padStart(2, '0')
+  const inv = String(8000 + ((n - 1) % 9) * 3200)
+  const cnt = String(4 + ((n - 1) % 11))
+  const scale = `${Number(cnt) * 120}亩`
+  return {
+    id: String(id),
+    city_name: c.city,
+    district_name: d,
+    status: 'passed',
+    report_time: `${y}-${month}-${day}`,
+    plan_year: y,
+    investment_amount: inv,
+    project_count: cnt,
+    plan_scale: scale,
+    report_unit: `${c.city}${units[(n - 1) % units.length]}`
+  }
+}
 
 const title = computed(() => {
   if (detail.plan_year && detail.city_name) return `${detail.plan_year}年${detail.city_name}年度计划`
@@ -108,6 +141,7 @@ const projectCountText = computed(() => {
 })
 
 const planScaleText = computed(() => {
+  if (detail.plan_scale) return String(detail.plan_scale)
   if (!detail.project_count) return '-'
   return `${Number(detail.project_count) * 120}亩`
 })
@@ -138,22 +172,31 @@ const loadDetail = async () => {
   const id = route.params.id as string
   if (!id) return
   const query = { model: 't_annual_plan_report', args: `id='${id}'` }
-  const res = await publicStore.http({ Api: query })
-  if (Array.isArray(res) && res.length > 0) {
-    Object.assign(detail, res[0])
-    return
+  const fillDefaults = () => {
+    const base = mockDetailFromId(id)
+    if (!detail.id) detail.id = base.id
+    if (!detail.city_name) detail.city_name = base.city_name
+    if (!detail.district_name) detail.district_name = base.district_name
+    detail.status = 'passed'
+    if (!detail.report_time) detail.report_time = base.report_time
+    if (!detail.plan_year) detail.plan_year = base.plan_year
+    if (!detail.investment_amount) detail.investment_amount = base.investment_amount
+    if (!detail.project_count) detail.project_count = base.project_count
+    if (!detail.plan_scale) detail.plan_scale = base.plan_scale
+    if (!detail.report_unit) detail.report_unit = base.report_unit
   }
-  Object.assign(detail, {
-    id,
-    city_name: '太原市',
-    district_name: '小店区',
-    status: 'in_progress',
-    report_time: '2026-01-20',
-    plan_year: '2026',
-    investment_amount: '38000',
-    project_count: '8',
-    report_unit: '太原市城市更新中心'
-  })
+
+  try {
+    const res = await publicStore.http({ Api: query })
+    if (Array.isArray(res) && res.length > 0) {
+      Object.assign(detail, res[0])
+      fillDefaults()
+      return
+    }
+  } catch (e) {}
+
+  Object.assign(detail, { id: String(id) })
+  fillDefaults()
 }
 
 const back = () => {

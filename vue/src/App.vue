@@ -37,63 +37,11 @@ if(configStore.isMqtt && configStore.isMqtt != 'false'){
 }
 
 onMounted(async() => {
-  if (!import.meta.env.DEV) {
-    document.addEventListener('contextmenu', handleContextMenu)
-    document.addEventListener('keydown', handleKeyDown)
-    createScheduled('detectDevTools', 1000, () => detectDevTools())
-  }
 })
 
 onUnmounted(() => {
   delTimer()
 })
-
-// 禁止右键菜单
-const handleContextMenu = (e) => {
-  if(!configStore.debugger) e.preventDefault()
-}
-// 禁止键盘输入
-const handleKeyDown = (e) => {
-  // 检测 Ctrl+Shift+F11
-  if (e.ctrlKey && e.shiftKey && e.key === 'F11') {
-    configStore.debugapi = !configStore.debugapi
-    let msg = configStore.debugapi?`已开启`:`已关闭`
-    alert(msg)
-  }
-  // 检测 Ctrl+Shift+F12
-  if (e.ctrlKey && e.shiftKey && e.key === 'F12') {
-    configStore.debugger = !configStore.debugger
-    let msg = configStore.debugger?`已开启`:`已关闭`
-    alert(msg)
-  }
-  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') ||  (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.key === 'U')) {
-    if(!configStore.debugger) e.preventDefault()
-  }
-}
-// 综合检测
-const detectDevTools = () => {
-  if (import.meta.env.DEV) return true
-  if(configStore.debugger) return true
-  // 方法1: debugger时间差检测
-  const start = performance.now();
-  (function(){}).constructor("debugger")()
-  if (performance.now() - start > 100) {
-    return true
-  }
-  // 方法2: 窗口大小检测
-  const widthThreshold = window.outerWidth - window.innerWidth > 160
-  const heightThreshold = window.outerHeight - window.innerHeight > 160
-  if (widthThreshold || heightThreshold) {
-    return true
-  }
-  // 方法3: 特殊属性检测
-  try {
-    if (window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) {
-      return true
-    }
-  } catch(e) {}
-  return false
-}
 
 const mock = async() => {
   delTimer()

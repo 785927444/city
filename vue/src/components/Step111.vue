@@ -11,7 +11,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="建设规模" prop="construct_scale" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
-          <el-input v-model="state.form.construct_scale" size="large" placeholder="请输入" />
+          <el-input v-model="state.form.construct_scale" size="large" placeholder="请输入">
+            <template #suffix>
+              <span class="unit-text">平方米</span>
+            </template>
+          </el-input>
         </el-form-item>
         <el-form-item label="建设性质" prop="construct_nature" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
           <el-input v-model="state.form.construct_nature" size="large" placeholder="请输入" />

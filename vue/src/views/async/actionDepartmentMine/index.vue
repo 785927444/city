@@ -172,8 +172,25 @@
     return setAreaLevel('district')
   })
 
+  const setTypeTabs = () => {
+    const roleId = String(configStore.user.role_id || '')
+    const dept = state.types.find((a: any) => a.type === 'actionDepartment')
+    const mine = state.types.find((a: any) => a.type === 'actionDepartmentMine')
+    if (roleId === '2') {
+      if (dept) dept.name = '市县上报'
+      if (mine) mine.name = '省级上报'
+    } else if (roleId === '3') {
+      if (dept) dept.name = '县级上报'
+      if (mine) mine.name = '市级上报'
+    } else if (roleId > '3') {
+      if (mine) mine.name = '县级上报'
+    }
+  }
+
   onMounted(async() => {
+    setTypeTabs()
     if(configStore.user.role_id > '3') state.types = state.types.filter(a=>a.type != 'actionDepartment')
+    if (!state.types.some((a: any) => a.type === state.type)) state.type = state.types[0]?.type || state.type
     await getInit()
     init()
   })

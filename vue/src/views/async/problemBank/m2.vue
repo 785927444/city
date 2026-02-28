@@ -68,9 +68,9 @@
           <span>{{scope.row.action_type?find(action_types, ['value', scope.row.action_type], 'name'):''}}</span>
         </template>
       </el-table-column> -->
-      <el-table-column prop="action_unit" label="责任单位" width="100" align="center" />
-      <el-table-column prop="problem_num" label="问题数量" width="70" align="center" />
-      <el-table-column prop="action_rate" label="整改进度" width="70" align="center" />
+      <!-- <el-table-column prop="action_unit" label="责任单位" width="100" align="center" /> -->
+      <el-table-column prop="problem_num" label="问题数量" width="80" align="center" />
+      <el-table-column prop="action_rate" label="整改进度" width="80" align="center" />
       <el-table-column label="问题区域" width="100" align="center" >
         <template #default="scope, $index">
           <span class="i1 cursor" @click.stop="problemRef.onVisable(scope.row)">查看问题分布</span>
@@ -78,7 +78,7 @@
       </el-table-column>
        <el-table-column label="整改项目清单" width="100" align="center" >
         <template #default="scope, $index">
-          <span class="i1 cursor" @click.stop="toPath('/schemePlansManagerCity', {id: scope.row.id})">查看项目清单</span>
+          <span class="i1 cursor" @click.stop="toPath('/project-push/ledger', {id: scope.row.id})">查看项目清单</span>
         </template>
       </el-table-column>
       </el-table>

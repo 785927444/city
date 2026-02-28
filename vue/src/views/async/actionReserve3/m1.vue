@@ -189,6 +189,21 @@
     }
   })
 
+  const setTypeTabs = () => {
+    const roleId = String(configStore.user.role_id || '')
+    const reserve1 = state.types.find((a: any) => a.type === 'actionReserve1')
+    const reserve3 = state.types.find((a: any) => a.type === 'actionReserve3')
+    if (roleId === '2') {
+      if (reserve1) reserve1.name = '省级储备'
+      if (reserve3) reserve3.name = '市县储备'
+    } else if (roleId === '3') {
+      if (reserve1) reserve1.name = '市级储备'
+      if (reserve3) reserve3.name = '县级储备'
+    } else if (roleId > '3') {
+      if (reserve1) reserve1.name = '县级储备'
+    }
+  }
+
   const construct_prices = [
     {value1: '0',    value: '5000', name: '5000万以下'},
     {value1: '5000',  value: '10000', name: '5000万-1亿'},
@@ -204,7 +219,9 @@
   ]
 
   onMounted(async() => {
+    setTypeTabs()
     if(configStore.user.role_id > '3') state.types = state.types.filter(a=>a.type != 'actionReserve3')
+    if (!state.types.some((a: any) => a.type === state.type)) state.type = state.types[0]?.type || state.type
     await getInit()
     getTaskType()
     init()

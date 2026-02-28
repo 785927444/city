@@ -34,7 +34,7 @@
         </div>
       </template>
       <template #right-content>
-        <!-- <div class="rad4 ptb10 plr12 flex-cc cursor ml15 bgi1 white" @click.stop="toPath('/actionApply', {key:'enterprise'})">新建项目</div> -->
+        <div class="rad4 ptb10 plr12 flex-cc cursor ml15 bgi1 white" @click.stop="toPath('/actionApply', {key:'department'})">新建项目</div>
         <div class="rad4 ptb10 plr12 flex-cc cursor ml15 bg-white c8 bo-cc-1" @click.stop="router.back">返回</div>
       </template>
     </aa-title>
@@ -174,8 +174,25 @@
     return setAreaLevel('district')
   })
 
+  const setTypeTabs = () => {
+    const roleId = String(configStore.user.role_id || '')
+    const dept = state.types.find((a: any) => a.type === 'actionDepartment')
+    const mine = state.types.find((a: any) => a.type === 'actionDepartmentMine')
+    if (roleId === '2') {
+      if (dept) dept.name = '市县上报'
+      if (mine) mine.name = '省级上报'
+    } else if (roleId === '3') {
+      if (dept) dept.name = '县级上报'
+      if (mine) mine.name = '市级上报'
+    } else if (roleId > '3') {
+      if (mine) mine.name = '县级上报'
+    }
+  }
+
   onMounted(async() => {
+    setTypeTabs()
     if(configStore.user.role_id > '3') state.types = state.types.filter(a=>a.type != 'actionDepartment')
+    if (!state.types.some((a: any) => a.type === state.type)) state.type = state.types[0]?.type || state.type
     await getInit()
     init()
   })

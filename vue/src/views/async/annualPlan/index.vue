@@ -1,551 +1,301 @@
 <template>
-  <div class="annual-plan-container">
-    <el-container>
-      <!-- Main Content (Left) -->
-      <el-main class="main-content">
-        <!-- Breadcrumb -->
-        <div class="breadcrumb">
-          <span class="home-icon"><i class="el-icon-s-home"></i> 城市更新</span>
-          <span class="separator">/</span>
-          <span class="current">实施与调度管理</span>
-        </div>
-
-        <!-- Filter Bar -->
-        <el-card class="filter-card">
-          <el-form :inline="true" :model="filters" class="filter-form">
-            <el-form-item label="项目周期">
-              <el-date-picker
-                v-model="filters.period"
-                type="date"
-                placeholder="请选择日期"
-                format="YYYY-MM-DD"
-                value-format="YYYY-MM-DD"
-              />
-            </el-form-item>
-            <el-form-item label="所属地区">
-              <el-select v-model="filters.city" placeholder="请选择市" style="width: 120px; margin-right: 10px;" @change="handleCityChange">
-                <el-option label="太原市" value="太原市" />
-                <el-option label="大同市" value="大同市" />
-                <el-option label="阳泉市" value="阳泉市" />
-                <el-option label="长治市" value="长治市" />
-                <el-option label="晋城市" value="晋城市" />
-                <el-option label="朔州市" value="朔州市" />
-                <el-option label="晋中市" value="晋中市" />
-                <el-option label="运城市" value="运城市" />
-                <el-option label="忻州市" value="忻州市" />
-                <el-option label="临汾市" value="临汾市" />
-                <el-option label="吕梁市" value="吕梁市" />
-              </el-select>
-              <el-select v-model="filters.district" placeholder="请选择区/县" style="width: 120px;">
-                <el-option v-for="item in districtOptions" :key="item" :label="item" :value="item" />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="项目阶段">
-              <el-select v-model="filters.stage" placeholder="请选择">
-                <el-option label="储备阶段" value="储备阶段" />
-                <el-option label="实施阶段" value="实施阶段" />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="总投资金额">
-              <el-select v-model="filters.investment" placeholder="请选择">
-                <el-option label="5千万以上" value="gt5000" />
-                <el-option label="5千万以下" value="lt5000" />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="项目类型">
-              <el-select v-model="filters.type" placeholder="请选择" style="width: 180px;">
-                <el-option label="加强既有建筑改造利用" value="加强既有建筑改造利用" />
-                <el-option label="完善社区服务设施" value="完善社区服务设施" />
-              </el-select>
-            </el-form-item>
-            <el-form-item>
-              <el-input v-model="filters.keyword" placeholder="请输入" style="width: 150px;" />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="fetchData">搜索</el-button>
-            </el-form-item>
-          </el-form>
-        </el-card>
-
-        <!-- List Section -->
-        <div class="list-section">
-          <div class="list-header">
-            <h3 class="section-title">年度计划</h3>
-            <div class="list-actions">
-              <el-button>全选</el-button>
-              <el-button type="primary">提醒</el-button>
-            </div>
+  <div class="layout-col">
+    <aa-title title="">
+      <template #left-content>
+        <div class="flex-sc flex4 hidden warp">
+          <div class="flex-sc mr30">
+            <span class="mr10">计划年度</span>
+            <span class="w50x4 flex-sc">
+              <el-date-picker size="large" style="width: 100%;" v-model="state.plan_year" type="year" value-format="YYYY" format="YYYY" placeholder="请选择" />
+            </span>
           </div>
+          <!-- <div class="flex-sc pr30">
+            <span class="mr10">状态</span>
+            <span class="w50x4 flex-sc hidden">
+              <el-select size="large" v-model="state.status" placeholder="请选择" style="width:100%" filterable clearable>
+                <el-option label="已通过" value="passed" />
+                <el-option label="特审候" value="special_audit" />
+                <el-option label="不通过" value="failed" />
+                <el-option label="待上报" value="wait_report" />
+                <el-option label="进行中" value="in_progress" />
+              </el-select>
+            </span>
+          </div> -->
+          <div class="flex-sc pr30 mt10">
+            <span class="mr10">关键字</span>
+            <span class="w50x4 flex-sc hidden">
+              <el-input size="large" v-model="state.search" style="width: 100%;" placeholder="请输入" />
+            </span>
+          </div>
+          <div class="rad4 ptb10 plr12 flex-cc cursor bgi1 white" @click.stop="init()">
+            <i-ep-search class="f12 fw" /><span class="f14 ml5">搜索</span>
+          </div>
+        </div>
+      </template>
+      <template #right-content></template>
+    </aa-title>
 
-          <el-row :gutter="20">
-            <el-col :span="8" v-for="item in listData" :key="item.id" style="margin-bottom: 20px;">
-              <el-card class="data-card" @click.stop="goDetail(item)">
-                <template #header>
-                  <div class="card-header">
-                    <span class="city-name">{{ item.city_name }}</span>
-                    <div class="header-right">
-                      <el-tag :type="getStatusType(item.status)" effect="dark" size="small" class="status-tag">
-                        {{ getStatusLabel(item.status) }}
-                      </el-tag>
-                      <el-checkbox v-model="item.checked" />
-                    </div>
-                  </div>
+    <div class="layout-col bg-white rad8 p8">
+      <div class="ww100 flex-sc p8">
+        <div class="flex-sc fw f16 tc">
+          <div class="mr40 cursor flex-col-cc relative" v-for="(v, i) in state.types" :key="i" @click.stop="toPath(v.path)">
+            <span class="mb5">{{ v.name }}</span>
+            <span class="ww100 h3 rad10" :class="v.type == state.type?'bgi2':'black-rgba0'"></span>
+          </div>
+        </div>
+        <div class="flex-ec flex1">
+          <div class="rad4 ptb5 plr12 flex-cc cursor bg-white c8 bo-cc-1 ml15" @click.stop="handleClick('selectAll')">全选</div>
+          <div class="rad4 ptb5 plr12 flex-cc cursor bgi1 white bo-i1-1 ml15" @click.stop="handleClick('remind')">提醒</div>
+        </div>
+      </div>
+
+      <div class="table flex-sc warp">
+        <div class="ww25 cursor p8" v-for="(v, i) in state.list" :key="v.id || i">
+          <div class="ww100 bs bo-i16-1 relative rad8 project-card" @click.stop="goDetail(v)">
+            <div class="ww100 flex-sc p12 bob-ce-1">
+              <el-popover title="" width="300" placement="bottom-start">
+                <template #default>
+                  <div class="problem-content f16"><div class="hh100 flex-col">{{ v.report_unit || v.name }}</div></div>
                 </template>
-                <div class="card-content">
-                  <div class="info-row">
-                    <span class="label">上报时间：</span>
-                    <span class="value">{{ item.report_time || '-' }}</span>
-                  </div>
-                  <div class="info-row">
-                    <span class="label">计划年度：</span>
-                    <span class="value">{{ item.plan_year }}</span>
-                  </div>
-                  <div class="info-row">
-                    <span class="label">年度投资估算：</span>
-                    <span class="value">{{ item.investment_amount }}万元</span>
-                  </div>
-                  <div class="info-row">
-                    <span class="label">包含项目数：</span>
-                    <span class="value">{{ item.project_count }}个</span>
-                  </div>
-                  <div class="info-row">
-                    <span class="label">上报单位：</span>
-                    <span class="value">{{ item.report_unit || '-' }}</span>
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-
-          <!-- Pagination -->
-          <div class="pagination-container">
-            <el-pagination
-              background
-              layout="prev, pager, next"
-              :total="total"
-              :page-size="pageSize"
-              :current-page="currentPage"
-              @current-change="handlePageChange"
-            />
-          </div>
-        </div>
-      </el-main>
-
-      <!-- Right Sidebar -->
-      <el-aside width="400px" class="right-sidebar">
-        <div class="sidebar-actions">
-          <el-button type="primary" class="action-btn" @click.stop="goReport">年度计划上报</el-button>
-          <el-button class="action-btn" @click.stop="goTrack">年度计划跟踪</el-button>
-        </div>
-
-        <el-card class="chart-card">
-          <template #header>
-            <div class="chart-header">年度计划上报情况</div>
-          </template>
-          <div class="stats-summary">
-            <div>共<span class="highlight">11</span>个地市</div>
-            <div class="pie-chart-placeholder">
-              <!-- Placeholder for Pie Chart -->
-              <div class="pie-circle">
-                <span class="percentage">60%</span>
+                <template #reference>
+                  <span class="flex1 f15 line1">{{ v.name }}</span>
+                </template>
+              </el-popover>
+              <span class="flex-ec">
+                <!-- <span class="rad3 ptb3 plr6 f12" :class="getStatusClass(v.status)">{{ getStatusLabel(v.status) }}</span> -->
+                <span class="w18 h18 tc lh18 rad3 ml10 white f12" :class="v.click?'bgi1 bo-i1-1':'bo-cc-1'" @click.stop="v.click = !v.click">
+                  <i-ep-check v-if="v.click" />
+                </span>
+              </span>
+            </div>
+            <div class="ww100 flex-col p12 c6">
+              <div class="ww100 flex-sc">
+                <span class="w110">所属地区</span>
+                <span>{{ v.city_name ? `${v.city_name}${v.district_name?`-${v.district_name}`:''}` : '-' }}</span>
               </div>
-            </div>
-            <div>
-              <div>共<span class="highlight blue">160</span>个县</div>
-              <div><span class="highlight blue">55</span>个县完成上报</div>
-            </div>
-          </div>
-        </el-card>
-
-        <el-card class="chart-card chart-card-tall">
-          <template #header>
-            <div class="chart-header">片区策划内容</div>
-          </template>
-          <div class="chart-legend">
-            <span class="legend-item"><span class="dot pink"></span>项目数量</span>
-            <span class="legend-item"><span class="dot cyan"></span>年度投资金额(万元)</span>
-          </div>
-          <div class="bar-chart-placeholder">
-            <!-- Simple HTML/CSS Bar Chart Mockup -->
-            <div class="bar-row" v-for="(item, index) in chartData" :key="index">
-              <span class="bar-label">{{ item.name }}</span>
-              <div class="bar-container">
-                <div class="bar-group">
-                  <div class="bar pink" :style="{ width: item.count * 2 + 'px' }"></div>
-                  <span class="bar-value pink-text">{{ item.count }}</span>
-                </div>
-                <div class="bar-group">
-                  <div class="bar cyan" :style="{ width: item.amount / 2 + 'px' }"></div>
-                  <span class="bar-value cyan-text">{{ item.amount }}</span>
-                </div>
+              <div class="ww100 flex-sc mt10">
+                <span class="w110">上报时间</span>
+                <span>{{ v.report_time || '-' }}</span>
+              </div>
+              <div class="ww100 flex-sc mt10">
+                <span class="w110">计划年度</span>
+                <span>{{ v.plan_year || '-' }}</span>
+              </div>
+              <div class="ww100 flex-sc mt10">
+                <span class="w110">年度投资估算</span>
+                <span>{{ v.investment_amount ? `${v.investment_amount} 万元` : '-' }}</span>
+              </div>
+              <div class="ww100 flex-sc mt10">
+                <span class="w110">包含项目数</span>
+                <span>{{ v.project_count ? `${v.project_count} 个` : '-' }}</span>
+              </div>
+              <div class="ww100 flex-sc mt10">
+                <span class="w110">上报单位</span>
+                <span class="flex1">{{ v.report_unit || '-' }}</span>
               </div>
             </div>
           </div>
-        </el-card>
-      </el-aside>
-    </el-container>
+        </div>
+      </div>
+
+      <Pagination style="padding-bottom: 0;" v-show="state.total>0" :total="state.total" v-model:page.sync="state.page" v-model:limit.sync="state.limit" @pagination="init" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, getCurrentInstance } from 'vue'
+import { getCurrentInstance, onMounted, reactive } from 'vue'
 
-const { proxy } = getCurrentInstance() as any
-const publicStore = proxy.publicStore()
+type AnnualPlanRow = {
+  id: string
+  name: string
+  city_name?: string
+  district_name?: string
+  status?: string
+  report_time?: string
+  plan_year?: string
+  investment_amount?: string | number
+  project_count?: string | number
+  report_unit?: string
+  click?: boolean
+}
 
-// State
-const filters = reactive({
-  period: '',
-  city: '',
-  district: '',
-  stage: '',
-  investment: '',
-  type: '',
-  keyword: ''
+const { proxy }: any = getCurrentInstance()
+const publicStore = proxy?.publicStore?.()
+
+const state = reactive({
+  page: 1,
+  limit: 8,
+  total: 0,
+  list: [] as AnnualPlanRow[],
+  status: '',
+  plan_year: '',
+  search: '',
+  types: [{ type: 'annualPlan', name: '年度计划', path: '/annual-plan', total: 0 }],
+  type: 'annualPlan',
+  click: false,
+  clickArr: [] as AnnualPlanRow[]
 })
 
-const districtOptions = ref<string[]>([])
-const listData = ref<any[]>([])
-const total = ref(0)
-const pageSize = ref(9)
-const currentPage = ref(1)
-
-const chartData = ref([
-  { name: '太原六城区', count: 13, amount: 203 },
-  { name: '古交市', count: 10, amount: 219 },
-  { name: '娄烦县', count: 23, amount: 225 },
-  { name: '阳曲县', count: 14, amount: 167 },
-  { name: '清徐县', count: 15, amount: 143 },
-])
-
-// Methods
-const handleCityChange = (val: string) => {
-  // Mock district data based on city
-  if (val === '太原市') districtOptions.value = ['小店区', '迎泽区', '杏花岭区', '尖草坪区', '万柏林区', '晋源区', '古交市', '清徐县', '阳曲县', '娄烦县']
-  else if (val === '大同市') districtOptions.value = ['平城区', '云冈区', '新荣区', '云州区', '阳高县', '天镇县']
-  else districtOptions.value = [] // Simplified for demo
-  filters.district = ''
-}
-
-const getStatusType = (status: string) => {
+const getStatusLabel = (status?: string) => {
   const map: Record<string, string> = {
-    'passed': 'success',
-    'special_audit': 'warning',
-    'failed': 'danger',
-    'wait_report': 'info',
-    'in_progress': ''
+    passed: '已通过',
+    special_audit: '特审候',
+    failed: '不通过',
+    wait_report: '待上报',
+    in_progress: '进行中'
   }
-  return map[status] || ''
+  return map[status || ''] || '未知'
 }
 
-const getStatusLabel = (status: string) => {
+const getStatusClass = (status?: string) => {
   const map: Record<string, string> = {
-    'passed': '已通过',
-    'special_audit': '特审候',
-    'failed': '不通过',
-    'wait_report': '待上报',
-    'in_progress': '进行中'
+    passed: 'bgi10 bo-i11-1 i12',
+    special_audit: 'bgi12 bo-i12-1 i14',
+    failed: 'bgi13 bo-i14-1 i15',
+    wait_report: 'bgi8 bo-i8-1 i8',
+    in_progress: 'bgi1 bo-i1-1 white'
   }
-  return map[status] || status
+  return map[status || ''] || 'bo-cc-1 c8'
 }
 
-const fetchData = async () => {
-  let whereClause = "1=1"
-  
-  if (filters.period) whereClause += ` AND report_time = '${filters.period}'`
-  if (filters.city) whereClause += ` AND city_name = '${filters.city}'`
-  if (filters.district) whereClause += ` AND district_name = '${filters.district}'`
-  if (filters.stage) whereClause += ` AND project_stage = '${filters.stage}'`
-  if (filters.type) whereClause += ` AND project_type = '${filters.type}'`
-  if (filters.keyword) whereClause += ` AND (city_name LIKE '%${filters.keyword}%' OR report_unit LIKE '%${filters.keyword}%')`
-  
-  if (filters.investment === 'gt5000') whereClause += ` AND investment_amount >= 5000`
-  if (filters.investment === 'lt5000') whereClause += ` AND investment_amount < 5000`
+const toPath = (path: string, query?: any) => {
+  proxy?.toPath?.(path, query)
+}
+
+const goDetail = (row: AnnualPlanRow) => {
+  if (!row?.id) return
+  toPath(`/annual-plan/${row.id}`)
+}
+
+const buildMockList = (): AnnualPlanRow[] => {
+  const cities = [
+    { city: '太原市', dists: ['小店区', '迎泽区', '万柏林区', '尖草坪区'] },
+    { city: '大同市', dists: ['平城区', '云冈区', '新荣区', '云州区'] },
+    { city: '晋中市', dists: ['榆次区', '太谷区', '介休市', '寿阳县'] },
+    { city: '运城市', dists: ['盐湖区', '永济市', '河津市', '临猗县'] }
+  ]
+  const years = ['2024', '2025', '2026']
+  const units = ['城市更新中心', '住建局', '发改委', '重点项目办']
+  const rows: AnnualPlanRow[] = []
+  for (let i = 0; i < 26; i++) {
+    const c = cities[i % cities.length]
+    const d = c.dists[i % c.dists.length]
+    const y = years[i % years.length]
+    const month = String((i % 12) + 1).padStart(2, '0')
+    const day = String(((i * 3) % 28) + 1).padStart(2, '0')
+    const inv = 8000 + (i % 9) * 3200
+    const cnt = 4 + (i % 11)
+    const unit = `${c.city}${units[i % units.length]}`
+    rows.push({
+      id: `mock-${i + 1}`,
+      name: `${c.city}${d}年度计划`,
+      city_name: c.city,
+      district_name: d,
+      status: 'passed',
+      report_time: `${y}-0${(i % 9) + 1}-${day}`,
+      plan_year: y,
+      investment_amount: inv,
+      project_count: cnt,
+      report_unit: unit,
+      click: false
+    })
+  }
+  return rows
+}
+
+const applyMock = () => {
+  let rows = buildMockList()
+  if (state.plan_year) rows = rows.filter(r => String(r.plan_year || '') === String(state.plan_year))
+  if (state.search) {
+    const kw = state.search.trim()
+    rows = rows.filter(r => {
+      const s = `${r.name || ''}${r.city_name || ''}${r.district_name || ''}${r.report_unit || ''}`
+      return s.includes(kw)
+    })
+  }
+  state.total = rows.length
+  state.types[0].total = rows.length
+  const start = (state.page - 1) * state.limit
+  state.list = rows.slice(start, start + state.limit)
+}
+
+const init = async () => {
+  state.click = false
+  state.clickArr = []
 
   try {
-    const res = await publicStore.http({
+    const res = await publicStore?.http?.({
       Api: {
         model: 't_annual_plan_report',
-        args: whereClause,
+        args: '1=1',
         order: 'report_time desc',
-        page: currentPage.value,
-        limit: pageSize.value
+        page: state.page,
+        limit: state.limit
       }
     })
-    
-    // Check if response structure matches expectation (adjust based on actual API)
-    if (res && res.list) {
-       listData.value = res.list.map((item: any) => ({ ...item, checked: false }))
-       total.value = res.total || 50 // Fallback if total not returned
-    } else {
-       // Fallback for direct array return or different structure
-       listData.value = Array.isArray(res) ? res : []
+
+    const list = Array.isArray(res?.list) ? res.list : (Array.isArray(res) ? res : [])
+    if (Array.isArray(list) && list.length > 0) {
+      state.list = list.map((item: any, idx: number) => ({
+        id: String(item.id ?? idx),
+        name: item.name || `${item.city_name || ''}${item.district_name || ''}年度计划`,
+        city_name: item.city_name,
+        district_name: item.district_name,
+        status: 'passed',
+        report_time: item.report_time,
+        plan_year: item.plan_year,
+        investment_amount: item.investment_amount,
+        project_count: item.project_count,
+        report_unit: item.report_unit,
+        click: false
+      }))
+      state.total = Number(res?.total || state.list.length)
+      state.types[0].total = state.total
+      return
     }
-  } catch (error) {
-    console.error('Failed to fetch data:', error)
+  } catch (e) {}
+
+  applyMock()
+}
+
+const handleClick = (remark: 'selectAll' | 'remind') => {
+  if (remark === 'remind') {
+    const clickIndex = state.list.findIndex(a => a.click)
+    if (clickIndex === -1) return ElNotification({ title: '提示', message: '请选择至少一个', type: 'error' })
+    ElNotification({ title: '提示', message: '提醒成功', type: 'success' })
   }
-}
-
-const goDetail = (item: any) => {
-  if (!item || !item.id) return
-  proxy.toPath(`/annual-plan/${item.id}`)
-}
-
-const goTrack = () => {
-  proxy.toPath('/annual-plan/track')
-}
-
-const goReport = () => {
-  proxy.toPath('/annual-plan/report')
-}
-
-const handlePageChange = (page: number) => {
-  currentPage.value = page
-  fetchData()
+  if (remark === 'selectAll') {
+    const clickIndex = state.list.findIndex(a => a.click)
+    if (clickIndex === -1) {
+      state.click = true
+      state.list.forEach(item => {
+        item.click = true
+        state.clickArr.push(item)
+      })
+    } else {
+      state.click = false
+      state.clickArr = []
+      state.list.forEach(item => {
+        item.click = false
+      })
+    }
+  }
 }
 
 onMounted(() => {
-  fetchData()
+  init()
 })
 </script>
 
 <style scoped lang="scss">
-.annual-plan-container {
-  font-size: 30px;
-  padding: 20px;
-  background-color: #f5f7fa;
-  min-height: 100vh;
-  height: 100vh;
-  overflow: auto;
-}
-
-.breadcrumb {
-  margin-bottom: 20px;
-  font-size: 14px;
-  color: #606266;
-  .home-icon { margin-right: 5px; }
-  .separator { margin: 0 8px; }
-  .current { color: #409EFF; font-weight: bold; }
-}
-
-.filter-card {
-  margin-bottom: 20px;
-  .filter-form {
-    .el-form-item { margin-bottom: 0; }
-    :deep(.el-select__selected-item) { color: #303133; }
-    :deep(.el-select__input) { color: #303133; }
-    :deep(.el-input__inner) { color: #303133; }
-  }
-}
-
-.list-section {
-  background: #fff;
-  padding: 20px;
-  border-radius: 4px;
-}
-
-.list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  
-  .section-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0;
-  }
-}
-
-.data-card {
-  height: 100%;
-  cursor: pointer;
-  :deep(.el-card__header) {
-    padding: 10px 15px;
-    border-bottom: 1px solid #EBEEF5;
-  }
-  
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .city-name {
-      font-weight: bold;
-      font-size: 16px;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-  }
-  
-  .card-content {
-    font-size: 13px;
-    color: #606266;
-    .info-row {
-      display: flex;
-      margin-bottom: 8px;
-      &:last-child { margin-bottom: 0; }
-      .label { width: 100px; color: #909399; }
-      .value { flex: 1; text-align: right; color: #303133; }
-    }
-  }
-}
-
-.pagination-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.main-content {
-  min-width: 0;
-}
-
-.right-sidebar {
-  padding-left: 20px;
-  .sidebar-actions {
-    margin-top: 65px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-  .action-btn {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    height: 128px;
-    margin: 0;
-    font-size: 28px;
-    font-weight: 600;
-    line-height: 1.2;
-    padding: 8px;
-    border-radius: 10px;
-  }
-  .action-btn:first-child {
-    background-color: #3366FF;
-    border-color: #3366FF;
-  }
-}
-
-.chart-card {
-  margin-bottom: 20px;
-  .chart-header { font-weight: bold; font-size: 18px; }
-}
-
-.chart-card-tall {
-  min-height: 420px;
-}
-
-.stats-summary {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  text-align: center;
-  font-size: 14px;
-  
-  .highlight {
-    font-size: 20px;
-    font-weight: bold;
-    color: #3366FF;
-    margin: 0 4px;
-    
-    &.blue { color: #3366FF; }
-  }
-  
-  .pie-chart-placeholder {
-    width: 80px;
-    height: 80px;
-    position: relative;
-    
-    .pie-circle {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: conic-gradient(#3366FF 0% 60%, #E6EBF5 60% 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      
-      &::before {
-        content: '';
-        width: 60%;
-        height: 60%;
-        background: #fff;
-        border-radius: 50%;
-        position: absolute;
-      }
-      
-      .percentage {
-        position: relative;
-        z-index: 1;
-        font-weight: bold;
-        color: #3366FF;
-      }
-    }
-  }
-}
-
-.chart-legend {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 15px;
-  font-size: 14px;
-  
-  .legend-item {
-    display: flex;
-    align-items: center;
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
-      margin-right: 5px;
-      &.pink { background-color: #F56C6C; }
-      &.cyan { background-color: #409EFF; }
-    }
-  }
-}
-
-.bar-chart-placeholder {
-  .bar-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-    
-    .bar-label {
-      width: 80px;
-      font-size: 14px;
-      text-align: right;
-      margin-right: 10px;
-    }
-    
-    .bar-container {
-      flex: 1;
-      
-      .bar-group {
-        display: flex;
-        align-items: center;
-        margin-bottom: 4px;
-        
-        .bar {
-          height: 10px;
-          border-radius: 0 4px 4px 0;
-          &.pink { background-color: #F56C6C; }
-          &.cyan { background-color: #409EFF; }
-        }
-        
-        .bar-value {
-          margin-left: 5px;
-          font-size: 14px;
-          transform: scale(0.8);
-          transform-origin: left;
-          &.pink-text { color: #F56C6C; }
-          &.cyan-text { color: #409EFF; }
-        }
-      }
-    }
+.w110 { width: 110px; }
+.project-card {
+  transition: all 0.3s;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: var(--el-color-primary);
   }
 }
 </style>

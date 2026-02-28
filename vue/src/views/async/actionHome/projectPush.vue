@@ -1,168 +1,159 @@
 <template>
-  <div class="push-library-container">
-    <div class="layout-row">
-      <div class="left-panel">
-        <div class="filter-card bg-white rad8 p8 mb15">
-          <el-form :inline="true" :model="filters" class="filter-form">
-            <el-form-item label="项目周期">
-              <el-date-picker v-model="filters.period" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" style="width: 240px" />
-            </el-form-item>
-            <el-form-item label="所属地区">
-              <el-cascader v-model="filters.area" :options="getAreaDataByCode(state.code)" :props="state.cascaderProps" separator="/" placeholder="请选择" clearable style="width: 300px" />
-            </el-form-item>
-            <el-form-item label="项目阶段">
-              <el-select v-model="filters.stage" placeholder="储备阶段" style="width: 140px">
+  <div class="layout-col">
+    <aa-title title="">
+      <template #left-content>
+        <div class="flex-sc flex4 hidden warp">
+          <div class="flex-sc mr30">
+            <span class="mr10">项目周期</span>
+            <span class="w50x6 flex-sc">
+              <el-date-picker v-model="filters.period" size="large" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" style="width: 100%" />
+            </span>
+          </div>
+          <div class="flex-sc mr30">
+            <span class="mr10">所属地区</span>
+            <span class="w50x6 flex-sc">
+              <el-cascader v-model="filters.area" size="large" :options="getAreaDataByCode(state.code)" :props="state.cascaderProps" separator="/" placeholder="请选择" clearable style="width: 100%" />
+            </span>
+          </div>
+          <div class="flex-sc pr30">
+            <span class="mr10">项目阶段</span>
+            <span class="w50x4 flex-sc hidden">
+              <el-select size="large" v-model="filters.stage" placeholder="储备阶段" style="width: 100%" filterable clearable>
                 <el-option label="储备阶段" value="储备阶段" />
                 <el-option label="实施阶段" value="实施阶段" />
                 <el-option label="完工阶段" value="完工阶段" />
               </el-select>
-            </el-form-item>
-            <el-form-item label="总投资金额">
-              <el-select v-model="filters.investment" placeholder="5千万以上" style="width: 140px">
+            </span>
+          </div>
+          <div class="flex-sc pr30">
+            <span class="mr10">投资金额</span>
+            <span class="w50x4 flex-sc hidden">
+              <el-select size="large" v-model="filters.investment" placeholder="5千万以上" style="width: 100%" filterable clearable>
                 <el-option label="5千万以上" value="5千万以上" />
                 <el-option label="1亿以上" value="1亿以上" />
                 <el-option label="2亿以上" value="2亿以上" />
               </el-select>
-            </el-form-item>
-            <el-form-item label="项目类型">
-              <el-select v-model="filters.type" placeholder="加强既有建筑改造" style="width: 200px">
+            </span>
+          </div>
+          <div class="flex-sc pr30 mt10">
+            <span class="mr10">项目类型</span>
+            <span class="w50x6 flex-sc hidden">
+              <el-select size="large" v-model="filters.type" placeholder="加强既有建筑改造" style="width: 100%" filterable clearable>
                 <el-option label="加强既有建筑改造" value="加强既有建筑改造" />
                 <el-option label="完善社区服务设施" value="完善社区服务设施" />
                 <el-option label="改善人居环境" value="改善人居环境" />
               </el-select>
-            </el-form-item>
-            <el-form-item label="项目名称">
-              <el-input v-model="filters.keyword" placeholder="请输入" style="width: 180px" />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" class="search-btn" @click="init">搜索</el-button>
-            </el-form-item>
-          </el-form>
+            </span>
+          </div>
+          <div class="flex-sc pr30 mt10">
+            <span class="mr10">项目名称</span>
+            <span class="w50x4 flex-sc hidden">
+              <el-input size="large" v-model="filters.keyword" style="width: 100%" placeholder="请输入" />
+            </span>
+          </div>
+          <div class="rad4 ptb10 plr12 flex-cc cursor bgi1 white" @click.stop="init">
+            <i-ep-search class="f12 fw" /><span class="f14 ml5">搜索</span>
+          </div>
         </div>
+      </template>
+      <template #right-content></template>
+    </aa-title>
 
-        <div class="list-card layout-col flex1 bg-white rad8 p8">
-          <div class="ww100 flex-sc p8">
-            <div class="flex-sc fw f16 tc">
-              <div class="mr40 cursor flex-col-cc relative" @click="activeTab = 'pending'">
-                <span class="mb5">待审核</span>
-                <span class="ww100 h3 rad10" :class="activeTab === 'pending' ? 'bgi2' : 'black-rgba0'"></span>
-              </div>
-              <div class="mr40 cursor flex-col-cc relative" @click="activeTab = 'recommended'">
-                <span class="mb5">{{ recommendedTabTitle }}</span>
-                <span class="ww100 h3 rad10" :class="activeTab === 'recommended' ? 'bgi2' : 'black-rgba0'"></span>
-              </div>
-              <div class="mr40 cursor flex-col-cc relative" @click="activeTab = 'rejected'">
-                <span class="mb5">已退回</span>
-                <span class="ww100 h3 rad10" :class="activeTab === 'rejected' ? 'bgi2' : 'black-rgba0'"></span>
-              </div>
-            </div>
-            <div class="flex-ec flex1">
-              <div class="rad4 ptb5 plr12 flex-cc cursor bg-white c8 bo-cc-1 ml15" @click="onToggleAll">全选</div>
-              <div class="rad4 ptb5 plr12 flex-cc cursor bgi1 white bo-i1-1 ml15">提醒</div>
-            </div>
+    <div class="layout-col bg-white rad8 p8">
+      <div class="ww100 flex-sc p8">
+        <div class="flex-sc fw f16 tc">
+          <div class="mr40 cursor flex-col-cc relative" @click="activeTab = 'pending'">
+            <span class="mb5">待审核</span>
+            <span class="ww100 h3 rad10" :class="activeTab === 'pending' ? 'bgi2' : 'black-rgba0'"></span>
           </div>
+          <div class="mr40 cursor flex-col-cc relative" @click="activeTab = 'recommended'">
+            <span class="mb5">{{ recommendedTabTitle }}</span>
+            <span class="ww100 h3 rad10" :class="activeTab === 'recommended' ? 'bgi2' : 'black-rgba0'"></span>
+          </div>
+          <div class="mr40 cursor flex-col-cc relative" @click="activeTab = 'rejected'" v-if="configStore.user.role_id != '2'">
+            <span class="mb5">已退回</span>
+            <span class="ww100 h3 rad10" :class="activeTab === 'rejected' ? 'bgi2' : 'black-rgba0'"></span>
+          </div>
+        </div>
+        <div class="flex-ec flex1">
+          <div class="rad4 ptb5 plr12 flex-cc cursor bg-white c8 bo-cc-1 ml15" @click="onToggleAll">全选</div>
+          <div class="rad4 ptb5 plr12 flex-cc cursor bgi1 white bo-i1-1 ml15">提醒</div>
+        </div>
+      </div>
 
-          <div class="table flex-sc warp">
-            <div class="ww25 cursor p8" v-for="item in pagedList" :key="item.id">
-              <div class="ww100 bs bo-i16-1 relative rad8 project-card" @click.stop="onViewDetail(item)">
-                <div class="ww100 flex-sc p12 bob-ce-1">
-                  <span class="f15 line1">{{ item.name }}</span>
-                  <span class="flex1 flex-ec" @click.stop="toggleCard(item)">
-                    <span class="w28 h28 tc lh28 rad6 ml10 white f14" :class="item.checked ? 'bgi1 bo-i1-1' : 'bo-cc-1 bg-white c8'">
-                      <i-ep-check v-if="item.checked" />
-                    </span>
-                  </span>
+      <div class="table flex-sc warp">
+        <div class="ww25 cursor p8" v-for="item in pagedList" :key="item.id">
+          <div class="ww100 bs bo-i16-1 relative rad8 project-card" @click.stop="onViewDetail(item)">
+            <div class="ww100 flex-sc p12 bob-ce-1">
+              <el-popover title="" width="300" placement="bottom-start">
+                <template #default>
+                  <div class="problem-content f16"><div class="hh100 flex-col">{{ item.name }}</div></div>
+                </template>
+                <template #reference>
+                  <span class="flex1 f15 line1">{{ item.name }}</span>
+                </template>
+              </el-popover>
+              <span class="flex-ec">
+                <span class="w18 h18 tc lh18 rad3 ml10 white f12" :class="item.checked ? 'bgi1 bo-i1-1' : 'bo-cc-1'" @click.stop="toggleCard(item)">
+                  <i-ep-check v-if="item.checked" />
+                </span>
+              </span>
+            </div>
+            <div class="ww100 flex-col p12 c6">
+              <div class="ww100 flex-sc">
+                <span class="w110">所属地区</span>
+                <span class="flex1 line1">{{ item.region }}</span>
+              </div>
+              <div class="ww100 flex-sc mt10">
+                <span class="w110">项目周期</span>
+                <span class="flex1 line1">{{ item.period }}</span>
+              </div>
+              <div class="ww100 flex-sc mt10">
+                <span class="w110">投资估算</span>
+                <span class="flex1 line1">{{ item.investment }}</span>
+              </div>
+              <div class="ww100 flex-sc mt10">
+                <span class="w110">项目性质</span>
+                <span class="flex1 line1">{{ item.nature }}</span>
+              </div>
+              <div class="ww100 flex-sc mt10">
+                <div class="flex-sc flex1">
+                  <span class="w110">更新进度时间</span>
+                  <span class="flex1 line1">{{ item.updateTime }}</span>
                 </div>
-                <div class="ww100 flex-col p12 c6">
-                  <div class="ww100 flex-sc">
-                    <span class="w110">所属地区</span>
-                    <span class="flex1 line1">{{ item.region }}</span>
-                  </div>
-                  <div class="ww100 flex-sc mt10">
-                    <span class="w110">项目周期</span>
-                    <span class="flex1 line1">{{ item.period }}</span>
-                  </div>
-                  <div class="ww100 flex-sc mt10">
-                    <span class="w110">投资估算</span>
-                    <span class="flex1 line1">{{ item.investment }}</span>
-                  </div>
-                  <div class="ww100 flex-sc mt10">
-                    <span class="w110">项目性质</span>
-                    <span class="flex1 line1">{{ item.nature }}</span>
-                  </div>
-                  <div class="ww100 flex-sc mt10">
-                    <div class="flex-sc flex1">
-                      <span class="w110">更新进度时间</span>
-                      <span class="flex1 line1">{{ item.updateTime }}</span>
-                    </div>
-                  </div>
+              </div>
 
-                  <div v-if="activeTab === 'recommended' && (configStore.user.role_id == '3' || configStore.user.role_id == '4')" class="mt10 pt10" style="border-top: 1px solid #eee;">
-                    <div class="flex-sc tc">
-                      <div class="flex1 flex-col">
-                        <span class="f14 c9 mb5">区级</span>
-                        <span class="f14" :class="getAuditStatusColor(item, 'district')">{{ getAuditStatusText(item, 'district') }}</span>
-                      </div>
-                      <div class="flex1 flex-col">
-                        <span class="f14 c9 mb5">市级</span>
-                        <span class="f14" :class="getAuditStatusColor(item, 'city')">{{ getAuditStatusText(item, 'city') }}</span>
-                      </div>
-                      <div class="flex1 flex-col">
-                        <span class="f14 c9 mb5">省级</span>
-                        <span class="f14" :class="getAuditStatusColor(item, 'province')">{{ getAuditStatusText(item, 'province') }}</span>
-                      </div>
-                    </div>
+              <div v-if="activeTab === 'recommended' && (configStore.user.role_id == '3' || configStore.user.role_id == '4')" class="mt10 pt10" style="border-top: 1px solid #eee;">
+                <div class="flex-sc tc">
+                  <div class="flex1 flex-col">
+                    <span class="f14 c9 mb5">区级</span>
+                    <span class="f14" :class="getAuditStatusColor(item, 'district')">{{ getAuditStatusText(item, 'district') }}</span>
                   </div>
-                  
-                </div>
-                <div class="project-card-actions" v-if="activeTab === 'pending'">
-                  <div class="rad5 ptb5 plr12 cursor bgi1 white" @click.stop="handleAudit(item)">审核</div>
+                  <div class="flex1 flex-col">
+                    <span class="f14 c9 mb5">市级</span>
+                    <span class="f14" :class="getAuditStatusColor(item, 'city')">{{ getAuditStatusText(item, 'city') }}</span>
+                  </div>
+                  <div class="flex1 flex-col">
+                    <span class="f14 c9 mb5">省级</span>
+                    <span class="f14" :class="getAuditStatusColor(item, 'province')">{{ getAuditStatusText(item, 'province') }}</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-
-          <div class="pagination">
-            <el-pagination
-              background
-              layout="prev, pager, next"
-              :total="filteredList.length"
-              :page-size="pageSize"
-              :current-page="currentPage"
-              @current-change="handlePageChange"
-            />
+            <div class="project-card-actions" v-if="activeTab === 'pending' || activeTab === 'rejected'">
+              <div class="rad5 ptb5 plr12 cursor bgi1 white" @click.stop="handleAudit(item)">{{ activeTab === 'pending' ? '审核' : '处理' }}</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- <div class="right-panel ml15">
-        <div class="quick-actions">
-          <div class="quick-card" @click.stop="toPath('/project-push/ledger')">项目台账</div>
-          <div class="quick-card" @click.stop="toPath('/project-push/tracking')">项目实施跟踪</div>
-        </div>
-
-        <div class="bg-white rad8 p15 mb15 right-card">
-          <div class="chart-title">项目实施情况</div>
-            <div class="ring-wrap">
-              <div class="ring" :style="{ background: `conic-gradient(#2b5cff 0% ${implementationRate}%, #e6ebf5 ${implementationRate}% 100%)` }">
-                <span>{{ implementationRate }}%</span>
-              </div>
-            </div>
-          <div class="ring-info">
-            <div>共<span class="highlight">{{ list.length }}</span>个上报项目</div>
-            <div>处于推进中状态</div>
-          </div>
-        </div>
-
-        <div class="bg-white rad8 p15 right-card">
-          <div class="chart-title">项目分布情况</div>
-          <div class="legend">
-            <span class="legend-item"><span class="dot blue"></span>实施中项目</span>
-            <span class="legend-item"><span class="dot cyan"></span>深规中项目</span>
-          </div>
-          <div ref="barChartRef" class="bar-chart"></div>
-        </div>
-      </div> -->
+      <Pagination
+        v-show="filteredList.length > 0"
+        :total="filteredList.length"
+        v-model:page="currentPage"
+        v-model:limit="pageSize"
+        @pagination="handlePagination"
+      />
     </div>
   </div>
   <el-dialog v-model="auditDialogVisible" title="项目审核" width="500px">
@@ -201,7 +192,7 @@ const filters = reactive({
 
 const activeTab = ref<'pending' | 'recommended' | 'rejected'>('pending')
 const selectAll = ref(false)
-const pageSize = ref(1000) // 设置一个足够大的值以取消数量限制，或者通过分页控制
+const pageSize = ref(15)
 const currentPage = ref(1)
 
 const list = ref([])
@@ -262,6 +253,9 @@ const buildRoleArgs = () => {
 
 const buildFilterArgs = () => {
   let args = buildRoleArgs()
+  // 排除未推送的项目 (push_status = '-1')
+  args += ` AND (push_status != '-1' OR push_status IS NULL)`
+  
   // 暂时屏蔽搜索栏功能，仅保留基础的角色过滤，确保能查到数据
   /*
   if(filters.area && filters.area.length > 0) {
@@ -376,7 +370,7 @@ const init = async () => {
             status = 'recommended'
           } else {
              // 兜底
-             status = 'pending'
+             status = ''
           }
         }
       }
@@ -427,6 +421,11 @@ const pagedList = computed(() => {
 
 const handlePageChange = (page: number) => {
   currentPage.value = page
+}
+
+const handlePagination = ({ page, limit }: { page: number; limit: number }) => {
+  currentPage.value = page
+  pageSize.value = limit
 }
 
 const toggleAll = () => {
@@ -544,6 +543,12 @@ onMounted(async() => {
   window.addEventListener('resize', renderBarChart)
 })
 
+onActivated(() => {
+  getInit()
+  init()
+  renderBarChart()
+})
+
 watch(() => filters.area, () => {
   init()
 }, { deep: true })
@@ -562,30 +567,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped lang="scss">
-.push-library-container {
-  padding: 20px;
-  background: #f5f7fa;
-  min-height: 100vh;
-}
-
-.left-panel {
-  flex: 1 1 0;
-  min-width: 0;
-}
-
-.right-panel {
-  width: 420px;
-  flex: 0 0 420px;
-}
-
-.right-card {
-  min-height: 260px;
-}
-
-.remind-btn {
-  background: #2b5cff;
-  border-color: #2b5cff;
-}
+.w110 { width: 110px; }
 
 .project-card {
   line-height: 20px;
@@ -614,12 +596,6 @@ onBeforeUnmount(() => {
   bottom: 12px;
   display: flex;
   gap: 8px;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 16px;
 }
 
 .quick-actions {

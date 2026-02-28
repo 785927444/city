@@ -18,7 +18,7 @@
         </span>
       </div>
       <div class="ww33 flex-sc p10">
-        <span class="w110">策划状态</span>
+        <span class="w110">审核状态</span>
         <span class="flex1 line1 flex-sc ptb2 rad3 hidden">
           <span class="plr12 ptb6 rad3 bgi10 i12">已通过</span>
           <!-- 待上报 -->

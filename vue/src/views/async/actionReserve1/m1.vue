@@ -105,7 +105,7 @@
                 <span class="flex-sc" :class="v.push_status == '2' ? 'i15' : 'i12'">
                   <svg v-if="v.push_status == '0' || v.push_status == '1'" xmlns="http://www.w3.org/2000/svg" class="success-icon svg-icon-path-icon fill" viewBox="0 0 32 32" width="13" height="13"><defs></defs><g><path d="M29.333 26.667h-26.667v-2.667h1.333v-9.292c0-6.651 5.373-12.041 12-12.041s12 5.391 12 12.041v9.292h1.333v2.667zM12.667 28h6.667c0 1.841-1.492 3.333-3.333 3.333s-3.333-1.492-3.333-3.333v0z"></path></g></svg>
                   <i-ep-warning v-else-if="v.push_status == '2'" class="f13" />
-                  <span class="ml5">{{ v.push_status == '2' ? '已退回' : (v.push_status == '0' || v.push_status == '1' ? '已推送' : '-') }}</span> 
+                  <span class="ml5">{{ v.push_status == '2' ? '已退回' : (v.push_status == '0' || v.push_status == '1' ? '已推送' : '未推送') }}</span> 
                 </span>
               </div>
               <div class="ww100 flex-sc mt10">
@@ -189,6 +189,21 @@
     }
   })
 
+  const setTypeTabs = () => {
+    const roleId = String(configStore.user.role_id || '')
+    const reserve1 = state.types.find((a: any) => a.type === 'actionReserve1')
+    const reserve3 = state.types.find((a: any) => a.type === 'actionReserve3')
+    if (roleId === '2') {
+      if (reserve1) reserve1.name = '省级储备'
+      if (reserve3) reserve3.name = '市县储备'
+    } else if (roleId === '3') {
+      if (reserve1) reserve1.name = '市级储备'
+      if (reserve3) reserve3.name = '县级储备'
+    } else if (roleId > '3') {
+      if (reserve1) reserve1.name = '县级储备'
+    }
+  }
+
   const construct_prices = [
     {value1: '0',    value: '5000', name: '5000万以下'},
     {value1: '5000',  value: '10000', name: '5000万-1亿'},
@@ -204,7 +219,9 @@
   ]
 
   onMounted(async() => {
+    setTypeTabs()
     if(configStore.user.role_id > '3') state.types = state.types.filter(a=>a.type != 'actionReserve3')
+    if (!state.types.some((a: any) => a.type === state.type)) state.type = state.types[0]?.type || state.type
     state.code = '140000'
     getTaskType()
     init()
@@ -313,9 +330,39 @@
       
       ElMessageBox.confirm('是否确定推送所选项目?', '温馨提示', {confirmButtonText: '确定', cancelButtonText: '关闭', type: 'warn'}).then(() => { 
         let list = clickList.map(v => {
+          let push_status = '0'
+          let push_status2 = '0'
+          let push_status3 = '0'
+
+          // 判断项目层级
+          // 优先使用 construct_main_xxx 字段，如果为空则使用 province/city/district 字段作为兜底
+          const dist = v.construct_main_district || v.district
+          const city = v.construct_main_city || v.city
+          const prov = v.construct_main_province || v.province
+
+          if (dist) {
+            // 区级项目：需要区级审核(0)，市级(0)，省级(0)
+            push_status = '0'
+            push_status2 = '0'
+            push_status3 = '0'
+          } else if (city) {
+            // 市级项目：区级自动通过(1)，市级审核(0)，省级审核(0)
+            push_status = '1'
+            push_status2 = '0'
+            push_status3 = '0'
+          } else if (prov) {
+            // 省级项目：区级自动通过(1)，市级自动通过(1)，省级审核(0)
+            push_status = '1'
+            push_status2 = '1'
+            push_status3 = '0'
+          }
+
           return {
             id: v.id,
-            push_status: '0'
+            push_status: push_status,
+            push_status2: push_status2,
+            push_status3: push_status3,
+            push_time: Date.now() + ''
           }
         })
         let params = {model: 't_project_report', list: list}

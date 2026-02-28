@@ -51,6 +51,7 @@
         <div class="flex-ec flex1">
           <div class="rad4 ptb5 plr12 flex-cc cursor bg-white c8 bo-cc-1 ml15" @click.stop="handleClick('selectAll')">全选</div>
           <div class="rad4 ptb5 plr12 flex-cc cursor bgi1 white bo-i1-1 ml15" @click.stop="handleClick('remind')">提醒</div>
+          <div class="rad4 ptb5 plr12 flex-cc cursor bgi1 white bo-i1-1 ml15" @click.stop="toPath('/schemeHome')">返回</div>
         </div>
       </div>
       <!-- 主体 -->
@@ -138,7 +139,7 @@
     {value: '3', name: '不通过'},
   ]
   const types = [
-    {type: 'special', name: '专项规划', path: '/schemePlansManagerCity'},
+    // {type: 'special', name: '专项规划', path: '/schemePlansManagerCity'},
     {type: 'region', name: '片区策划', path: '/schemeDesignsManagerCity'},
   ]
   const state = reactive({
@@ -241,7 +242,7 @@
     getData2()
   }
 
-	const getData1 = () => {
+  const getData1 = () => {
 	  // 1. 初始化两个 Set 用于去重统计
 	  const allUsers = new Set()
 	  const releasedUsers = new Set()
@@ -272,7 +273,7 @@
       let areas = getAreaDataByCode(configStore.user.province)
       let children = areas[0].children
       let conditions = children.map(item => `city = '${item.code}'`).join(' OR ')
-      let query1 = { model: 't_scheme_project', field: 'city AS code, city_name AS name, COUNT(*) AS count', args: conditions, group: 'city, city_name'}
+      let query1 = { model: 't_scheme_project', field: 'city AS code, city_name AS name, COUNT(*) AS count', args: `type='${state.type}' and (${conditions})`, group: 'city, city_name'}
       let query2 = {model: `t_scheme_project`, args: `type='${state.type}' and user_id='${configStore.user.id}'`, field: `COUNT(*)`}
       let res = await publicStore.http({Api1: query1, Api2: query2})
       let user = [{code: configStore.user.province, name: configStore.user.province_name, count: res.Api2[0]['COUNT(*)']}]
@@ -283,7 +284,7 @@
       let areas = getAreaDataByCode(configStore.user.city)
       let children = areas[0].children[0].children
       let conditions = children.map(item => `district = '${item.code}'`).join(' OR ')
-      let query1 = { model: 't_scheme_project', field: 'district AS code, district_name AS name, COUNT(*) AS count', args: conditions, group: 'district, district_name'}
+      let query1 = { model: 't_scheme_project', field: 'district AS code, district_name AS name, COUNT(*) AS count', args: `type='${state.type}' and (${conditions})`, group: 'district, district_name'}
       let query2 = {model: `t_scheme_project`, args: `type='${state.type}' and user_id='${configStore.user.id}'`, field: `COUNT(*)`}
       let res = await publicStore.http({Api1: query1, Api2: query2})
       let user = [{code: configStore.user.city, name: configStore.user.city_name, count: res.Api2[0]['COUNT(*)']}]

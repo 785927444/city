@@ -22,11 +22,11 @@
               <FileList v-if="publicStore.form?.has_attr" v-model:files="publicStore.form.has_attr" parent-field="has_attr" :plans="props.plans" :contents="props.contents" :active="props.active"  />
             </div>
           </el-form-item>
-          <el-form-item label="实施成效材料上传" prop="effect_attr" class="ww100 flex-ss">
+          <!-- <el-form-item label="实施成效材料上传" prop="effect_attr" class="ww100 flex-ss">
             <div class="ww100 plr30 ptb22 bo-i16-1 rad8 bg-white">
               <FileList v-if="publicStore.form?.effect_attr" v-model:files="publicStore.form.effect_attr" parent-field="effect_attr" :plans="props.plans1" :contents="props.contents1" :active="props.active1"  />
             </div>
-          </el-form-item>
+          </el-form-item> -->
           <!-- <el-form-item v-if="route.query.key == 'enterprise'" label="审核结果" prop="reserve_res" class="ww100 flex-ss" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
             <el-input size="large" v-model="publicStore.form.reserve_res" style="width: 100%;" type="textarea" :rows="4" placeholder="请输入" />
           </el-form-item> -->
@@ -98,29 +98,177 @@
   const keyword = ref('')
   const pickSelection = ref<any[]>([])
 
+  const norm = (v) => String(v ?? '').trim()
+
+  const mockKeyTaskGroups = [
+    [
+      { task_type: '危险住房改造', construct_content: 'D 级危险住房改造', construct_scale: '14栋', t2026: '5', t2027: '5', t2028: '4' },
+      { task_type: '危险住房改造', construct_content: 'C 级危险住房改造', construct_scale: '12栋', t2026: '4', t2027: '4', t2028: '4' },
+      { task_type: '危险住房改造', construct_content: '非成套住房改造', construct_scale: '8处', t2026: '3', t2027: '3', t2028: '2' },
+      { task_type: '建筑节能改造', construct_content: '既有建筑节能提升', construct_scale: '10万㎡', t2026: '3', t2027: '4', t2028: '3' },
+      { task_type: '建筑安全隐患整治', construct_content: '重点区域隐患整治', construct_scale: '20处', t2026: '8', t2027: '7', t2028: '5' },
+      { task_type: '存量建筑改造', construct_content: '低效楼宇改造利用', construct_scale: '5栋', t2026: '2', t2027: '2', t2028: '1' },
+      { task_type: '存量建筑改造', construct_content: '老旧厂房改造利用', construct_scale: '3处', t2026: '1', t2027: '1', t2028: '1' },
+      { task_type: '存量建筑改造', construct_content: '传统商业设施改造利用', construct_scale: '2处', t2026: '1', t2027: '1', t2028: '0' },
+    ],
+    [
+      { task_type: '存量建筑改造', construct_content: '低效楼宇改造利用', construct_scale: '4栋', t2026: '2', t2027: '1', t2028: '1' },
+      { task_type: '存量建筑改造', construct_content: '老旧厂房改造利用', construct_scale: '4处', t2026: '2', t2027: '1', t2028: '1' },
+      { task_type: '建筑安全隐患整治', construct_content: '住宅小区隐患排查整治', construct_scale: '30处', t2026: '10', t2027: '10', t2028: '10' },
+      { task_type: '建筑节能改造', construct_content: '公共建筑能效提升', construct_scale: '6万㎡', t2026: '2', t2027: '2', t2028: '2' },
+      { task_type: '危险住房改造', construct_content: 'D 级危险住房改造', construct_scale: '10栋', t2026: '4', t2027: '3', t2028: '3' },
+    ],
+    [
+      { task_type: '建筑节能改造', construct_content: '既有居住建筑节能改造', construct_scale: '8万㎡', t2026: '3', t2027: '3', t2028: '2' },
+      { task_type: '建筑安全隐患整治', construct_content: '消防通道与设施完善', construct_scale: '15处', t2026: '6', t2027: '5', t2028: '4' },
+      { task_type: '存量建筑改造', construct_content: '传统商业设施改造利用', construct_scale: '3处', t2026: '1', t2027: '1', t2028: '1' },
+      { task_type: '危险住房改造', construct_content: 'C 级危险住房改造', construct_scale: '9栋', t2026: '3', t2027: '3', t2028: '3' },
+      { task_type: '危险住房改造', construct_content: '非成套住房改造', construct_scale: '6处', t2026: '2', t2027: '2', t2028: '2' },
+    ]
+  ]
+
+  const mockCheckTaskGroups = [
+    [
+      {
+        type: '住房',
+        indicator: '存在结构安全隐患的住宅数量（栋）',
+        problem: '住宅墙体楼板裂缝、砂浆粉化空鼓、砖砌体缺棱掉角等结构安全隐患较多。'
+      },
+      {
+        type: '住房',
+        indicator: '存在燃气安全隐患的住宅数量（栋）',
+        problem: '部分住宅燃气管生锈腐蚀，存在燃气安全风险。'
+      },
+      {
+        type: '住房',
+        indicator: '存在楼道安全隐患的住宅数量（栋）',
+        problem: '楼梯踏步缺损、扶手松动、照明缺失、消防器材缺失及楼道乱停乱放等问题突出。'
+      },
+      {
+        type: '住房',
+        indicator: '公共空间安全管理',
+        problem: '部分住户占用消防楼梯、楼道、管道井等公共空间堆放杂物。'
+      },
+      {
+        type: '住房',
+        indicator: '消防标识完善情况',
+        problem: '部分住宅缺乏或损坏消防安全出口标识，疏散指引不清晰。'
+      },
+    ],
+    [
+      {
+        type: '城区',
+        indicator: '人均公共文化设施面积（平方米/人）',
+        problem: '人均公共文化设施面积未达到标准要求。'
+      },
+      {
+        type: '城区',
+        indicator: '应急供水保障率（%）',
+        problem: '无应急水源，应急供水保障率为 0。'
+      },
+      {
+        type: '城区',
+        indicator: '老旧燃气管网改造完成率（%）',
+        problem: '老旧燃气管网改造完成率低，存在燃气安全风险。'
+      },
+      {
+        type: '城区',
+        indicator: '城市消防站服务半径覆盖率（%）',
+        problem: '城市消防站覆盖率低，存在大量覆盖盲区。'
+      },
+      {
+        type: '城区',
+        indicator: 'CIM 平台三维数据覆盖率（%）',
+        problem: '未建设 CIM 基础平台，三维数据覆盖率为 0。'
+      },
+    ],
+    [
+      {
+        type: '街道',
+        indicator: '中学服务半径覆盖率（%）',
+        problem: '中学资源配置不平衡，部分街道覆盖率不足。'
+      },
+      {
+        type: '街道',
+        indicator: '未达标配建的多功能运动场地数量（个）',
+        problem: '文化站/运动场地建筑面积不达标，服务质量有待提升。'
+      },
+      {
+        type: '街道',
+        indicator: '存在乱停乱放车辆问题的道路数量（条）',
+        problem: '车辆无序停放突出，存在占用人行道、绿化带等情况。'
+      },
+      {
+        type: '街道',
+        indicator: '需要更新改造的老旧商业街区数量（个）',
+        problem: '老旧商业街区质量不高，商业功能单一，需要整体改造提升。'
+      },
+      {
+        type: '街道',
+        indicator: '需要更新改造的老旧厂区数量（个）',
+        problem: '老旧工业用地利用效率不高，历史遗留企业用地需整体改造提升。'
+      },
+    ]
+  ]
+
+  const pickRandomN = <T,>(arr: T[], n: number) => {
+    const copy = Array.isArray(arr) ? [...arr] : []
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[copy[i], copy[j]] = [copy[j], copy[i]]
+    }
+    return copy.slice(0, Math.max(0, Math.min(n, copy.length)))
+  }
+
+  const buildRectifyContent = (problem: any) => {
+    const p = norm(problem)
+    if (!p) return '-'
+    const short = p.length > 26 ? `${p.slice(0, 26)}…` : p
+    return `围绕“${short}”制定整改措施，明确责任单位与完成时限，验收后闭环销号。`
+  }
+
+  const applyDemoMockData = () => {
+    const keyGroup = mockKeyTaskGroups[Math.floor(Math.random() * mockKeyTaskGroups.length)] || []
+    const checkGroup = mockCheckTaskGroups[Math.floor(Math.random() * mockCheckTaskGroups.length)] || []
+
+    keyTasks.splice(0, keyTasks.length, ...pickRandomN(keyGroup, 3).map(r => ({ ...r })))
+    checkTasks.splice(0, checkTasks.length, ...pickRandomN(checkGroup, 3).map(r => ({
+      ...r,
+      content: r?.content || buildRectifyContent(r?.problem)
+    })))
+    timelineRows.splice(0, timelineRows.length, ...[
+      { year: '2026', desc: '完成底数摸排与重点项目开工', investment: '3000 万元' },
+      { year: '2027', desc: '全面推进改造任务与配套完善', investment: '5000 万元' },
+      { year: '2028', desc: '巩固提升并组织验收评估', investment: '2000 万元' },
+    ])
+  }
+
   // 获取明细数据 (初始化回填)
-  const getDetailData = async () => {
+  const getDetailData = async (force = false) => {
     if (!publicStore.form || !publicStore.form.id) return
     const pid = publicStore.form.id
     
     console.log('--- step3 开始加载三表明细数据 ---', pid);
     const query = {
-      keyApi: { model: 't_project_task_key', args: `project_id='${pid}'`, limit: 1000 },
-      checkApi: { model: 't_project_task_check', args: `project_id='${pid}'`, limit: 1000 },
-      timeApi: { model: 't_project_task_timeline', args: `project_id='${pid}'`, limit: 1000 }
+      Api1: { model: 't_project_task_key', args: `project_id='${pid}'`, limit: 1000 },
+      Api2: { model: 't_project_task_check', args: `project_id='${pid}'`, limit: 1000 },
+      Api3: { model: 't_project_task_timeline', args: `project_id='${pid}'`, limit: 1000 }
     }
     
-    publicStore.http(query).then(res => {
+    try {
+      const res = await publicStore.http(query)
       console.log('step3 三表明细返回数据:', res);
       
       // 1. 回填重点任务
-      if (res.keyApi && Array.isArray(res.keyApi) && res.keyApi.length > 0) {
-        keyTasks.splice(0, keyTasks.length, ...res.keyApi)
+      if (force || keyTasks.length === 0) {
+        const list = Array.isArray(res?.Api1) ? res.Api1 : []
+        keyTasks.splice(0, keyTasks.length, ...list)
       }
 
       // 2. 回填体检任务
-      if (res.checkApi && Array.isArray(res.checkApi) && res.checkApi.length > 0) {
-        checkTasks.splice(0, checkTasks.length, ...res.checkApi.map(item => ({
+      if (force || checkTasks.length === 0) {
+        const list = Array.isArray(res?.Api2) ? res.Api2 : []
+        checkTasks.splice(0, checkTasks.length, ...list.map(item => ({
           ...item,
           type: item.dimension,
           range: item.rectify_range,
@@ -129,24 +277,35 @@
       }
 
       // 3. 回填时序管理
-      if (res.timeApi && Array.isArray(res.timeApi) && res.timeApi.length > 0) {
-        const sorted = [...res.timeApi].sort((a, b) => Number(a.year) - Number(b.year))
+      if (force || timelineRows.length === 0) {
+        const list = Array.isArray(res?.Api3) ? res.Api3 : []
+        const sorted = [...list].sort((a, b) => Number(a.year) - Number(b.year))
         timelineRows.splice(0, timelineRows.length, ...sorted.map(item => ({
           ...item,
           desc: item.construct_content
         })))
       }
-    }).catch(err => {
+    } catch (err) {
       console.error('step3 加载三表明细失败:', err);
-    })
+    }
   }
 
   onMounted(() => {
-    getDetailData() // 仅加载明细数据，不需要 UI 联动相关的数据
+    // 强制使用假数据（演示用）
+    applyDemoMockData()
+    /*
+    // 演示临时：三表查表回填逻辑先停用（不可删除，演示后恢复）
+    getDetailData(true)
+    */
   })
 
   watch(() => publicStore.form.id, () => {
-    getDetailData()
+    // 强制使用假数据（演示用）
+    applyDemoMockData()
+    /*
+    // 演示临时：三表查表回填逻辑先停用（不可删除，演示后恢复）
+    getDetailData(true)
+    */
   })
 
   let projectRef = $ref()
@@ -256,6 +415,7 @@
                 form.apply_time = nowtime
                 form.reserve_status = '1'
                 form.reserve_time = nowtime
+                form.push_status = '-1'
               }else{
                 console.log('状态错误2')
               }
@@ -505,37 +665,190 @@
       return
     }
 
+    const norm = (v) => String(v ?? '').trim()
+    const hasAny = (...vals) => vals.some(v => norm(v) !== '')
+
+    const taskProblems = Array.isArray(publicStore?._public?.task_problems) ? publicStore._public.task_problems : []
+    const problemItems = Array.isArray(publicStore?._public?.problem_items) ? publicStore._public.problem_items : []
+    const taskMap = new Map(taskProblems.map(t => [String(t.id), t]))
+
+    const resolveDimensionIndicator = (row) => {
+      const directDimension = norm(row?.type || row?.dimensionName || row?.dimension)
+      const directIndicator = norm(row?.indicator || row?.indicatorName)
+      if (directDimension && directIndicator) return { dimension: directDimension, indicator: directIndicator }
+
+      const indicatorId = row?.indicatorId || row?.indicator_id || row?.indicatorId2
+      const dimensionId = row?.dimensionId || row?.dimension_id
+      if (indicatorId) {
+        const ind = taskMap.get(String(indicatorId))
+        const dim = ind ? taskMap.get(String(ind.parent_id)) : null
+        return {
+          dimension: directDimension || norm(dim?.name),
+          indicator: directIndicator || norm(ind?.name)
+        }
+      }
+      if (dimensionId) {
+        const dim = taskMap.get(String(dimensionId))
+        return { dimension: directDimension || norm(dim?.name), indicator: directIndicator }
+      }
+
+      const itemId = row?.problemItemId || row?.problem_item_id || row?.scheme_id
+      const item = itemId ? problemItems.find((p: any) => String(p.id) === String(itemId)) : null
+      const itemByText = !item && norm(row?.problem) ? problemItems.find((p: any) => norm(p.problem_content) === norm(row.problem)) : null
+      const hit = item || itemByText
+      if (hit) {
+        const ind = taskMap.get(String(hit.parent_id))
+        const dim = ind ? taskMap.get(String(ind.parent_id)) : null
+        return {
+          dimension: directDimension || norm(dim?.name),
+          indicator: directIndicator || norm(ind?.name)
+        }
+      }
+
+      return { dimension: directDimension, indicator: directIndicator }
+    }
+
     // 1. 重点落实任务数据
-    const keyList = keyTasks.map(row => ({
-      id: row.id || uuidv6(),
-      project_id: projectId,
-      task_type: row.task_type,
-      construct_content: row.construct_content,
-      construct_scale: row.construct_scale,
-      t2026: row.t2026,
-      t2027: row.t2027,
-      t2028: row.t2028
-    }))
+    const keyList = keyTasks
+      .filter(row => hasAny(row?.task_type, row?.construct_content, row?.construct_scale, row?.t2026, row?.t2027, row?.t2028))
+      .map(row => ({
+        id: row.id || uuidv6(),
+        project_id: projectId,
+        task_type: norm(row.task_type) || null,
+        construct_content: norm(row.construct_content) || null,
+        construct_scale: norm(row.construct_scale) || null,
+        t2026: norm(row.t2026) || null,
+        t2027: norm(row.t2027) || null,
+        t2028: norm(row.t2028) || null
+      }))
 
     // 2. 体检整改任务数据
-    const checkList = checkTasks.map(row => ({
-      id: row.id || uuidv6(),
-      project_id: projectId,
-      dimension: row.type,
-      indicator: row.indicator,
-      problem: row.problem,
-      rectify_range: row.range,
-      rectify_content: row.content
-    }))
+    const rawCheckRows = Array.isArray(checkTasks) ? checkTasks : []
+    const checkNeedMetaRows = rawCheckRows.filter(r => norm(r?.problem) !== '')
+
+    const schemeIds = [...new Set(checkNeedMetaRows.map(r => norm(r?.scheme_id)).filter(Boolean))]
+    const itemIds = [...new Set(checkNeedMetaRows.map(r => norm(r?.problemItemId || r?.problem_item_id)).filter(Boolean))]
+    const allLookupIds = [...new Set([...schemeIds, ...itemIds])]
+
+    let schemeProblemMap = new Map<string, any>()
+    if (schemeIds.length > 0) {
+      const res = await publicStore.http({
+        Api: { model: 't_scheme_problem', args: `id in ('${schemeIds.join("','")}')`, limit: 2000 }
+      })
+      const list = Array.isArray(res) ? res : []
+      schemeProblemMap = new Map(list.map((p: any) => [String(p.id), p]))
+    }
+
+    let schemeProblemItemMap = new Map<string, any>()
+    if (allLookupIds.length > 0) {
+      const res = await publicStore.http({
+        Api: { model: 't_scheme_problem_item', args: `id in ('${allLookupIds.join("','")}')`, limit: 2000 }
+      })
+      const list = Array.isArray(res) ? res : []
+      schemeProblemItemMap = new Map(list.map((p: any) => [String(p.id), p]))
+    }
+
+    const indicatorIdSet = new Set<string>()
+    const rowMeta = new Map<any, { indicatorId?: string; schemeId?: string }>()
+
+    checkNeedMetaRows.forEach(row => {
+      let schemeId = norm(row?.scheme_id) || ''
+      let indicatorId = norm(row?.indicatorId || row?.indicator_id || row?.indicatorId2) || ''
+
+      if (!indicatorId && schemeId) {
+        const sp = schemeProblemMap.get(schemeId)
+        if (sp?.parent_id) indicatorId = String(sp.parent_id)
+      }
+
+      if (!indicatorId && schemeId) {
+        const it = schemeProblemItemMap.get(schemeId)
+        if (it?.parent_id) indicatorId = String(it.parent_id)
+        if (it?.problem_id && !schemeProblemMap.has(String(it.problem_id))) schemeId = String(it.problem_id)
+      }
+
+      if (!indicatorId) {
+        const itId = norm(row?.problemItemId || row?.problem_item_id)
+        if (itId) {
+          const it = schemeProblemItemMap.get(itId)
+          if (it?.parent_id) indicatorId = String(it.parent_id)
+          if (it?.problem_id) schemeId = norm(schemeId) || String(it.problem_id)
+        }
+      }
+
+      if (indicatorId) indicatorIdSet.add(String(indicatorId))
+      rowMeta.set(row, { indicatorId: indicatorId || undefined, schemeId: schemeId || undefined })
+    })
+
+    const indicatorIds = [...indicatorIdSet]
+    let indMap = new Map<string, any>()
+    let dimMap = new Map<string, any>()
+
+    if (indicatorIds.length > 0) {
+      const indRes = await publicStore.http({
+        Api: { model: 't_task_problem', args: `id in ('${indicatorIds.join("','")}')`, limit: 5000 }
+      })
+      const inds = Array.isArray(indRes) ? indRes : []
+      indMap = new Map(inds.map((t: any) => [String(t.id), t]))
+
+      const dimIds = [...new Set(inds.map((t: any) => String(t.parent_id)).filter(Boolean))]
+      if (dimIds.length > 0) {
+        const dimRes = await publicStore.http({
+          Api: { model: 't_task_problem', args: `id in ('${dimIds.join("','")}')`, limit: 5000 }
+        })
+        const dims = Array.isArray(dimRes) ? dimRes : []
+        dimMap = new Map(dims.map((t: any) => [String(t.id), t]))
+      }
+    }
+
+    const missingRows = []
+    const checkList = rawCheckRows
+      .map(row => {
+        const { dimension, indicator } = resolveDimensionIndicator(row)
+        const meta = rowMeta.get(row)
+        const indId = meta?.indicatorId
+        const ind = indId ? indMap.get(String(indId)) : null
+        const dim = ind?.parent_id ? dimMap.get(String(ind.parent_id)) : null
+
+        const finalDimension = norm(dimension) || norm(dim?.name)
+        const finalIndicator = norm(indicator) || norm(ind?.name)
+
+        const problem = norm(row?.problem)
+        if (problem !== '' && (!finalDimension || !finalIndicator)) {
+          missingRows.push(problem.slice(0, 40))
+        }
+
+        return {
+          id: row.id || uuidv6(),
+          project_id: projectId,
+          dimension: finalDimension || null,
+          indicator: finalIndicator || null,
+          problem: problem || null,
+          rectify_range: norm(row?.range) || null,
+          rectify_content: norm(row?.content) || null,
+          scheme_id: norm(meta?.schemeId || row?.scheme_id) || null
+        }
+      })
+      .filter(r => hasAny(r.dimension, r.indicator, r.problem, r.rectify_range, r.rectify_content))
+
+    if (missingRows.length > 0) {
+      ElNotification({
+        title: '错误',
+        message: `体检整改任务缺少“体检维度/指标项”，无法保存：${missingRows.slice(0, 3).join('；')}${missingRows.length > 3 ? '…' : ''}`,
+        type: 'error'
+      })
+      throw new Error('t_project_task_check missing dimension/indicator')
+    }
 
     // 3. 时序管理数据
-    const timelineList = timelineRows.filter(r => r.desc || r.investment).map(row => ({
-      id: row.id || uuidv6(),
-      project_id: projectId,
-      year: row.year,
-      construct_content: row.desc,
-      investment: row.investment
-    }))
+    const timelineList = timelineRows
+      .filter(r => hasAny(r?.desc, r?.investment))
+      .map(row => ({
+        id: row.id || uuidv6(),
+        project_id: projectId,
+        year: norm(row?.year) || null,
+        construct_content: norm(row?.desc) || null,
+        investment: norm(row?.investment) || null
+      }))
 
     try {
       // 先删除旧数据

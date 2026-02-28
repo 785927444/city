@@ -187,7 +187,14 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: { next: false },
         component: () => import('@/views/async/annualPlan/goalTasks.vue'),
         children: []
-      }
+      },
+      {
+        path: '/assess',
+        name: '实施评估',
+        meta: { next: false },
+        component: () => import('@/views/async/assess/index.vue'),
+        children: []
+      },
     ]
   },
   {

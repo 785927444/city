@@ -81,7 +81,9 @@
               <div class="flex-bc">
                 <el-button size="small" @click="handleAuditSave(3)">保存</el-button>
                 <div>
-                  <el-button size="small" type="danger" @click="handleAuditSubmit(3, 2)">驳回</el-button>
+                  <!-- 仅当项目来源为区级(Level 4)时，市级才显示“驳回”按钮(退回至区级) -->
+                  <!-- 市级源项目(Level 3)只能编辑提交给省级 -->
+                  <el-button v-if="projectSourceLevel === 4" size="small" type="danger" @click="handleAuditSubmit(3, 2)">驳回</el-button>
                   <el-button size="small" type="primary" @click="handleAuditSubmit(3, 1)">通过</el-button>
                 </div>
               </div>
@@ -252,6 +254,20 @@
     return roleId === level
   }
 
+  // 计算项目来源层级
+  const projectSourceLevel = computed(() => {
+    const f = publicStore.form
+    // 区级源项目：有区级信息
+    if (f.construct_main_district || f.district) return 4
+    // 市级源项目：无区级信息，有市级信息
+    if (f.construct_main_city || f.city) return 3
+    // 省级源项目：无区/市信息，有省级信息
+    if (f.construct_main_province || f.province) return 2
+    
+    // 默认为区级 (兼容旧数据或异常情况)
+    return 4
+  })
+
   const getStatusText = (status) => {
     if (status == '1') return '通过'
     if (status == '2') return '驳回'
@@ -322,27 +338,23 @@
           }
           // 4储备审批操作
           if(route.query.action== '019c041a-9f8c-7e9e-91eb-0ae051e6f324'){
-            if(form.reserve_status == '0' && (!form.push_status || form.push_status == '0' || form.push_status == '-1')){
-              console.log("审批储备")
-              if(form.apply_status == '0' || form.apply_status == '3') {
-                if(status == '1') {
-                  form.apply_status = '1'
-                  form.apply_time = nowtime
-                }
-              }else{
-                form.reserve_status = status
-                form.reserve_time = nowtime
-                if(status == '1') {
-                  form.apply_status = '2'
-                  form.push_status = '-1'
-                }
-                if(status == '2') {
-                  form.apply_status = '3'
-                  form.push_status = '-1'
-                }
+            console.log("审批储备")
+            if(form.apply_status == '0' || form.apply_status == '3') {
+              if(status == '1') {
+                form.apply_status = '1'
+                form.apply_time = nowtime
               }
             }else{
-              console.log('状态错误4')
+              form.reserve_status = status
+              form.reserve_time = nowtime
+              if(status == '1') {
+                form.apply_status = '2'
+                form.push_status = '-1'
+              }
+              if(status == '2') {
+                form.apply_status = '3'
+                form.push_status = '-1'
+              }
             }
           }
           // 5推送审核操作
@@ -586,9 +598,21 @@
         publicStore.form.push_time = now
         publicStore.form.push_user = user
         publicStore.form.push_res = finalRes
-        if (status === 2) {
+        
+        // 无论是通过(1)还是驳回(2)，一旦区级重新提交/修改状态，都需要重置上级状态，确保流程重新流转
+        // 通过(1): 重新提交给市级，市级变回待审核(0)
+        // 驳回(2): 退回给储备，流程断开，清理上级脏数据
+        if (status === 1 || status === 2) {
           publicStore.form.push_status2 = '0'; publicStore.form.push_time2 = null; publicStore.form.push_res2 = null; publicStore.form.push_user2 = null;
           publicStore.form.push_status3 = '0'; publicStore.form.push_time3 = null; publicStore.form.push_res3 = null; publicStore.form.push_user3 = null;
+        }
+
+        if (status === 2) {
+          // 针对企业项目 (user_role=5)，区级驳回时重置为未推送状态 (-1)，使其从审核列表中移除并允许企业重新推送
+          // 增加类型转换确保匹配
+          if (String(publicStore.form.user_role) == '5') {
+            publicStore.form.push_status = '-1'
+          }
         }
       }
       if (level === 3) {
@@ -596,7 +620,9 @@
         publicStore.form.push_time2 = now
         publicStore.form.push_user2 = user
         publicStore.form.push_res2 = finalRes
-        if (status === 2) {
+        
+        // 市级操作后，重置省级状态
+        if (status === 1 || status === 2) {
           publicStore.form.push_status3 = '0'; publicStore.form.push_time3 = null; publicStore.form.push_res3 = null; publicStore.form.push_user3 = null;
         }
       }
@@ -627,37 +653,190 @@
       return
     }
  console.log("projectId", projectId)
+    const norm = (v) => String(v ?? '').trim()
+    const hasAny = (...vals) => vals.some(v => norm(v) !== '')
+
+    const taskProblems = Array.isArray(publicStore?._public?.task_problems) ? publicStore._public.task_problems : []
+    const problemItems = Array.isArray(publicStore?._public?.problem_items) ? publicStore._public.problem_items : []
+    const taskMap = new Map(taskProblems.map(t => [String(t.id), t]))
+
+    const resolveDimensionIndicator = (row) => {
+      const directDimension = norm(row?.type || row?.dimensionName || row?.dimension)
+      const directIndicator = norm(row?.indicator || row?.indicatorName)
+      if (directDimension && directIndicator) return { dimension: directDimension, indicator: directIndicator }
+
+      const indicatorId = row?.indicatorId || row?.indicator_id || row?.indicatorId2
+      const dimensionId = row?.dimensionId || row?.dimension_id
+      if (indicatorId) {
+        const ind = taskMap.get(String(indicatorId))
+        const dim = ind ? taskMap.get(String(ind.parent_id)) : null
+        return {
+          dimension: directDimension || norm(dim?.name),
+          indicator: directIndicator || norm(ind?.name)
+        }
+      }
+      if (dimensionId) {
+        const dim = taskMap.get(String(dimensionId))
+        return { dimension: directDimension || norm(dim?.name), indicator: directIndicator }
+      }
+
+      const itemId = row?.problemItemId || row?.problem_item_id || row?.scheme_id
+      const item = itemId ? problemItems.find((p: any) => String(p.id) === String(itemId)) : null
+      const itemByText = !item && norm(row?.problem) ? problemItems.find((p: any) => norm(p.problem_content) === norm(row.problem)) : null
+      const hit = item || itemByText
+      if (hit) {
+        const ind = taskMap.get(String(hit.parent_id))
+        const dim = ind ? taskMap.get(String(ind.parent_id)) : null
+        return {
+          dimension: directDimension || norm(dim?.name),
+          indicator: directIndicator || norm(ind?.name)
+        }
+      }
+
+      return { dimension: directDimension, indicator: directIndicator }
+    }
+
     // 1. 重点落实任务数据
-    const keyList = keyTasks.map(row => ({
-      id: row.id || uuidv6(),
-      project_id: projectId,
-      task_type: row.task_type,
-      construct_content: row.construct_content,
-      construct_scale: row.construct_scale,
-      t2026: row.t2026,
-      t2027: row.t2027,
-      t2028: row.t2028
-    }))
+    const keyList = keyTasks
+      .filter(row => hasAny(row?.task_type, row?.construct_content, row?.construct_scale, row?.t2026, row?.t2027, row?.t2028))
+      .map(row => ({
+        id: row.id || uuidv6(),
+        project_id: projectId,
+        task_type: norm(row.task_type) || null,
+        construct_content: norm(row.construct_content) || null,
+        construct_scale: norm(row.construct_scale) || null,
+        t2026: norm(row.t2026) || null,
+        t2027: norm(row.t2027) || null,
+        t2028: norm(row.t2028) || null
+      }))
 
     // 2. 体检整改任务数据
-    const checkList = checkTasks.map(row => ({
-      id: row.id || uuidv6(),
-      project_id: projectId,
-      dimension: row.type,
-      indicator: row.indicator,
-      problem: row.problem,
-      rectify_range: row.range,
-      rectify_content: row.content
-    }))
+    const rawCheckRows = Array.isArray(checkTasks) ? checkTasks : []
+    const checkNeedMetaRows = rawCheckRows.filter(r => norm(r?.problem) !== '')
+
+    const schemeIds = [...new Set(checkNeedMetaRows.map(r => norm(r?.scheme_id)).filter(Boolean))]
+    const itemIds = [...new Set(checkNeedMetaRows.map(r => norm(r?.problemItemId || r?.problem_item_id)).filter(Boolean))]
+    const allLookupIds = [...new Set([...schemeIds, ...itemIds])]
+
+    let schemeProblemMap = new Map<string, any>()
+    if (schemeIds.length > 0) {
+      const res = await publicStore.http({
+        Api: { model: 't_scheme_problem', args: `id in ('${schemeIds.join("','")}')`, limit: 2000 }
+      })
+      const list = Array.isArray(res) ? res : []
+      schemeProblemMap = new Map(list.map((p: any) => [String(p.id), p]))
+    }
+
+    let schemeProblemItemMap = new Map<string, any>()
+    if (allLookupIds.length > 0) {
+      const res = await publicStore.http({
+        Api: { model: 't_scheme_problem_item', args: `id in ('${allLookupIds.join("','")}')`, limit: 2000 }
+      })
+      const list = Array.isArray(res) ? res : []
+      schemeProblemItemMap = new Map(list.map((p: any) => [String(p.id), p]))
+    }
+
+    const indicatorIdSet = new Set<string>()
+    const rowMeta = new Map<any, { indicatorId?: string; schemeId?: string }>()
+
+    checkNeedMetaRows.forEach(row => {
+      let schemeId = norm(row?.scheme_id) || ''
+      let indicatorId = norm(row?.indicatorId || row?.indicator_id || row?.indicatorId2) || ''
+
+      if (!indicatorId && schemeId) {
+        const sp = schemeProblemMap.get(schemeId)
+        if (sp?.parent_id) indicatorId = String(sp.parent_id)
+      }
+
+      if (!indicatorId && schemeId) {
+        const it = schemeProblemItemMap.get(schemeId)
+        if (it?.parent_id) indicatorId = String(it.parent_id)
+        if (it?.problem_id && !schemeProblemMap.has(String(it.problem_id))) schemeId = String(it.problem_id)
+      }
+
+      if (!indicatorId) {
+        const itId = norm(row?.problemItemId || row?.problem_item_id)
+        if (itId) {
+          const it = schemeProblemItemMap.get(itId)
+          if (it?.parent_id) indicatorId = String(it.parent_id)
+          if (it?.problem_id) schemeId = norm(schemeId) || String(it.problem_id)
+        }
+      }
+
+      if (indicatorId) indicatorIdSet.add(String(indicatorId))
+      rowMeta.set(row, { indicatorId: indicatorId || undefined, schemeId: schemeId || undefined })
+    })
+
+    const indicatorIds = [...indicatorIdSet]
+    let indMap = new Map<string, any>()
+    let dimMap = new Map<string, any>()
+
+    if (indicatorIds.length > 0) {
+      const indRes = await publicStore.http({
+        Api: { model: 't_task_problem', args: `id in ('${indicatorIds.join("','")}')`, limit: 5000 }
+      })
+      const inds = Array.isArray(indRes) ? indRes : []
+      indMap = new Map(inds.map((t: any) => [String(t.id), t]))
+
+      const dimIds = [...new Set(inds.map((t: any) => String(t.parent_id)).filter(Boolean))]
+      if (dimIds.length > 0) {
+        const dimRes = await publicStore.http({
+          Api: { model: 't_task_problem', args: `id in ('${dimIds.join("','")}')`, limit: 5000 }
+        })
+        const dims = Array.isArray(dimRes) ? dimRes : []
+        dimMap = new Map(dims.map((t: any) => [String(t.id), t]))
+      }
+    }
+
+    const missingRows = []
+    const checkList = rawCheckRows
+      .map(row => {
+        const { dimension, indicator } = resolveDimensionIndicator(row)
+        const meta = rowMeta.get(row)
+        const indId = meta?.indicatorId
+        const ind = indId ? indMap.get(String(indId)) : null
+        const dim = ind?.parent_id ? dimMap.get(String(ind.parent_id)) : null
+
+        const finalDimension = norm(dimension) || norm(dim?.name)
+        const finalIndicator = norm(indicator) || norm(ind?.name)
+
+        const problem = norm(row?.problem)
+        if (problem !== '' && (!finalDimension || !finalIndicator)) {
+          missingRows.push(problem.slice(0, 40))
+        }
+
+        return {
+          id: row.id || uuidv6(),
+          project_id: projectId,
+          dimension: finalDimension || null,
+          indicator: finalIndicator || null,
+          problem: problem || null,
+          rectify_range: norm(row?.range) || null,
+          rectify_content: norm(row?.content) || null,
+          scheme_id: norm(meta?.schemeId || row?.scheme_id) || null
+        }
+      })
+      .filter(r => hasAny(r.dimension, r.indicator, r.problem, r.rectify_range, r.rectify_content))
+
+    if (missingRows.length > 0) {
+      ElNotification({
+        title: '错误',
+        message: `体检整改任务缺少“体检维度/指标项”，无法保存：${missingRows.slice(0, 3).join('；')}${missingRows.length > 3 ? '…' : ''}`,
+        type: 'error'
+      })
+      throw new Error('t_project_task_check missing dimension/indicator')
+    }
 
     // 3. 时序管理数据
-    const timelineList = timelineRows.filter(r => r.desc || r.investment).map(row => ({
-      id: row.id || uuidv6(),
-      project_id: projectId,
-      year: row.year,
-      construct_content: row.desc,
-      investment: row.investment
-    }))
+    const timelineList = timelineRows
+      .filter(r => hasAny(r?.desc, r?.investment))
+      .map(row => ({
+        id: row.id || uuidv6(),
+        project_id: projectId,
+        year: norm(row?.year) || null,
+        construct_content: norm(row?.desc) || null,
+        investment: norm(row?.investment) || null
+      }))
 
     try {
       // 先删除旧数据

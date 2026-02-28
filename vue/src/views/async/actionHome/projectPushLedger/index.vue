@@ -1,6 +1,9 @@
 <template>
   <div class="ledger-container">
-    <div class="breadcrumb">首页 / 项目台账</div>
+    <div class="header-row">
+      <div class="breadcrumb">首页 / 项目台账</div>
+      <el-button size="small" @click="router.back()">返回</el-button>
+    </div>
 
     <el-card class="filter-card">
       <el-form :inline="true" :model="filters" class="filter-form">
@@ -15,33 +18,34 @@
           />
         </el-form-item>
         <el-form-item label="所属地区">
-          <el-select v-model="filters.city" placeholder="太原市" style="width: 140px">
+          <el-select v-model="filters.city" placeholder="请选择" style="width: 140px" clearable>
             <el-option label="太原市" value="太原市" />
             <el-option label="大同市" value="大同市" />
             <el-option label="晋中市" value="晋中市" />
           </el-select>
-          <el-select v-model="filters.district" placeholder="小店区" style="width: 140px; margin-left: 10px">
+          <el-select v-model="filters.district" placeholder="请选择" style="width: 140px; margin-left: 10px" clearable>
             <el-option label="小店区" value="小店区" />
             <el-option label="迎泽区" value="迎泽区" />
             <el-option label="杏花岭区" value="杏花岭区" />
+            <el-option label="清徐县" value="清徐县" />
           </el-select>
         </el-form-item>
         <el-form-item label="项目阶段">
-          <el-select v-model="filters.stage" placeholder="储备阶段" style="width: 140px">
+          <el-select v-model="filters.stage" placeholder="请选择" style="width: 140px" clearable>
             <el-option label="储备阶段" value="储备阶段" />
             <el-option label="实施阶段" value="实施阶段" />
             <el-option label="完工阶段" value="完工阶段" />
           </el-select>
         </el-form-item>
         <el-form-item label="项目类型">
-          <el-select v-model="filters.type" placeholder="加强既有建筑改造" style="width: 200px">
+          <el-select v-model="filters.type" placeholder="请选择" style="width: 200px" clearable>
             <el-option label="加强既有建筑改造" value="加强既有建筑改造" />
             <el-option label="完善社区服务设施" value="完善社区服务设施" />
             <el-option label="改善人居环境" value="改善人居环境" />
           </el-select>
         </el-form-item>
         <el-form-item label="总投资金额">
-          <el-select v-model="filters.investment" placeholder="5千万以上" style="width: 140px">
+          <el-select v-model="filters.investment" placeholder="请选择" style="width: 140px" clearable>
             <el-option label="5千万以上" value="5千万以上" />
             <el-option label="1亿以上" value="1亿以上" />
             <el-option label="2亿以上" value="2亿以上" />
@@ -95,18 +99,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import api from '@/api'
 
 type LedgerRow = {
-  id: number
+  id: string
   name: string
   region: string
   area: string
   taskType: string
   status: string
   nature: string
-  investment: number
+  investment: string
   cycle: string
   funding: string
   city: string
@@ -116,49 +122,209 @@ type LedgerRow = {
   investmentLevel: string
 }
 
+const route = useRoute()
+const router = useRouter()
 const filters = reactive({
   period: [] as any[],
-  city: '太原市',
-  district: '小店区',
-  stage: '储备阶段',
-  type: '加强既有建筑改造',
-  investment: '5千万以上',
+  city: '',
+  district: '',
+  stage: '',
+  type: '',
+  investment: '',
   keyword: ''
 })
 
 const pageSize = ref(10)
 const currentPage = ref(1)
 
-const allRows = ref<LedgerRow[]>(Array.from({ length: 36 }).map((_, i) => {
-  const city = i % 3 === 0 ? '太原市' : (i % 3 === 1 ? '大同市' : '晋中市')
-  const district = i % 3 === 0 ? '小店区' : (i % 3 === 1 ? '迎泽区' : '杏花岭区')
-  const stage = i % 3 === 0 ? '储备阶段' : (i % 3 === 1 ? '实施阶段' : '完工阶段')
-  const type = i % 3 === 0 ? '加强既有建筑改造' : (i % 3 === 1 ? '完善社区服务设施' : '改善人居环境')
-  const investmentLevel = i % 3 === 0 ? '5千万以上' : (i % 3 === 1 ? '1亿以上' : '2亿以上')
-  const investment = i % 3 === 0 ? 12000 : (i % 3 === 1 ? 18000 : 26000)
-  const status = i % 3 === 0 ? '谋划中' : (i % 3 === 1 ? '实施中' : '已完工')
-  const area = i % 3 === 0 ? '龙城片区' : (i % 3 === 1 ? '老城区片区' : '产业片区')
-  const taskType = i % 3 === 0 ? '既有建筑改造利用' : (i % 3 === 1 ? '完善社区服务设施' : '历史风貌保护')
-  const funding = i % 3 === 0 ? '政府投资30% 社会资本70%' : (i % 3 === 1 ? '政府投资20% 社会资本80%' : '政府投资40% 社会资本60%')
+const allRows = ref<LedgerRow[]>([])
 
-  return {
-    id: i + 1,
-    name: `${area}城市更新改造项目${i + 1}`,
-    region: `${city}-${district}`,
-    area,
-    taskType,
-    status,
+const statusMap: Record<string, string> = {
+  '0': '未开始',
+  '1': '谋划中',
+  '2': '实施中',
+  '3': '已竣工'
+}
+
+// Mock Database
+const mockDatabase: LedgerRow[] = [
+  {
+    id: 'mock_1',
+    name: '龙城片区老城改造项目',
+    region: '太原市-小店区',
+    area: '龙城片区',
+    taskType: '既有建筑改造利用',
+    status: '谋划中',
     nature: '新建',
-    investment,
+    investment: '12000',
     cycle: '2026-2030',
-    funding,
-    city,
-    district,
-    stage,
-    type,
-    investmentLevel
+    funding: '政府投资30%社会资本投资70%',
+    city: '太原市',
+    district: '小店区',
+    stage: '储备阶段',
+    type: '加强既有建筑改造',
+    investmentLevel: '1亿以上'
+  },
+  {
+    id: 'mock_2',
+    name: '清徐县老旧小区综合整治与“一刻钟生活圈”建设项目',
+    region: '太原市-清徐县',
+    area: '龙城片区',
+    taskType: '完善社区服务设施',
+    status: '实施中',
+    nature: '改建',
+    investment: '1000',
+    cycle: '2025-2027',
+    funding: '财政资金',
+    city: '太原市',
+    district: '清徐县',
+    stage: '实施阶段',
+    type: '完善社区服务设施',
+    investmentLevel: '5千万以上'
+  },
+  {
+    id: 'mock_3',
+    name: '太原市“口袋公园”建设与老旧片区绿化品质提升项目',
+    region: '太原市',
+    area: '龙城片区',
+    taskType: '改善人居环境',
+    status: '实施中',
+    nature: '新建',
+    investment: '5000',
+    cycle: '2025-2026',
+    funding: '专项债',
+    city: '太原市',
+    district: '小店区',
+    stage: '实施阶段',
+    type: '改善人居环境',
+    investmentLevel: '5千万以上'
+  },
+  {
+    id: 'mock_4',
+    name: '迎泽区历史文化街区保护与更新项目',
+    region: '太原市-迎泽区',
+    area: '龙城片区',
+    taskType: '既有建筑改造利用',
+    status: '储备阶段',
+    nature: '修缮',
+    investment: '8000',
+    cycle: '2026-2028',
+    funding: '申请超长期国债',
+    city: '太原市',
+    district: '迎泽区',
+    stage: '储备阶段',
+    type: '加强既有建筑改造',
+    investmentLevel: '5千万以上'
+  },
+  {
+    id: 'mock_5',
+    name: '杏花岭区社区养老服务中心建设项目',
+    region: '太原市-杏花岭区',
+    area: '龙城片区',
+    taskType: '完善社区服务设施',
+    status: '谋划中',
+    nature: '改建',
+    investment: '2000',
+    cycle: '2025-2026',
+    funding: '企业融资',
+    city: '太原市',
+    district: '杏花岭区',
+    stage: '储备阶段',
+    type: '完善社区服务设施',
+    investmentLevel: '5千万以上'
   }
-}))
+]
+
+const generateMockData = () => {
+  // Randomly select 2 to 4 items
+  const count = Math.floor(Math.random() * 3) + 2 // 2, 3, or 4
+  const shuffled = [...mockDatabase].sort(() => 0.5 - Math.random())
+  const selected = shuffled.slice(0, count)
+  allRows.value = selected
+  // Remove toast
+  // ElMessage.success(`已生成 ${count} 条模拟数据`)
+}
+
+const fetchData = async () => {
+  // Mock Data Logic (Active)
+  generateMockData()
+
+  /* 
+  // Real API Logic (Commented out)
+  const problemId = route.query.id as string
+  if (!problemId) {
+    // ElMessage.warning('未提供体检问题ID')
+    return
+  }
+
+  try {
+    // 1. 根据体检问题ID查询 t_project_task_check
+    const checkRes: any = await api.Api({
+      model: 't_project_task_check',
+      args: `scheme_id='${problemId}'` // 入口体检问题ID对应 scheme_id
+    })
+
+    const checkList = Array.isArray(checkRes) ? checkRes : []
+    if (checkList.length === 0) {
+      allRows.value = []
+      return
+    }
+
+    const projectIds = checkList.map((item: any) => item.project_id).filter(Boolean)
+    if (projectIds.length === 0) {
+      allRows.value = []
+      return
+    }
+
+    // 去重
+    const uniqueIds = [...new Set(projectIds)]
+
+    // 2. 根据 project_id 查询 t_project_report
+    const idsStr = uniqueIds.map(id => `'${id}'`).join(',')
+    const reportRes: any = await api.Api({
+      model: 't_project_report',
+      args: `id in (${idsStr})`
+    })
+
+    const reportList = Array.isArray(reportRes) ? reportRes : []
+
+    allRows.value = reportList.map((item: any) => {
+      // 映射字段
+      const statusText = statusMap[item.completion_status] || item.completion_status || '未知'
+      const cycle = (item.construct_datetime_start || '') + '-' + (item.construct_datetime_end || '')
+      
+      return {
+        id: item.id,
+        name: item.name || '',
+        region: item.area || '', // 地区
+        area: item.parent_area || '', // 所属片区
+        taskType: item.task_type || '',
+        status: statusText,
+        nature: item.construct_nature || '',
+        investment: item.construct_price || '',
+        cycle: cycle === '-' ? '' : cycle,
+        funding: item.fund_source || '',
+        
+        // 以下字段用于筛选，需根据实际数据填充或保留默认逻辑
+        city: '太原市', // 示例默认值，实际可能需要从 area 解析
+        district: '小店区', // 示例默认值
+        stage: '储备阶段', // 示例默认值
+        type: '加强既有建筑改造', // 示例默认值
+        investmentLevel: '5千万以上' // 示例默认值
+      }
+    })
+
+  } catch (error) {
+    console.error('Fetch data failed:', error)
+    ElMessage.error('获取数据失败')
+  }
+  */
+}
+
+onMounted(() => {
+  // Always fetch (mock) data regardless of query ID
+  fetchData()
+})
 
 const filteredRows = computed(() => {
   const kw = filters.keyword.trim()

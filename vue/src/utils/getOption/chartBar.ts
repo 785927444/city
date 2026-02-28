@@ -471,4 +471,3 @@ const setOption = {
 }
 
 export default setOption
-
